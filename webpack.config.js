@@ -14,6 +14,11 @@ module.exports = {
     path: path.resolve( __dirname, 'dist' ),
     filename: 'review-pus.[name].bundle.js',
   },
+  plugins: [
+    new webpack.ProvidePlugin( {
+      React: 'react',
+    } ),
+  ],
   module: {
     rules: [
       {
@@ -28,14 +33,11 @@ module.exports = {
         ]
       },
       {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
+        test: /\.js$/,
+        exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        }
+          loader: "babel-loader"
+        },
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,

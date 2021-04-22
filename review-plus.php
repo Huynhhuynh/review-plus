@@ -30,6 +30,11 @@ require_once( __DIR__ . '/vendor/autoload.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/hooks.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/ajax.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/options.php' );
+
+  /**
+   * Admin
+   */
+  require_once( REVIEW_PLUS_DIR . '/inc/admin/review-type-panel.php' );
 }
 
 
