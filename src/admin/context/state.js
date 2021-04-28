@@ -1,29 +1,36 @@
 import React, { createContext, useContext, useReducer, useState, useEffect } from 'react'
-import { getAllReviewType } from '../lib/api'
+import { getAllReviewDesign } from '../lib/api'
 /**
  * States Context
  */
 
-const ReviewTypeContext = createContext()
+const ReviewDesignContext = createContext()
 
-function ReviewTypeProvider( { children } ) {
-  const [ reviewTypeData, setReviewTypeData ] = useState( [] )
+function ReviewDesignProvider( { children } ) {
+  const [ reviewDesignData, setReviewDesignData ] = useState( [] )
+  const [ designEdit, setDesignEdit ] = useState( null )
 
   useEffect( async () => {
-    const data = await getAllReviewType()
-    setReviewTypeData( [...data] )
+    const data = await getAllReviewDesign()
+    setReviewDesignData( [...data] )
   }, [] )
 
-  const value = { reviewTypeData, setReviewTypeData }
+  const value = { 
+    reviewDesignData, 
+    setReviewDesignData,
+    designEdit, 
+    setDesignEdit, 
+  }
+
   return (
-    <ReviewTypeContext.Provider value={ value }>
+    <ReviewDesignContext.Provider value={ value }>
       { children }
-    </ReviewTypeContext.Provider>
+    </ReviewDesignContext.Provider>
   )
 }
 
-function useReviewType() {
-  return useContext( ReviewTypeContext )
+function useReviewDesign() {
+  return useContext( ReviewDesignContext )
 }
 
-export { ReviewTypeProvider, useReviewType }
+export { ReviewDesignProvider, useReviewDesign }

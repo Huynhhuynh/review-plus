@@ -1,3 +1,4 @@
-import ReviewType from './admin/review-type'
+import './scss/backend.scss'
+import ReviewDesign from './admin/review-design'
 
-window.RP_ReviewType = new ReviewType()
+window.RP_ReviewDesign = new ReviewDesign()

@@ -22,6 +22,8 @@ export async function Request( action = null, variables = {}, method = 'POST' ) 
  * 
  * @returns 
  */
-export async function getAllReviewType() {
-  return await Request( 'rp_ajax_get_all_review_type', {} )
+export async function getAllReviewDesign() {
+  return await Request( 'rp_ajax_get_all_review_design', {
+    
+  } )
 }
