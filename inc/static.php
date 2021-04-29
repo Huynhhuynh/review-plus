@@ -19,6 +19,7 @@ function rp_admin_enqueue_scripts() {
 
   wp_localize_script( 'review-plus-backend', 'PHP_DATA', [
     'ajax_url' => admin_url( 'admin-ajax.php' ),
+    'post_types' => rp_get_all_post_type(),
     'lang' => [],
   ] );
 }
