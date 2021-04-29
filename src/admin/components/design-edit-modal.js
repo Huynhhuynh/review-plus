@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Multiselect } from 'multiselect-react-dropdown'
 /**
  * Design edit
  */
@@ -8,8 +9,40 @@ function RatingFieldItem( { ratingFieldData } ) {
 
   return (
     <div className="rating-field-item-control">
-      <div className="field-title">{ fieldData.name }</div>
-      <div>{ JSON.stringify( ratingFieldData ) }</div>
+      <div className="rating-field-item-control__title">{ fieldData.name }</div>
+      <div className="rating-field-item-control__body">
+        {/* { JSON.stringify( ratingFieldData ) } */}
+        <div className="group-field">
+          <label>Name</label>
+          <div className="field">
+            <input className="rp-field" type="text" value={ fieldData.name } />
+          </div>
+        </div>
+        <div className="group-field">
+          <label>Slug</label>
+          <div className="field">
+            <input className="rp-field" type="text" value={ fieldData.slug } />
+          </div>
+        </div>
+        <div className="group-field">
+          <label>Max Point</label>
+          <div className="field">
+            <input className="rp-field" type="number" value={ fieldData.max_point } />
+          </div>
+        </div>
+        <div className="group-field">
+          <label>Point Default</label>
+          <div className="field">
+            <input className="rp-field" type="number" value={ fieldData.default_point } />
+          </div>
+        </div>
+        <div className="group-field">
+          <label>Icon</label>
+          <div className="field">
+            <input className="rp-field" type="text" value={ fieldData.rating_icon } />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -17,6 +50,27 @@ function RatingFieldItem( { ratingFieldData } ) {
 export default function DesignEditModal( { designEditData } ) {
 
   if( designEditData == null ) return <></>
+
+  let selected = PHP_DATA.post_types.filter( ( postType ) => {
+    return designEditData.support_post_type.includes( postType.name )
+  } )
+
+  let postTypeOptions = {
+    options: PHP_DATA.post_types,
+    selectedValues: selected,
+    onSelect: ( list, item ) => {
+      console.log( list, item )
+    },
+    onRemove: ( list, item ) => {
+      console.log( list, item )
+    },
+    displayValue: 'label',
+    style: {
+      chips: {
+        'border-radius': '3px'
+      }
+    }
+  }
 
   return (
     <div className="design-edit-modal">
@@ -28,26 +82,27 @@ export default function DesignEditModal( { designEditData } ) {
             <div className="group-field">
               <label>Label</label>
               <div className="field">
-                <input value={ designEditData.label } />
+                <input className="rp-field" type="text" value={ designEditData.label } />
               </div>
             </div>
             <div className="group-field">
               <label>Description</label>
               <div className="field">
-                <textarea value={ designEditData.description }></textarea>
+                <textarea className="rp-field" value={ designEditData.description }></textarea>
               </div>
             </div>
             <div className="group-field">
               <label>Select Post Type</label>
               <div className="field">
-                <select multiple>
+                <Multiselect {...postTypeOptions} />
+                {/* <select multiple>
                   {
                     PHP_DATA.post_types.map( ( postType ) => {
                       let selected = designEditData.support_post_type.includes( postType.name ) ? { selected: 'selected' } : {}
                       return <option value={ postType.name } { ...selected }>{ postType.label }</option>
                     } )
                   }
-                </select>
+                </select> */}
               </div>
             </div>
             <div className="group-field">

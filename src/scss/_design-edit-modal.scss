@@ -9,12 +9,21 @@
   z-index: 99999;
 
   &__inner {
-    width: 700px;
+    width: 560px;
     max-width: calc(100% - 30px);
     margin: 7vw auto;
     background: white;
     box-shadow: 0 5px 5px 0 rgb(1 1 1 / 10%);
     border-radius: 3px;
     padding: 20px;
+  }
+
+  &__heading {
+    font-size: 1.3em;
+    font-weight: 600;
+    line-height: 1.3em;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    border-bottom: solid 1px #eee;
   }
 }
