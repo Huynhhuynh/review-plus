@@ -3,6 +3,7 @@
  */
 const webpack = require( 'webpack' )
 const path = require( 'path' )
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' )
 
 module.exports = {
   mode: 'production',
@@ -18,6 +19,9 @@ module.exports = {
     new webpack.ProvidePlugin( {
       React: 'react',
     } ),
+    new MiniCssExtractPlugin( {
+      filename: 'css/review-pus.[name].css',
+    } ),
   ],
   module: {
     rules: [
@@ -25,7 +29,8 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         use: [
           // Creates `style` nodes from JS strings
-          "style-loader",
+          // "style-loader",
+          MiniCssExtractPlugin.loader, 
           // Translates CSS into CommonJS
           "css-loader",
           // Compiles Sass to CSS
