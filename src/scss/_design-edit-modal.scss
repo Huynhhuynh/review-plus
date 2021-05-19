@@ -14,7 +14,7 @@
     margin: 7vw auto;
     background: white;
     box-shadow: 0 5px 5px 0 rgb(1 1 1 / 10%);
-    border-radius: 3px;
+    border-radius: 1px;
     padding: 20px;
   }
 
@@ -25,5 +25,42 @@
     padding-bottom: 18px;
     margin-bottom: 20px;
     border-bottom: solid 1px #eee;
+  }
+
+  .modal-actions {
+    text-align: right;
+    padding-top: 20px;
+    border-top: solid 1px #d8d8d8;
+
+    .modal-button {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 1px;
+      background: #000;
+      margin-left: 10px;
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      border-radius: 40px;
+      border: solid 2px black;
+      cursor: pointer;
+      transition: .3s ease;
+      -webkit-transition: .3s ease;
+
+      &:hover {
+        opacity: .6;
+      }
+
+      &.modal-button__close {
+        border-color: #eee;
+        color: black;
+        background: transparent;
+      }
+
+      &.modal-button__save {
+        background: #3f51b5;
+        border-color: #3f51b5;
+      }
+    }
   }
 }

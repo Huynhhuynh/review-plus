@@ -13,7 +13,7 @@ function ReviewDesignApp() {
   return (
     <>
       <ReviewDesignLoop reviewDesign={ reviewDesignData } />
-      <DesignEditModal designEditData={ designEdit } />
+      <DesignEditModal />
     </>
   )
 }

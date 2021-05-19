@@ -6,6 +6,7 @@
 function rp_ajax_get_all_review_design() {
   wp_send_json( [
     [
+      'id' => uniqid(),
       'label' => 'Review Plus Demo for Post',
       'description' => 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
       'support_post_type' => [ 'post' ],

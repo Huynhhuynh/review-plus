@@ -42,10 +42,10 @@ export function ReviewDesignItem( { designData } ) {
           <div className="review-design-item__desc">{ designData.description }</div>
         </div>
         <div className="review-design-item__meta">
-          <ul class="review-design-item__meta-list">
+          <ul className="review-design-item__meta-list">
             <li className="review-design-item__meta-item">
               <label>Post type</label>
-              <div>{ designData.support_post_type.map( ( p ) => { return <span>{ p }</span> } ) }</div>
+              <div className="rp-support-post-type">{ designData.support_post_type.map( ( p ) => <span className="rp-tag">{ p }</span> ) }</div>
             </li>
             <li className="review-design-item__meta-item">
               <label>Theme</label>
