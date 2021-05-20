@@ -34,6 +34,8 @@ require_once( __DIR__ . '/vendor/autoload.php' );
   /**
    * Admin
    */
+  require_once( REVIEW_PLUS_DIR . '/inc/admin/review-entries-cpt.php' );
+  require_once( REVIEW_PLUS_DIR . '/inc/admin/review-design-cpt.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-design-panel.php' );
 }
 

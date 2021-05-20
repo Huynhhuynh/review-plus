@@ -39,7 +39,7 @@ export function ReviewDesignItem( { designData } ) {
       <div className="review-design-item__inner">
         <div className="review-design-item__heading">
           <h4 className="review-design-item__title">{ designData.label }</h4>
-          <div className="review-design-item__desc">{ designData.description }</div>
+          <div className="review-design-item__desc" dangerouslySetInnerHTML={{__html: designData.description}}></div>
         </div>
         <div className="review-design-item__meta">
           <ul className="review-design-item__meta-list">
@@ -53,7 +53,10 @@ export function ReviewDesignItem( { designData } ) {
             </li>
             <li className="review-design-item__meta-item">
               <label>Color</label>
-              <div>{ designData.theme_color }</div>
+              <div className="rd-color-ui">
+                <span className="rd-color-ui__tag" style={ { backgroundColor: designData.theme_color } }></span>
+                { designData.theme_color }
+              </div>
             </li>
             <li className="review-design-item__meta-item">
               <label>Enable</label>

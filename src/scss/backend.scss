@@ -35,7 +35,7 @@
 }
 
 .group-field {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   
   label {
     margin-right: 15px;
@@ -88,5 +88,18 @@
         box-sizing: border-box;
       }
     }
+  }
+}
+
+.rd-color-ui {
+  display: flex;
+
+  &__tag {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 14px;
+    margin-right: 4px;
+    border: solid 1px #eee;
   }
 }

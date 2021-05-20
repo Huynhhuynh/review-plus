@@ -5,7 +5,7 @@
 
 function rp_review_design_settings_panel() {
   add_submenu_page(
-    'review-plus-options',
+    'edit.php?post_type=review-entries',
     __( 'Review Design', 'review-plus' ),
     __( 'Review Design', 'review-plus' ),
     'manage_options',
@@ -13,7 +13,7 @@ function rp_review_design_settings_panel() {
     'rp_review_design_settings_panel_callback' );
 }
 
-add_action( 'admin_menu', 'rp_review_design_settings_panel', 99 );
+add_action( 'admin_menu', 'rp_review_design_settings_panel' );
 
 function rp_review_design_settings_panel_callback() {
   ?>

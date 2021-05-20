@@ -3,6 +3,9 @@ import { Multiselect } from 'multiselect-react-dropdown'
 import Switch from 'react-switch'
 import { useReviewDesign } from '../context/state'
 
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
 /**
  * Design edit
  */
@@ -163,12 +166,24 @@ export default function DesignEditModal() {
             <div className="group-field">
               <label>Description</label>
               <div className="field">
-                <textarea 
+                {/* <textarea 
                   className="rp-field" 
                   value={ designEdit.description } 
                   onChange={ e => {
                     onUpdateField( e.target.value, 'description' )
-                  } } ></textarea>
+                  } } >  
+                </textarea> */}
+                <CKEditor
+                  editor={ ClassicEditor } 
+                  config={ {
+                    toolbar: [ 'bold', 'italic' ],
+                  } }
+                  data={ designEdit.description }
+                  onChange={ ( event, editor ) => {
+                    const data = editor.getData();
+                    onUpdateField( data, 'description' )
+                  } }
+                />
               </div>
             </div>
             <div className="group-field">

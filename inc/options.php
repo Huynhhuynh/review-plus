@@ -23,9 +23,9 @@ function rp_register_general_options() {
 
   $group_fields = apply_filters( 'review-plus/global_options', $group_fields );
 
-  $options = Container::make( 'theme_options', __( 'Review Plus', 'review-plus' ) )
-    ->set_icon( 'dashicons-star-filled' )
-    ->set_page_file( 'review-plus-options' );
+  $options = Container::make( 'theme_options', __( 'Settings', 'review-plus' ) )
+    ->set_page_file( 'review-plus-options' )
+    ->set_page_parent( 'edit.php?post_type=review-entries' );
 
   foreach( $group_fields as $key => $item ) {
     $options->add_tab( $item[ 'label' ], $item[ 'fields' ] );

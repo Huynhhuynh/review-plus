@@ -7,6 +7,11 @@ const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' )
 
 module.exports = {
   mode: 'production',
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+  },
   entry: {
     frontend: './src/main.js',
     backend: './src/backend.js',
@@ -26,7 +31,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.(scss|css)$/,
         use: [
           // Creates `style` nodes from JS strings
           // "style-loader",
