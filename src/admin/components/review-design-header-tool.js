@@ -1,15 +1,12 @@
+import { useReviewDesign } from '../context/state'
 /**
  * Review design header tool
  * 
  */
 
 const ButtonNewDesign = ( props ) => {
-
-  const onNewDesign = ( e ) => {
-    e.preventDefault()
-  }
-
-  return <button className="rp-button-tool rp-button-tool__new-design" onClick={ onNewDesign }>New Design</button>
+  const { addNewDesign } = useReviewDesign()
+  return <button className="rp-button-tool rp-button-tool__new-design" onClick={ addNewDesign }>New Design</button>
 }
 
 export default function ReviewDesignHeaderTool() {

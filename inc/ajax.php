@@ -16,3 +16,13 @@ function rp_ajax_get_all_post_type() {
 
 add_action( 'wp_ajax_rp_ajax_get_all_post_type', 'rp_ajax_get_all_post_type' );
 add_action( 'wp_ajax_nopriv_rp_ajax_get_all_post_type', 'rp_ajax_get_all_post_type' );
+
+function rp_ajax_new_design() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+
+  wp_send_json( $postData[ 'designData' ]  );
+}
+
+add_action( 'wp_ajax_rp_ajax_new_design', 'rp_ajax_new_design' );
+add_action( 'wp_ajax_nopriv_rp_ajax_new_design', 'rp_ajax_new_design' );

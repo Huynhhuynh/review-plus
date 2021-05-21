@@ -3,12 +3,36 @@ import { Multiselect } from 'multiselect-react-dropdown'
 import Switch from 'react-switch'
 import { useReviewDesign } from '../context/state'
 
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+const _ = require( 'lodash' )
+
+// import { CKEditor } from '@ckeditor/ckeditor5-react'
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 /**
  * Design edit
  */
+
+const ControlBar = ( { ratingFieldId } ) => {
+  const { moveRatingFieldEdit, removeRatingFieldItem } = useReviewDesign()
+
+  const onMove = ( move ) => {
+    moveRatingFieldEdit( ratingFieldId, move )
+  }
+
+  const onRemoveItem = () => {
+    let r = confirm( 'Remove this item?' )
+    if( r ) removeRatingFieldItem( ratingFieldId )
+  }
+
+  return (
+    <div className="rating-field-item-control__control">
+      <button type="button" className="__move-up" onClick={ e => { onMove( 'up' ) } }>↑ Move Up</button>
+      <button type="button" className="__move-down" onClick={ e => { onMove( 'down' ) } }>↓ Move Down</button>
+      <button type="button" className="__remove-item" onClick={ onRemoveItem }>Remove Item</button>
+    </div>
+  )
+}
+
 
 function RatingFieldItem( { ratingFieldData, onUpdate } ) {
   const [ fieldData, setFieldData ] = useState( ratingFieldData )
@@ -87,15 +111,25 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
             </div>
           </div>
         </div>
+        <ControlBar 
+          ratingFieldId={ fieldData.id }
+        />
       </fieldset>
     </div>
   )
 }
 
 export default function DesignEditModal() {
-  const { designEdit, setDesignEdit, updateReviewDesignItem } = useReviewDesign()
+  const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, newReviewDesignItem } = useReviewDesign()
   if( designEdit == null ) return <></>
   
+  const isEdit = ( () => {
+    let find = _.findIndex( reviewDesignData, d => {
+      return d.id == designEdit.id
+    } )
+    
+    return find === -1 ? false : true
+  } )()
 
   let selected = PHP_DATA.post_types.filter( ( postType ) => {
     return designEdit.support_post_type.includes( postType.name )
@@ -117,7 +151,14 @@ export default function DesignEditModal() {
   }
 
   const onSave = () => {
-    updateReviewDesignItem( designEdit.id, designEdit )
+    if ( isEdit ) {
+      // update
+      updateReviewDesignItem( designEdit.id, designEdit )
+    } else {
+      // add new
+      newReviewDesignItem( designEdit )
+    }
+    
     onCloseModal()
   }
 
@@ -136,7 +177,7 @@ export default function DesignEditModal() {
   return (
     <div className="design-edit-modal">
       <div className="design-edit-modal__inner">
-        <div className="design-edit-modal__heading">Edit Design</div>
+        <div className="design-edit-modal__heading">{ isEdit ? 'Edit' : 'New' } Design</div>
         <div className="design-edit-modal__body">
           <form className="rp-form">
             <div className="group-field __inline">
@@ -166,14 +207,14 @@ export default function DesignEditModal() {
             <div className="group-field">
               <label>Description</label>
               <div className="field">
-                {/* <textarea 
+                <textarea 
                   className="rp-field" 
                   value={ designEdit.description } 
                   onChange={ e => {
                     onUpdateField( e.target.value, 'description' )
                   } } >  
-                </textarea> */}
-                <CKEditor
+                </textarea>
+                {/* <CKEditor
                   editor={ ClassicEditor } 
                   config={ {
                     toolbar: [ 'bold', 'italic' ],
@@ -183,7 +224,7 @@ export default function DesignEditModal() {
                     const data = editor.getData();
                     onUpdateField( data, 'description' )
                   } }
-                />
+                /> */}
               </div>
             </div>
             <div className="group-field">
@@ -197,8 +238,10 @@ export default function DesignEditModal() {
               <div className="field repeater-field">
                 {
                   designEdit.rating_fields &&
+                  (designEdit.rating_fields.length > 0) &&
                   designEdit.rating_fields.map( ( ratingFieldData, index ) => {
                     return <RatingFieldItem 
+                      key={ ratingFieldData.id }
                       ratingFieldData={ ratingFieldData } 
                       onUpdate={ updateFieldData => {
                         let newRatingFields = [ ...designEdit.rating_fields ]
@@ -208,11 +251,15 @@ export default function DesignEditModal() {
                   } )
                 }
               </div>
+              <button type="button" className="button-add-more-rating-field" onClick={ e => {
+                e.preventDefault()
+                addRatingFieldItem()
+              } }>Add Item</button>
             </div>
           </form>
           <div className="modal-actions">
             <button className="modal-button modal-button__close" onClick={ onCloseModal }>Cancel</button>
-            <button className="modal-button modal-button__save" onClick={ onSave }>Update</button>
+            <button className="modal-button modal-button__save" onClick={ onSave }>{ isEdit ? 'Update' : 'Add Design' }</button>
           </div>
         </div>
       </div>

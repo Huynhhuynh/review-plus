@@ -12,6 +12,11 @@
 export async function Request( action = null, variables = {}, method = 'POST' ) {
   const response = await fetch( `${ PHP_DATA.ajax_url }?action=${ action }`, {
     method,
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Cache-Control': 'no-cache',
+    },
     body: JSON.stringify( variables )
   } )
 
@@ -25,5 +30,11 @@ export async function Request( action = null, variables = {}, method = 'POST' ) 
 export async function getAllReviewDesign() {
   return await Request( 'rp_ajax_get_all_review_design', {
     
+  } )
+}
+
+export async function newDesign( designData ) {
+  return await Request( 'rp_ajax_new_design', {
+    designData: designData
   } )
 }
