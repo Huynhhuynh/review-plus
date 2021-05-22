@@ -16,6 +16,9 @@ function rp_enqueue_scripts() {
 add_action( 'wp_enqueue_scripts', 'rp_enqueue_scripts' );
 
 function rp_admin_enqueue_scripts() {
+  if( ! isset( $_GET[ 'page' ] ) || $_GET[ 'page' ] != 'review-design-settings-panel' )
+    return; 
+
   wp_enqueue_style( 'review-plus-backend', REVIEW_PLUS_URI . '/dist/css/review-pus.backend.css', false, REVIEW_PLUS_VER );
   wp_enqueue_script( 'review-plus-backend', REVIEW_PLUS_URI . '/dist/review-pus.backend.bundle.js', 'jquery', REVIEW_PLUS_VER, true );
 

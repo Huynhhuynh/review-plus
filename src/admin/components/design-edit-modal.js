@@ -3,7 +3,8 @@ import { Multiselect } from 'multiselect-react-dropdown'
 import Switch from 'react-switch'
 import { useReviewDesign } from '../context/state'
 
-const _ = require( 'lodash' )
+// const _ = require( 'lodash' )
+import { findIndex } from 'lodash'
 
 // import { CKEditor } from '@ckeditor/ckeditor5-react'
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
@@ -124,7 +125,7 @@ export default function DesignEditModal() {
   if( designEdit == null ) return <></>
   
   const isEdit = ( () => {
-    let find = _.findIndex( reviewDesignData, d => {
+    let find = findIndex( reviewDesignData, d => {
       return d.id == designEdit.id
     } )
     

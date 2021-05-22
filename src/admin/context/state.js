@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useReducer, useState, useEffect } from 'react'
 import { getAllReviewDesign, newDesign } from '../lib/api'
 import * as Helpers from '../lib/helpers'
-const findIndex = require( 'lodash/findIndex' )
-const _ = require( 'lodash' )
+import { findIndex, remove } from 'lodash'
 
 /**
  * States Context
@@ -42,7 +41,7 @@ function ReviewDesignProvider( { children } ) {
     let ratingFields = [ ...newdesignEdit.rating_fields ]
 
     // get current index
-    let cIndex = _.findIndex( ratingFields, o => { 
+    let cIndex = findIndex( ratingFields, o => { 
       return o.id == ratingFieldItemID 
     } )
 
@@ -59,7 +58,7 @@ function ReviewDesignProvider( { children } ) {
     let newdesignEdit = {...designEdit}
     let ratingFields = [ ...newdesignEdit.rating_fields ]
 
-    _.remove( ratingFields, item => {
+    remove( ratingFields, item => {
       return item.id == ratingFieldItemID
     } )  
 

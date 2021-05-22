@@ -90,6 +90,39 @@ function rp_get_review_design( $id = 'all' ) {
  */
 function rp_update_review_design_meta_fields( $post_id = 0, $designData = [] ) {
 
+  // WP Fields
+  $postUpdateFields = [ 
+    'label' => 'post_title', 
+    'description' => 'post_content' 
+  ];
+  $updateArgs = [];
+  foreach( array_keys( $postUpdateFields ) as $field ) {
+    if( ! isset( $designData[ $field ] ) ) continue;
+    $updateArgs[ $postUpdateFields[ $field ] ] = $designData[ $field ];
+  }
+
+  if( count( $updateArgs ) > 0 ) {
+    $updateArgs[ 'ID' ] = $post_id;
+    wp_update_post( $updateArgs );
+  }
+
+  /**
+   * Update meta fields
+   */
+  $postUpdateMetaFields = [ 
+    'support_post_type', 
+    'theme', 
+    'theme_color', 
+    'enable', 
+    'rating_fields' 
+  ];
+  
+  foreach( $postUpdateMetaFields as $field ) {
+    if( ! isset( $designData[ $field ] ) ) continue;
+    carbon_set_post_meta( $post_id, $field, $designData[ $field ] );
+  }
+
+  return $post_id;
 }
 
 /**
@@ -105,7 +138,8 @@ function rp_new_review_design( $designData = [] ) {
     'post_status'   => 'publish'
   ] );
 
-  rp_update_review_design_meta_fields( $ID, $designData )
+  rp_update_review_design_meta_fields( $ID, $designData );
+  return $ID;
 }
 
 add_action( 'init', function() {

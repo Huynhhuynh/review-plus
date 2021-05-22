@@ -10,7 +10,7 @@ const ratingIcons = {
 
 export function RatingFieldFake( { name, slug, max_point, default_point, rating_icon } ) {
   let ratingNumber = [ ...Array( parseInt( max_point ) ).keys() ]
-  console.log( ratingNumber )
+  
   return (
     <div className="rating-item">
       <label>{ name }</label>
@@ -36,7 +36,7 @@ export function ReviewDesignItem( { designData } ) {
 
   return (
     <div className="review-design-item">
-      <div className="review-design-item__inner">
+      <div className={ [ 'review-design-item__inner', designData.enable ? '__is-enable' : '__is-disable' ].join( ' ' ) }>
         <div className="review-design-item__heading">
           <h4 className="review-design-item__title">{ designData.label }</h4>
           <div className="review-design-item__desc" dangerouslySetInnerHTML={{__html: designData.description}}></div>
