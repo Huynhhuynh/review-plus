@@ -38,3 +38,15 @@ export async function newDesign( designData ) {
     designData: designData
   } )
 }
+
+export async function deleteDesign( ID ) {
+  return await Request( 'rp_ajax_delete_design', {
+    designID: ID
+  } )
+}
+
+export async function updateDesign( designData ) {
+  return await Request( 'rp_ajax_update_design', {
+    designData: designData
+  } )
+}

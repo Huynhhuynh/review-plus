@@ -142,6 +142,15 @@ function rp_new_review_design( $designData = [] ) {
   return $ID;
 }
 
+/**
+ * Delete review design 
+ * 
+ * @param Int $ID
+ */
+function rp_delete_review_design( $ID ) {
+  return wp_delete_post( $ID, true );
+}
+
 add_action( 'init', function() {
   // var_dump( rp_get_review_design( 32 ) );
 } );

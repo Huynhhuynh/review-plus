@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useReducer, useState, useEffect } from 'react'
-import { getAllReviewDesign, newDesign } from '../lib/api'
+import React, { createContext, useContext, useState, useEffect } from 'react'
+import { getAllReviewDesign, newDesign, deleteDesign, updateDesign  } from '../lib/api'
 import * as Helpers from '../lib/helpers'
 import { findIndex, remove } from 'lodash'
 
@@ -19,7 +19,7 @@ function ReviewDesignProvider( { children } ) {
    * @param {*} designData 
    * @returns 
    */
-  const updateReviewDesignItem = ( id, designData ) => {
+  const updateReviewDesignItem = async ( id, designData ) => {
     let newRD = [ ...reviewDesignData ]
     let editIndex = findIndex( newRD, item => {
       return item.id == id
@@ -27,13 +27,35 @@ function ReviewDesignProvider( { children } ) {
 
     if( editIndex == -1 ) return
 
+    const result = await updateDesign( designData )
+    if( result.success != true ) return 
+
     newRD[ editIndex ] = designData
     setReviewDesignData( newRD )
   }
 
   const newReviewDesignItem = async ( designData ) => {
     const result = await newDesign( designData )
-    console.log( result )
+    if( result.success != true ) return
+    
+    let newRD = [ ...reviewDesignData ]
+    let newData = { ...designData }
+    newData.id = parseInt( result.ID )
+
+    newRD.unshift( newData ) 
+    setReviewDesignData( newRD )
+  }
+
+  const deleteReviewDesign = async ( designID ) => { 
+    const result = await deleteDesign( designID )
+    if( result.success != true ) return 
+
+    let newRD = [ ...reviewDesignData ]
+    remove( newRD, d => {
+      return d.id == designID
+    } )
+
+    setReviewDesignData( newRD )
   }
 
   const moveRatingFieldEdit = ( ratingFieldItemID, move ) => {
@@ -71,11 +93,6 @@ function ReviewDesignProvider( { children } ) {
     setDesignEdit( newDesign )
   }
 
-  useEffect( async () => {
-    const data = await getAllReviewDesign()
-    setReviewDesignData( [...data] )
-  }, [] )
-
   const addRatingFieldItem = () => {
     let newdesignEdit = {...designEdit}
     let ratingFields = [ ...newdesignEdit.rating_fields ]
@@ -87,6 +104,11 @@ function ReviewDesignProvider( { children } ) {
     setDesignEdit( newdesignEdit )
   }
 
+  useEffect( async () => {
+    const data = await getAllReviewDesign()
+    setReviewDesignData( [...data] )
+  }, [] )
+
   const value = { 
     reviewDesignData, 
     setReviewDesignData,
@@ -97,7 +119,8 @@ function ReviewDesignProvider( { children } ) {
     removeRatingFieldItem,
     addRatingFieldItem,
     addNewDesign,
-    newReviewDesignItem
+    newReviewDesignItem,
+    deleteReviewDesign
   }
 
   return (

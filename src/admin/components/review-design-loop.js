@@ -28,17 +28,25 @@ export function RatingFieldFake( { name, slug, max_point, default_point, rating_
 }
 
 export function ReviewDesignItem( { designData } ) {
-  const { setDesignEdit } = useReviewDesign()
+  const { setDesignEdit, deleteReviewDesign } = useReviewDesign()
 
   const onSetDesignEdit = () => {
     setDesignEdit( designData )
+  }
+
+  const onDeleteDesign = ( e ) => {
+    e.preventDefault()
+    let r = confirm( 'Delete this item?' )
+
+    if( r == true )
+      deleteReviewDesign( designData.id )
   }
 
   return (
     <div className="review-design-item">
       <div className={ [ 'review-design-item__inner', designData.enable ? '__is-enable' : '__is-disable' ].join( ' ' ) }>
         <div className="review-design-item__heading">
-          <h4 className="review-design-item__title">{ designData.label }</h4>
+          <h4 className="review-design-item__title">{ designData.label } (#{ designData.id })</h4>
           <div className="review-design-item__desc" dangerouslySetInnerHTML={{__html: designData.description}}></div>
         </div>
         <div className="review-design-item__meta">
@@ -68,7 +76,7 @@ export function ReviewDesignItem( { designData } ) {
             </li>
           </ul>
           <div className="review-design-item__button-actions">
-            <a href="#" className="delete-design">Delete design</a>
+            <a href="#" className="delete-design" onClick={ onDeleteDesign }>Delete design</a>
             <button className="edit-design" onClick={ onSetDesignEdit }>Edit</button>
           </div>
         </div>
@@ -84,7 +92,7 @@ export function ReviewDesignLoop( { reviewDesign } ) {
       {
         reviewDesign &&
         reviewDesign.map( ( designItem ) => {
-          return <ReviewDesignItem designData={ designItem } />
+          return <ReviewDesignItem designData={ designItem } key={ designItem.id } />
         } )
       }
     </div>

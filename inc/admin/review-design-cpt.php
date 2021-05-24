@@ -36,9 +36,9 @@ function rp_register_review_design_cpt() {
 
   $args = [
     'labels'             => $labels,
-    'public'             => true,
+    'public'             => false,
     'publicly_queryable' => true,
-    'show_ui'            => true,
+    'show_ui'            => false,
     'query_var'          => true,
     'rewrite'            => [ 'slug' => 'review-design' ],
     'capability_type'    => 'post',
@@ -102,7 +102,7 @@ function rp_review_design_register_meta_fields() {
       <% } %>' ),
   ] );
 
-  Container::make( 'post_meta', __( 'Review Design Options', 'review-plus' ) )
+  Container::make( 'post_meta', __( 'Review Design', 'review-plus' ) )
     ->where( 'post_type', '=', 'review-design' )
     ->add_fields( $fields );
 }

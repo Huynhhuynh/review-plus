@@ -1,4 +1,6 @@
 <?php 
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
 /**
  * Review entries custom post type
  */
@@ -42,10 +44,28 @@ function rp_register_review_entries_cpt() {
     'has_archive'        => false,
     'hierarchical'       => false,
     'menu_icon'          => 'dashicons-star-filled',
-    'supports'           => [ 'title', 'editor', 'author' ],
+    'supports'           => [ 'title' ],
   ];
 
   register_post_type( 'review-entries', $args );
 }
 
-add_action( 'init', 'rp_register_review_entries_cpt', 99 );
+add_action( 'init', 'rp_register_review_entries_cpt' );
+
+function rp_review_entry_register_meta_fields() {
+
+  $fields = apply_filters( 'review-plus/review-entry-meta-fields', [
+    Field::make( 'text', 'review_post_id', __( 'Review Post ID', 'review-plus' ) ),
+    Field::make( 'rich_text', 'comment_content', __( 'Content', 'review-plus' ) ),
+    Field::make( 'separator', '__separator', __( 'Author', 'review-plus' ) ),
+    Field::make( 'text', 'name', __( 'Name', 'review-plus' ) ),
+    Field::make( 'text', 'email', __( 'Email', 'review-plus' ) ),
+    Field::make( 'text', 'url', __( 'URL', 'review-plus' ) ),
+  ] );
+
+  Container::make( 'post_meta', __( 'Review Entry', 'review-plus' ) )
+    ->where( 'post_type', '=', 'review-entries' )
+    ->add_fields( $fields );
+}
+
+add_action( 'carbon_fields_register_fields', 'rp_review_entry_register_meta_fields' );

@@ -30,3 +30,30 @@ function rp_ajax_new_design() {
 
 add_action( 'wp_ajax_rp_ajax_new_design', 'rp_ajax_new_design' );
 add_action( 'wp_ajax_nopriv_rp_ajax_new_design', 'rp_ajax_new_design' );
+
+function rp_ajax_delete_design() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+
+  rp_delete_review_design( $postData[ 'designID' ] );
+  wp_send_json( [
+    'success' => true,
+  ] );
+}
+
+add_action( 'wp_ajax_rp_ajax_delete_design', 'rp_ajax_delete_design' );
+add_action( 'wp_ajax_priv_rp_ajax_delete_design', 'rp_ajax_delete_design' );
+
+function rp_ajax_update_design() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  $designData = $postData[ 'designData' ];
+
+  rp_update_review_design_meta_fields( $designData[ 'id' ], $designData );
+  wp_send_json( [
+    'success' => true
+  ] );
+}
+
+add_action( 'wp_ajax_rp_ajax_update_design', 'rp_ajax_update_design' );
+add_action( 'wp_ajax_nopriv_rp_ajax_update_design', 'rp_ajax_update_design' );

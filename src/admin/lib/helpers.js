@@ -14,7 +14,7 @@ export function reviewItemTemplate() {
 export function designItemTemplate() {
   return {
     'id': uuidv4(),
-    'label': 'New Dedign',
+    'label': 'New Design',
     'description': 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
     'support_post_type': [],
     'theme': 'default',
