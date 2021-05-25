@@ -1,0 +1,52 @@
+.review-form-container {
+
+  .rp-title {
+
+  }
+
+  .rp-desc {
+    margin-bottom: 20px;
+  }
+}
+
+form.review-plus-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  input[type=text],
+  input[type=email],
+  textarea {
+    width: 100%;
+    margin: 0;
+    margin-bottom: 5px;
+  }
+
+  .rp-field {
+    width: 100%;
+    margin-bottom: 10px;  
+
+    &__name,
+    &__email {
+      width: calc(50% - 15px);
+    }
+
+    label {
+      display: inline-block;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      line-height: normal;
+    }
+
+    .__label {
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+  }
+
+  .review-button-submit {
+    width: 100%;
+    margin-top: 10px;
+  }
+}

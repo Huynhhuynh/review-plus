@@ -57,3 +57,19 @@ function rp_ajax_update_design() {
 
 add_action( 'wp_ajax_rp_ajax_update_design', 'rp_ajax_update_design' );
 add_action( 'wp_ajax_nopriv_rp_ajax_update_design', 'rp_ajax_update_design' );
+
+function rp_ajax_get_review_design_by_post_id() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+
+  $postID = $postData[ 'postID' ];
+  $result = rp_get_review_design_by_post_type( get_post_type( $postID ) );
+
+  wp_send_json( [
+    'success' => true,
+    'data' => $result,
+  ] );
+}
+
+add_action( 'wp_ajax_rp_ajax_get_review_design_by_post_id', 'rp_ajax_get_review_design_by_post_id' );
+add_action( 'wp_ajax_nopriv_rp_ajax_get_review_design_by_post_id', 'rp_ajax_get_review_design_by_post_id' );

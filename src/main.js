@@ -2,9 +2,17 @@
  * Review plus main script
  */
 import './scss/main.scss'
+import ReviewDesign from './rating-plus'
 
-! ( ( w ) => {
+! ( ( w, $ ) => {
   'use strict'
 
+  const init = () => {
+    new ReviewDesign()
+  }
 
-} )( window )
+  $( () => {
+    init()
+  } )
+
+} )( window, window.jQuery )

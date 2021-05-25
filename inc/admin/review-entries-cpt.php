@@ -6,6 +6,7 @@ use Carbon_Fields\Field;
  */
 
 function rp_register_review_entries_cpt() {
+  
   $labels = [
     'name'                  => _x( 'Review Entries', 'Post type general name', 'review-plus' ),
     'singular_name'         => _x( 'Review Entries', 'Post type singular name', 'review-plus' ),
@@ -55,6 +56,8 @@ add_action( 'init', 'rp_register_review_entries_cpt' );
 function rp_review_entry_register_meta_fields() {
 
   $fields = apply_filters( 'review-plus/review-entry-meta-fields', [
+    Field::make( 'ratingjson', 'test_rating_json_field', __( 'Rating Json Fields', 'review-plus' ) )
+      ->set_default_value( 'default value...!' ),
     Field::make( 'text', 'review_post_id', __( 'Review Post ID', 'review-plus' ) ),
     Field::make( 'rich_text', 'comment_content', __( 'Content', 'review-plus' ) ),
     Field::make( 'separator', '__separator', __( 'Author', 'review-plus' ) ),

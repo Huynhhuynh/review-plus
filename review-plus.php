@@ -37,6 +37,12 @@ require_once( __DIR__ . '/vendor/autoload.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-entries-cpt.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-design-cpt.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-design-panel.php' );
+
+  /**
+   * CB Fields
+   */
+  require_once( REVIEW_PLUS_DIR . '/inc/cb-custom-fields/rating-json/field.php' );
+  require_once( REVIEW_PLUS_DIR . '/inc/cb-custom-fields/loader.php' );
 }
 
 

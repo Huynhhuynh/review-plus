@@ -151,6 +151,46 @@ function rp_delete_review_design( $ID ) {
   return wp_delete_post( $ID, true );
 }
 
+/**
+ * Comment form 
+ * 
+ * @since Int $post_id
+ */
+function rp_comment_form( $post_id = 0 ) {
+  ?>
+  <div class="review-plus-container" data-post-id="<?php echo $post_id ?>">
+    <!-- Content by React -->
+  </div> <!-- .review-plus-container -->
+  <?php 
+}
+
+function rp_query_review_design( $post_type = '' ) {
+  $args = [
+    'numberposts' => -1,
+    'post_type' => 'review-design',
+    'meta_query' => [
+      [
+        'key' => 'support_post_type',
+        'value' => $post_type,
+        'compare' => 'IN',
+      ]
+    ],
+  ];
+
+  $designs = get_posts( $args );
+  if( count( $designs ) <= 0 ) return;
+
+  return array_map( function( $item ) {
+    return rp_get_review_design( $item->ID );
+  }, $designs );
+}
+
+function rp_get_review_design_by_post_type( $post_type = '' ) {
+  return rp_query_review_design( $post_type );
+}
+
 add_action( 'init', function() {
   // var_dump( rp_get_review_design( 32 ) );
+  if( isset( $_GET[ 'dev' ] ) )
+    rp_get_review_design_by_post_type( 'post' );
 } );

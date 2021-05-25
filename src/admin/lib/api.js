@@ -50,3 +50,9 @@ export async function updateDesign( designData ) {
     designData: designData
   } )
 }
+
+export async function getReviewDesignByPostID( postID ) {
+  return await Request( 'rp_ajax_get_review_design_by_post_id', {
+    postID
+  } )
+}
