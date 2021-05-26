@@ -50,3 +50,44 @@ form.review-plus-form {
     margin-top: 10px;
   }
 }
+
+.rp-review-list {
+  width: 100%;
+  margin-bottom: 35px;
+
+  .rating-field-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: solid 1px black;
+    
+    &:nth-child(1) {
+      border-top: solid 1px black; 
+    }
+
+    &__name {
+
+    }
+
+    &__icons{
+      line-height: normal;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.heading-review-list {
+  margin-bottom: 25px;
+}
+
+.review-plus-rating-field {
+
+  span {
+
+    &:not(:last-child) {
+      margin-right: 4px;
+    }
+  }
+}
