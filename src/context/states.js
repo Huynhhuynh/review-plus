@@ -3,7 +3,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { getReviewDesignByPostID } from '../admin/lib/api'
+import { getReviewDesignByPostID, postReview } from '../admin/lib/api'
 const ReviewPlusContext = createContext()
 
 function ReviewPlusProvider( { children, postId } ) {
@@ -15,9 +15,15 @@ function ReviewPlusProvider( { children, postId } ) {
     setReviewDesign( Result.data )
   }, [] )
 
+  const submitReview = async ( reviewData ) => {
+    const result = await postReview( reviewData )
+    console.log( result )
+  }
+
   const value = { 
     postId,
-    reviewDesign
+    reviewDesign,
+    submitReview
   }
 
   return (

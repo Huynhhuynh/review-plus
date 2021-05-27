@@ -9,6 +9,7 @@ function rp_enqueue_scripts() {
 
   wp_localize_script( 'review-plus', 'PHP_DATA', [
     'ajax_url' => admin_url( 'admin-ajax.php' ),
+    'user_logged_in' => is_user_logged_in() ? 'yes' : 'no',
     'lang' => [],
   ] );
 }

@@ -56,3 +56,9 @@ export async function getReviewDesignByPostID( postID ) {
     postID
   } )
 }
+
+export async function postReview( reviewData ) {
+  return await Request( 'rp_ajax_post_review', {
+    reviewData
+  } )
+}

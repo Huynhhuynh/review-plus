@@ -14,7 +14,7 @@ export default function ReviewPlusApp( props ) {
         reviewDesign &&
         reviewDesign.length > 0 && 
         reviewDesign.map( design => {
-          return <ReviewForm designData={ design } />
+          return <ReviewForm designData={ design } postId={ postId } />
         } )
       }
     </>

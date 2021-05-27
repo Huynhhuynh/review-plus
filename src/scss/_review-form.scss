@@ -1,3 +1,7 @@
+.review-plus-container {
+  max-width: 100%;
+}
+
 .review-form-container {
 
   .rp-title {
@@ -19,12 +23,22 @@ form.review-plus-form {
   textarea {
     width: 100%;
     margin: 0;
-    margin-bottom: 5px;
+
+    &.__is-invalid {
+      border-color: $color-invalid;
+    }
+  }
+
+  textarea.rp-comment {
+    height: 120px;
+    max-width: 100%;
   }
 
   .rp-field {
     width: 100%;
     margin-bottom: 10px;  
+    position: relative;
+    line-height: normal;
 
     &__name,
     &__email {
@@ -39,9 +53,25 @@ form.review-plus-form {
       line-height: normal;
     }
 
+    .__field {
+      position: relative;
+      margin-bottom: 5px;
+    }
+
     .__label {
       margin-bottom: 5px;
       display: inline-block;
+    }
+
+    .__invalid-message {
+      font-size: 12px;
+      background: $color-invalid;
+      color: white;
+      padding: 2px 4px;
+      position: absolute;
+      top: calc(100% - 5px);
+      left: 0;
+      width: 100%;
     }
   }
 
@@ -56,6 +86,7 @@ form.review-plus-form {
   margin-bottom: 35px;
 
   .rating-field-item {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -74,6 +105,23 @@ form.review-plus-form {
       line-height: normal;
       display: flex;
       align-items: center;
+    }
+
+    &.__is-invalid {
+      
+      .rating-field-item__name {
+        color: $color-invalid;
+      }
+    }
+
+    .hidden-rate-value {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 60px;
+      height: 0;
+      opacity: 0;
+      z-index: -1;
     }
   }
 }

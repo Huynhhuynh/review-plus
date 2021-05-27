@@ -73,3 +73,14 @@ function rp_ajax_get_review_design_by_post_id() {
 
 add_action( 'wp_ajax_rp_ajax_get_review_design_by_post_id', 'rp_ajax_get_review_design_by_post_id' );
 add_action( 'wp_ajax_nopriv_rp_ajax_get_review_design_by_post_id', 'rp_ajax_get_review_design_by_post_id' );
+
+function rp_ajax_post_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+
+  $reviewData = $postData[ 'reviewData' ];
+  wp_send_json( $reviewData );
+}
+
+add_action( 'wp_ajax_rp_ajax_post_review', 'rp_ajax_post_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_post_review', 'rp_ajax_post_review' );

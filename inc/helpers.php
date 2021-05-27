@@ -189,6 +189,23 @@ function rp_get_review_design_by_post_type( $post_type = '' ) {
   return rp_query_review_design( $post_type );
 }
 
+function rp_update_review() {
+
+}
+
+function rp_new_review() {
+  
+}
+
+/**
+ * Post review 
+ * 
+ * @param Array $review_data
+ */
+function rp_post_review( $review_data = [] ) {
+
+}
+
 add_action( 'init', function() {
   // var_dump( rp_get_review_design( 32 ) );
   if( isset( $_GET[ 'dev' ] ) )
