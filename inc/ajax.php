@@ -79,7 +79,12 @@ function rp_ajax_post_review() {
   $postData = json_decode( $json, true );
 
   $reviewData = $postData[ 'reviewData' ];
-  wp_send_json( $reviewData );
+  $review_id = rp_post_review( $reviewData );
+
+  wp_send_json( [
+    'success' => true,
+    'review_id' => $review_id
+  ] );
 }
 
 add_action( 'wp_ajax_rp_ajax_post_review', 'rp_ajax_post_review' );

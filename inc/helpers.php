@@ -189,12 +189,79 @@ function rp_get_review_design_by_post_type( $post_type = '' ) {
   return rp_query_review_design( $post_type );
 }
 
-function rp_update_review() {
+/**
+ * Update review entry 
+ * 
+ * @param Int $post_id 
+ * @param Array $review_data 
+ * 
+ * @return Int 
+ */
+function rp_update_review( $post_id = 0, $review_data = [] ) {
+  $wp_post_fields = [];
 
+  if( isset( $review_data[ 'name' ] ) ) {
+    $wp_post_fields[ 'post_title' ] = esc_html( $review_data[ 'name' ] );
+  }
+
+  if( count( $wp_post_fields ) > 0 ) {
+    $wp_post_fields[ 'ID' ] = $post_id;
+    wp_update_post( $wp_post_fields );
+  }
+
+  {
+    /**
+     * Update meta fields 
+     */
+    $meta_fields = [ 
+      'ratings' => 'rating_json_field',
+      'postId' => 'review_post_id',
+      'parent' => 'parent',
+      'comment' => 'comment_content',
+      'user_id' => 'user_id',
+      'name' => 'name',
+      'email' => 'email',
+      'url' => 'url',
+    ];
+
+    foreach( array_keys( $meta_fields ) as $key ) {
+      if( ! isset( $review_data[ $key ] ) ) continue;
+
+      if( $meta_fields[ $key ] == 'rating_json_field' ) {
+        $review_data[ $key ] = serialize( $review_data[ $key ] );
+      }
+
+      carbon_set_post_meta( 
+        $post_id, 
+        $meta_fields[ $key ], 
+        ( isset( $review_data[ $key ] ) ? $review_data[ $key ] : '' )
+      );
+    }
+  }
+
+  return $post_id;
 }
 
-function rp_new_review() {
+function rp_new_review( $review_data = [] ) {
+
+  if( is_user_logged_in() ) {
+    $current_user = wp_get_current_user();
+    $name = esc_html( $current_user->display_name );
+    
+    $review_data[ 'user_id' ] = $current_user->ID;
+    $review_data[ 'name' ] = esc_html( $current_user->display_name );
+    $review_data[ 'email' ] = $current_user->user_email;
+    $review_data[ 'url' ] = $current_user->user_url;
+  }
   
+  $id = wp_insert_post( [
+    'post_type' => 'review-entries',
+    'post_title' => ( isset( $review_data[ 'name' ] ) ? $review_data[ 'name' ] : '' ),
+    'post_status' => 'publish'
+  ] );
+
+  rp_update_review( $id, $review_data );
+  return $id;
 }
 
 /**
@@ -203,11 +270,13 @@ function rp_new_review() {
  * @param Array $review_data
  */
 function rp_post_review( $review_data = [] ) {
-
+  return rp_new_review( $review_data );
 }
 
 add_action( 'init', function() {
   // var_dump( rp_get_review_design( 32 ) );
-  if( isset( $_GET[ 'dev' ] ) )
-    rp_get_review_design_by_post_type( 'post' );
+  if( isset( $_GET[ 'dev' ] ) ) {
+    // rp_get_review_design_by_post_type( 'post' );
+    // carbon_set_post_meta( 86, 'rating_json_field', serialize( [ 'a' => a, 'b' => 'b' ] ) );
+  }
 } );

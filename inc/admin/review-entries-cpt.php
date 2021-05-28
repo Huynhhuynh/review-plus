@@ -56,14 +56,14 @@ add_action( 'init', 'rp_register_review_entries_cpt' );
 function rp_review_entry_register_meta_fields() {
 
   $fields = apply_filters( 'review-plus/review-entry-meta-fields', [
-    Field::make( 'ratingjson', 'test_rating_json_field', __( 'Rating Json Fields', 'review-plus' ) )
-      ->set_default_value( 'default value...!' ),
+    Field::make( 'ratingjson', 'rating_json_field', __( 'Rating Json Fields', 'review-plus' ) ),
     Field::make( 'text', 'review_post_id', __( 'Review Post ID', 'review-plus' ) ),
     Field::make( 'text', 'parent', __( 'Parent', 'review-plus' ) )
       ->set_attribute( 'type', 'number' )
       ->set_default_value( 0 ),
     Field::make( 'rich_text', 'comment_content', __( 'Content', 'review-plus' ) ),
     Field::make( 'separator', '__separator', __( 'Author', 'review-plus' ) ),
+    Field::make( 'text', 'user_id', __( 'User ID', 'review-plus' ) ),
     Field::make( 'text', 'name', __( 'Name', 'review-plus' ) ),
     Field::make( 'text', 'email', __( 'Email', 'review-plus' ) ),
     Field::make( 'text', 'url', __( 'URL', 'review-plus' ) ),

@@ -164,3 +164,46 @@
     background: $accent-color;
   }
 }
+
+.rating-json-field__list {
+  border: solid #eee;
+  border-width: 1px 1px 0 1px;
+  
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: solid 1px #eee;
+
+    label {
+      color: black;
+    }
+  }
+}
+
+.rp-table {
+  border-collapse: collapse;
+  width: 100%;
+  
+  th, td {
+    border: solid 1px #e2e4e7;
+    padding: 10px;
+
+    &.__rate {
+      text-align: right;
+    }
+  }
+
+  th {
+    text-align: left;
+  }
+
+  td {
+    
+    &.__label {
+      color: black;
+    }
+  }
+}
