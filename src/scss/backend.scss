@@ -186,18 +186,39 @@
 .rp-table {
   border-collapse: collapse;
   width: 100%;
+
+  input[type=text],
+  input[type=number] {
+    border-radius: 0;
+    border-width: 0 0 1px 0;
+    padding: 5px 10px;
+    width: 100%;
+    min-width: auto;
+    max-width: 100%;
+    background: #fafafa;
+  }
   
   th, td {
     border: solid 1px #e2e4e7;
     padding: 10px;
 
+    &.__label {
+      width:50%;
+    }
+
+    &.__slug {
+      width: 30%;
+    }
+
     &.__rate {
       text-align: right;
+      width: 10%;
     }
   }
 
   th {
     text-align: left;
+    background-color: #fafafa;
   }
 
   td {
@@ -205,5 +226,17 @@
     &.__label {
       color: black;
     }
+
+    &.__actions {
+
+      button {
+        display: inline-block;
+        width: 100%;
+      }
+    }
+  }
+
+  tfoot {
+    background: #fafafa;
   }
 }

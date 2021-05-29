@@ -4,6 +4,14 @@ use Carbon_Fields\Field\Field;
 
 class RatingJson_Field extends Field {
 
+	public function set_value_from_input( $input ) {
+		$value = $input[ $this->get_name() ];
+		$this->set_value( serialize( $value ) );
+		return $this;
+		// echo '<pre>'; print_r( [$input, $this->get_name(), $value] ); echo '</pre>';
+		// die;
+	}
+
 	/**
 	 * 
 	 */
