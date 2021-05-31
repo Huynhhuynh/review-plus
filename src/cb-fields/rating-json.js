@@ -139,7 +139,7 @@ class RatingJsonField extends Component {
           <tfoot>
             <tr>
               <td colspan="4">
-                <strong>Add More Rating Item</strong>
+                <strong>Add More Rate Item</strong>
               </td>
             </tr>
             <tr>

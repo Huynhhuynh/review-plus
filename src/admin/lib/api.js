@@ -62,3 +62,7 @@ export async function postReview( reviewData ) {
     reviewData
   } )
 }
+
+export async function getAllGroupPostTax() {
+  return await Request( 'rp_ajax_get_all_group_tax_per_post_types', {} )
+}

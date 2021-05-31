@@ -89,3 +89,13 @@ function rp_ajax_post_review() {
 
 add_action( 'wp_ajax_rp_ajax_post_review', 'rp_ajax_post_review' );
 add_action( 'wp_ajax_nopriv_rp_ajax_post_review', 'rp_ajax_post_review' );
+
+function rp_ajax_get_all_group_tax_per_post_types() {
+  $all_post_types = rp_build_options_public_post_types();
+  $result = rp_group_tax_per_post_types( array_keys( $all_post_types ) );
+  
+  wp_send_json( $result );
+}
+
+add_action( 'wp_ajax_rp_ajax_get_all_group_tax_per_post_types', 'rp_ajax_get_all_group_tax_per_post_types' );
+add_action( 'wp_ajax_nopriv_rp_ajax_get_all_group_tax_per_post_types', 'rp_ajax_get_all_group_tax_per_post_types' );

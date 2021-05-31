@@ -38,7 +38,7 @@ function rp_register_review_design_cpt() {
     'labels'             => $labels,
     'public'             => false,
     'publicly_queryable' => true,
-    'show_ui'            => false,
+    'show_ui'            => true,
     'query_var'          => true,
     'rewrite'            => [ 'slug' => 'review-design' ],
     'capability_type'    => 'post',

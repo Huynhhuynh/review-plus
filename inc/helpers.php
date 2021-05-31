@@ -51,12 +51,13 @@ function rp_get_review_design( $id = 'all' ) {
     return array_map( function( $item ) {
       $support_post_type = carbon_get_post_meta( $item->ID, 'support_post_type' );
       $rating_fields = carbon_get_post_meta( $item->ID, 'rating_fields' );
-
+      
       return [
         'id' => $item->ID,
         'label' => $item->post_title,
         'description' => $item->post_content,
         'support_post_type' => $support_post_type ? $support_post_type : [],
+        'post_tax' => [], // rp_group_tax_per_post_types( ( $support_post_type ? $support_post_type : [] ) ),
         'theme' => carbon_get_post_meta( $item->ID, 'theme' ),
         'theme_color' => carbon_get_post_meta( $item->ID, 'theme_color' ),
         'enable' => carbon_get_post_meta( $item->ID, 'enable' ),
@@ -74,6 +75,7 @@ function rp_get_review_design( $id = 'all' ) {
       'label' => $result->post_title,
       'description' => $result->post_content,
       'support_post_type' => $support_post_type ? $support_post_type : [],
+      'post_tax' => [], // rp_group_tax_per_post_types( ( $support_post_type ? $support_post_type : [] ) ),
       'theme' => carbon_get_post_meta( $result->ID, 'theme' ),
       'theme_color' => carbon_get_post_meta( $result->ID, 'theme_color' ),
       'enable' => carbon_get_post_meta( $result->ID, 'enable' ),
@@ -273,9 +275,36 @@ function rp_post_review( $review_data = [] ) {
   return rp_new_review( $review_data );
 }
 
+/**
+ * 
+ */
+function rp_group_tax_per_post_types( $post_types = [] ) {
+  if( ! $post_types || count( $post_types ) <= 0 ) return [];
+  $result = [];
+
+  foreach( $post_types as $index => $post_type ) {
+    $taxs = get_object_taxonomies( $post_type, 'objects' );
+    if( ! $taxs || count( $taxs ) <= 0 ) continue;
+    
+    $result[ $post_type ] = [];
+    foreach( $taxs as $_index => $tax ) {
+      array_push( $result[ $post_type ], [
+        'tax_label' => $tax->label,
+        'tax_name' => $tax->name,
+        'terms' => get_terms( $tax->name ),
+      ] );
+    } 
+  }
+
+  return $result;
+}
+
 add_action( 'init', function() {
   // var_dump( rp_get_review_design( 32 ) );
   if( isset( $_GET[ 'dev' ] ) ) {
+    echo '<pre>';
+    print_r( rp_group_tax_per_post_types( [ 'post' ] ) );
+    echo '</pre>';
     // rp_get_review_design_by_post_type( 'post' );
     // carbon_set_post_meta( 86, 'rating_json_field', serialize( [ 'a' => a, 'b' => 'b' ] ) );
   }

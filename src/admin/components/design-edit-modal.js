@@ -121,9 +121,40 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
 }
 
 export default function DesignEditModal() {
-  const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, newReviewDesignItem } = useReviewDesign()
+  const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, newReviewDesignItem, groupPostTax } = useReviewDesign()
   if( designEdit == null ) return <></>
   
+  const [ _groupPostTax, _setGroupPostTax ] = useState( [] )
+
+  const buildGroupOptions = ( postTypes = [] ) => {
+    let _groupPostTax = {...groupPostTax}
+    let options = []
+    
+    Object.keys( _groupPostTax ).forEach( ( postTypeName ) => { 
+      let taxs = _groupPostTax[ postTypeName ]
+      if( ! taxs || taxs.length <= 0 ) return
+
+      taxs.forEach( ( tax ) => {
+        let taxLabel = tax.tax_label
+        let taxName = tax.tax_name
+        let terms = tax.terms
+
+        if( terms && terms.length > 0 ) {
+          terms.forEach( t => {
+            options.push( {
+              tax: taxName,
+              label: t.name,
+              id: t.term_id,
+              group: `${ taxLabel } (${ postTypeName })`
+            } )
+          } )
+        }
+      } )
+    } )
+
+    return options
+  }
+
   const isEdit = ( () => {
     let find = findIndex( reviewDesignData, d => {
       return d.id == designEdit.id
@@ -169,6 +200,19 @@ export default function DesignEditModal() {
     onSelect: onUpdatePosttype,
     onRemove: onUpdatePosttype,
     displayValue: 'label',
+    style: {
+      searchBox: { 'border-radius': '1px' },
+      chips: { 'border-radius': '30px', 'background': '#3f51b5' }
+    }
+  }
+
+  let categoryOptions = {
+    options: [ ...buildGroupOptions() ],
+    groupBy: 'group',
+    displayValue: 'label',
+    onSelect: ( list, item ) => {
+      console.log( list, item )
+    },
     style: {
       searchBox: { 'border-radius': '1px' },
       chips: { 'border-radius': '30px', 'background': '#3f51b5' }
@@ -232,6 +276,12 @@ export default function DesignEditModal() {
               <label>Select Post Type</label>
               <div className="field">
                 <Multiselect {...postTypeOptions} />
+              </div>
+            </div>
+            <div className="group-field">
+              <label>Select Category</label>
+              <div className="field">
+                <Multiselect {...categoryOptions} />
               </div>
             </div>
             <div className="group-field">

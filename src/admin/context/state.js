@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { getAllReviewDesign, newDesign, deleteDesign, updateDesign  } from '../lib/api'
+import { getAllReviewDesign, newDesign, deleteDesign, updateDesign, getAllGroupPostTax  } from '../lib/api'
 import * as Helpers from '../lib/helpers'
 import { findIndex, remove } from 'lodash'
 
@@ -11,6 +11,7 @@ const ReviewDesignContext = createContext()
 
 function ReviewDesignProvider( { children } ) {
   const [ reviewDesignData, setReviewDesignData ] = useState( [] )
+  const [ groupPostTax, setGroupPostTax ] = useState( {} )
   const [ designEdit, setDesignEdit ] = useState( null )
 
   /**
@@ -104,9 +105,20 @@ function ReviewDesignProvider( { children } ) {
     setDesignEdit( newdesignEdit )
   }
 
-  useEffect( async () => {
-    const data = await getAllReviewDesign()
-    setReviewDesignData( [...data] )
+  useEffect( () => {
+
+    async function _getAllDesign() {
+      const _design = await getAllReviewDesign()
+      setReviewDesignData( [..._design] )
+    }
+
+    async function _getAllGroupPostTax() {
+      const _groupTax = await getAllGroupPostTax()
+      setGroupPostTax( {..._groupTax } )
+    }
+
+    _getAllDesign()
+    _getAllGroupPostTax()
   }, [] )
 
   const value = { 
@@ -120,7 +132,8 @@ function ReviewDesignProvider( { children } ) {
     addRatingFieldItem,
     addNewDesign,
     newReviewDesignItem,
-    deleteReviewDesign
+    deleteReviewDesign,
+    groupPostTax
   }
 
   return (
