@@ -96,8 +96,6 @@ export default function ReviewForm( { designData, postId } ) {
     submitReview( newSubmitFormData )
   }
 
-  console.log( PHP_DATA.user_logged_in )
-
   return (
     <>
       <div className="review-form-container">

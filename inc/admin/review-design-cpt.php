@@ -65,6 +65,17 @@ function rp_review_design_register_meta_fields() {
       ->set_default_value( false ),
     Field::make( 'multiselect', 'support_post_type', __( 'Support Post Types', 'review-plus' ) )
       ->add_options( 'rp_build_options_public_post_types' ),
+    Field::make( 'complex', 'support_category', __( 'Category', 'review-plus' ) )
+      ->add_fields( [
+        Field::make( 'text', 'group', __( 'Group', 'review-plus' ) )
+          ->set_width( 25 ),
+        Field::make( 'text', 'tax', __( 'Tax Name', 'review-plus' ) )
+          ->set_width( 25 ),
+        Field::make( 'text', 'term_label', __( 'Term Label', 'review-plus' ) )
+          ->set_width( 25 ),
+        Field::make( 'text', 'term_id', __( 'Term ID', 'review-plus' ) )
+          ->set_width( 25 ),
+      ] ),
     Field::make( 'select', 'theme', __( 'Theme', 'review-plus' ) )
       ->set_options( array(
         'default' => __( 'Default', 'review-plus' ),

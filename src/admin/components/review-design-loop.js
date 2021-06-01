@@ -45,7 +45,7 @@ export function ReviewDesignItem( { designData } ) {
   return (
     <div className="review-design-item">
       <div className={ [ 'review-design-item__inner', designData.enable ? '__is-enable' : '__is-disable' ].join( ' ' ) }>
-        <div className="review-design-item__heading">
+        <div className="review-design-item__heading" style={ { backgroundColor: designData.theme_color } }>
           <h4 className="review-design-item__title">{ designData.label } (#{ designData.id })</h4>
           <div className="review-design-item__desc" dangerouslySetInnerHTML={{__html: designData.description}}></div>
         </div>

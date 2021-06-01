@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Multiselect } from 'multiselect-react-dropdown'
 import Switch from 'react-switch'
 import { useReviewDesign } from '../context/state'
+import { BlockPicker } from 'react-color'
 
 // const _ = require( 'lodash' )
 import { findIndex } from 'lodash'
@@ -120,6 +121,51 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
   )
 }
 
+function ColorSelector( { color, onChange } ) {
+  const [ open, setOpen ] = useState( false )
+
+  const onOpen = ( e ) => {
+    e.preventDefault()
+    setOpen( true )
+  }
+
+  const onClose = ( e ) => {
+    e.preventDefault()
+    setOpen( false )
+  }
+
+  const pickColor = {
+    backgroundColor: color
+  }
+
+  const cover = {
+    position: 'fixed',
+    top: '0px',
+    right: '0px',
+    bottom: '0px',
+    left: '0px',
+  }
+
+  const _onChange = ( color ) => {
+    if( onChange ) onChange( color )
+  }
+
+  return (
+    <div className="rp-color-field">
+      <span className="__pick-color" style={ pickColor } onClick={ onOpen }></span>
+      {
+        open == true &&
+        <>
+          <div style={ cover } onClick={ onClose } style={ cover }/>
+          <div className="__popover-pick-color">
+            <BlockPicker color={ color } onChange={ _onChange } />
+          </div>
+        </>
+      }
+    </div>
+  )
+}
+
 export default function DesignEditModal() {
   const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, newReviewDesignItem, groupPostTax } = useReviewDesign()
   if( designEdit == null ) return <></>
@@ -133,25 +179,31 @@ export default function DesignEditModal() {
     Object.keys( _groupPostTax ).forEach( ( postTypeName ) => { 
       let taxs = _groupPostTax[ postTypeName ]
       if( ! taxs || taxs.length <= 0 ) return
-
+      
       taxs.forEach( ( tax ) => {
         let taxLabel = tax.tax_label
         let taxName = tax.tax_name
         let terms = tax.terms
 
+        // Conver object to array
+        if( terms && typeof terms == 'object' ) {
+          terms = Object.values( terms )
+        }
+
         if( terms && terms.length > 0 ) {
           terms.forEach( t => {
+            console.log( t )
             options.push( {
+              group: `${ taxLabel } (${ postTypeName })`,
               tax: taxName,
-              label: t.name,
-              id: t.term_id,
-              group: `${ taxLabel } (${ postTypeName })`
+              term_label: t.name,
+              term_id: t.term_id,
             } )
           } )
         }
       } )
     } )
-
+    
     return options
   }
 
@@ -206,13 +258,17 @@ export default function DesignEditModal() {
     }
   }
 
+  const onUpdateCategory = ( list, item ) => {
+    onUpdateField( list, 'support_category' )
+  }
+
   let categoryOptions = {
     options: [ ...buildGroupOptions() ],
+    selectedValues: designEdit.support_category,
     groupBy: 'group',
-    displayValue: 'label',
-    onSelect: ( list, item ) => {
-      console.log( list, item )
-    },
+    displayValue: 'term_label',
+    onSelect: onUpdateCategory,
+    onRemove: onUpdateCategory,
     style: {
       searchBox: { 'border-radius': '1px' },
       chips: { 'border-radius': '30px', 'background': '#3f51b5' }
@@ -272,6 +328,14 @@ export default function DesignEditModal() {
                 /> */}
               </div>
             </div>
+            <div className="group-field __inline">
+              <div className="field" style={ { width: '54px' } }>
+                <ColorSelector color={ designEdit.theme_color } onChange={ color => {
+                  onUpdateField( color.hex, 'theme_color' )
+                } } />
+              </div>
+              <label>Theme Color</label>
+            </div>
             <div className="group-field">
               <label>Select Post Type</label>
               <div className="field">
@@ -279,7 +343,7 @@ export default function DesignEditModal() {
               </div>
             </div>
             <div className="group-field">
-              <label>Select Category</label>
+              <label>Select Category (Limit category to display review form)</label>
               <div className="field">
                 <Multiselect {...categoryOptions} />
               </div>

@@ -57,7 +57,7 @@ function rp_get_review_design( $id = 'all' ) {
         'label' => $item->post_title,
         'description' => $item->post_content,
         'support_post_type' => $support_post_type ? $support_post_type : [],
-        'post_tax' => [], // rp_group_tax_per_post_types( ( $support_post_type ? $support_post_type : [] ) ),
+        'support_category' => carbon_get_post_meta( $item->ID, 'support_category' ), // rp_group_tax_per_post_types( ( $support_post_type ? $support_post_type : [] ) ),
         'theme' => carbon_get_post_meta( $item->ID, 'theme' ),
         'theme_color' => carbon_get_post_meta( $item->ID, 'theme_color' ),
         'enable' => carbon_get_post_meta( $item->ID, 'enable' ),
@@ -75,7 +75,7 @@ function rp_get_review_design( $id = 'all' ) {
       'label' => $result->post_title,
       'description' => $result->post_content,
       'support_post_type' => $support_post_type ? $support_post_type : [],
-      'post_tax' => [], // rp_group_tax_per_post_types( ( $support_post_type ? $support_post_type : [] ) ),
+      'support_category' => [], // rp_group_tax_per_post_types( ( $support_post_type ? $support_post_type : [] ) ),
       'theme' => carbon_get_post_meta( $result->ID, 'theme' ),
       'theme_color' => carbon_get_post_meta( $result->ID, 'theme_color' ),
       'enable' => carbon_get_post_meta( $result->ID, 'enable' ),
@@ -113,6 +113,7 @@ function rp_update_review_design_meta_fields( $post_id = 0, $designData = [] ) {
    */
   $postUpdateMetaFields = [ 
     'support_post_type', 
+    'support_category',
     'theme', 
     'theme_color', 
     'enable', 
@@ -158,10 +159,12 @@ function rp_delete_review_design( $ID ) {
  * 
  * @since Int $post_id
  */
-function rp_comment_form( $post_id = 0 ) {
+function rp_comment_form() {
+  $post_id = get_the_ID();
+  if( empty( $post_id ) ) return;
   ?>
   <div class="review-plus-container" data-post-id="<?php echo $post_id ?>">
-    <!-- Content by React -->
+    <!-- Content by React JS -->
   </div> <!-- .review-plus-container -->
   <?php 
 }
@@ -303,7 +306,7 @@ add_action( 'init', function() {
   // var_dump( rp_get_review_design( 32 ) );
   if( isset( $_GET[ 'dev' ] ) ) {
     echo '<pre>';
-    print_r( rp_group_tax_per_post_types( [ 'post' ] ) );
+    // print_r( rp_group_tax_per_post_types( [ 'post' ] ) );
     echo '</pre>';
     // rp_get_review_design_by_post_type( 'post' );
     // carbon_set_post_meta( 86, 'rating_json_field', serialize( [ 'a' => a, 'b' => 'b' ] ) );
