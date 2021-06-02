@@ -36,14 +36,13 @@ function rp_register_review_design_cpt() {
 
   $args = [
     'labels'             => $labels,
-    'public'             => false,
+    'public'             => true,
     'publicly_queryable' => true,
-    'show_ui'            => true,
+    'show_ui'            => false, 
     'query_var'          => true,
     'rewrite'            => [ 'slug' => 'review-design' ],
     'capability_type'    => 'post',
     'has_archive'        => false,
-    'hierarchical'       => false,
     'show_in_menu'       => 'edit.php?post_type=review-entries',
     'supports'           => [ 'title', 'editor', 'author' ],
   ];

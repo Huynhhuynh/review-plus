@@ -49,39 +49,34 @@ function rp_get_review_design( $id = 'all' ) {
     if( !$result || count( $result ) == 0 ) return [];
 
     return array_map( function( $item ) {
-      $support_post_type = carbon_get_post_meta( $item->ID, 'support_post_type' );
-      $rating_fields = carbon_get_post_meta( $item->ID, 'rating_fields' );
-      
-      return [
-        'id' => $item->ID,
-        'label' => $item->post_title,
-        'description' => $item->post_content,
-        'support_post_type' => $support_post_type ? $support_post_type : [],
-        'support_category' => carbon_get_post_meta( $item->ID, 'support_category' ), // rp_group_tax_per_post_types( ( $support_post_type ? $support_post_type : [] ) ),
-        'theme' => carbon_get_post_meta( $item->ID, 'theme' ),
-        'theme_color' => carbon_get_post_meta( $item->ID, 'theme_color' ),
-        'enable' => carbon_get_post_meta( $item->ID, 'enable' ),
-        'rating_fields' => $rating_fields ? $rating_fields : [],
-      ];
+      return rp_get_review_design_by_id( $item->ID );
     }, $result );
   } else {
-    $result = get_post( (int) $id );
-    if( !$result ) return false;
-
-    $support_post_type = carbon_get_post_meta( $result->ID, 'support_post_type' );
-    $rating_fields = carbon_get_post_meta( $result->ID, 'rating_fields' );
-    return [
-      'id' => $result->ID,
-      'label' => $result->post_title,
-      'description' => $result->post_content,
-      'support_post_type' => $support_post_type ? $support_post_type : [],
-      'support_category' => [], // rp_group_tax_per_post_types( ( $support_post_type ? $support_post_type : [] ) ),
-      'theme' => carbon_get_post_meta( $result->ID, 'theme' ),
-      'theme_color' => carbon_get_post_meta( $result->ID, 'theme_color' ),
-      'enable' => carbon_get_post_meta( $result->ID, 'enable' ),
-      'rating_fields' => $rating_fields ? $rating_fields : [],
-    ];
+    return rp_get_review_design_by_id( (int) $id );
   }
+}
+
+/**
+ * 
+ */
+function rp_get_review_design_by_id( $post_id ) {
+  $result = get_post( (int) $post_id );
+  if( !$result ) return false;
+
+  $support_post_type = carbon_get_post_meta( $result->ID, 'support_post_type' );
+  $rating_fields = carbon_get_post_meta( $result->ID, 'rating_fields' );
+
+  return [
+    'id' => $result->ID,
+    'label' => $result->post_title,
+    'description' => $result->post_content,
+    'support_post_type' => $support_post_type ? $support_post_type : [],
+    'support_category' => carbon_get_post_meta( $result->ID, 'support_category' ), 
+    'theme' => carbon_get_post_meta( $result->ID, 'theme' ),
+    'theme_color' => carbon_get_post_meta( $result->ID, 'theme_color' ),
+    'enable' => carbon_get_post_meta( $result->ID, 'enable' ),
+    'rating_fields' => $rating_fields ? $rating_fields : [],
+  ];
 }
 
 /**
@@ -227,7 +222,10 @@ function rp_update_review( $post_id = 0, $review_data = [] ) {
       'name' => 'name',
       'email' => 'email',
       'url' => 'url',
+      'user_ip' => 'user_ip',
     ];
+
+    $review_data[ 'user_ip' ] = rp_get_client_ip();
 
     foreach( array_keys( $meta_fields ) as $key ) {
       if( ! isset( $review_data[ $key ] ) ) continue;
@@ -302,10 +300,70 @@ function rp_group_tax_per_post_types( $post_types = [] ) {
   return $result;
 }
 
+/**
+ * 
+ */
+function rp_count_response( $review_post_id = 0 ) {
+  $result = get_posts( [
+    'post_type' => 'review-entries',
+    'post_status' => 'publish',
+    'meta_query' => [
+      [
+        'key' => 'review_post_id',
+        'value' => $review_post_id,
+        'compare' => '=',
+      ]
+    ],
+  ] );
+
+  return count( $result );
+} 
+
+function rp_get_client_ip() {
+  $ipaddress = '';
+  if (getenv('HTTP_CLIENT_IP'))
+    $ipaddress = getenv('HTTP_CLIENT_IP');
+  else if(getenv('HTTP_X_FORWARDED_FOR'))
+    $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+  else if(getenv('HTTP_X_FORWARDED'))
+    $ipaddress = getenv('HTTP_X_FORWARDED');
+  else if(getenv('HTTP_FORWARDED_FOR'))
+    $ipaddress = getenv('HTTP_FORWARDED_FOR');
+  else if(getenv('HTTP_FORWARDED'))
+    $ipaddress = getenv('HTTP_FORWARDED');
+  else if(getenv('REMOTE_ADDR'))
+    $ipaddress = getenv('REMOTE_ADDR');
+  else
+    $ipaddress = 'UNKNOWN';
+
+  return $ipaddress;
+}
+
+/**
+ * Check post in term 
+ * 
+ * @param Int $post_id 
+ * @param String $tax 
+ * @param Int $term_id 
+ * 
+ * @return Boolean
+ */
+function rp_check_post_in_term( $post_id, $tax, $term_id ) {
+  $terms = wp_get_post_terms( (int) $post_id, $tax );
+  $filter = array_filter( $terms, function( $term ) use ( $term_id ) {
+    return ($term->term_id == (int) $term_id);
+  } );
+  
+  return (count( $filter ) > 0) ? true : false;
+}
+
 add_action( 'init', function() {
   // var_dump( rp_get_review_design( 32 ) );
   if( isset( $_GET[ 'dev' ] ) ) {
     echo '<pre>';
+    echo rp_check_post_in_term( 93, 'category', 5 );
+    // print_r( carbon_get_post_meta( 32, 'support_category' ) );
+    // print_r( rp_get_review_design( 32 ) );
     // print_r( rp_group_tax_per_post_types( [ 'post' ] ) );
     echo '</pre>';
     // rp_get_review_design_by_post_type( 'post' );

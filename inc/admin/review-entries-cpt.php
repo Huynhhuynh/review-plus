@@ -57,16 +57,20 @@ function rp_review_entry_register_meta_fields() {
 
   $fields = apply_filters( 'review-plus/review-entry-meta-fields', [
     Field::make( 'ratingjson', 'rating_json_field', __( 'Rating Json Fields', 'review-plus' ) ),
-    Field::make( 'text', 'review_post_id', __( 'Review Post ID', 'review-plus' ) ),
-    Field::make( 'text', 'parent', __( 'Parent', 'review-plus' ) )
-      ->set_attribute( 'type', 'number' )
+    Field::make( 'text', 'review_post_id', false )
+      ->set_attribute( 'type', 'hidden' ),
+    Field::make( 'text', 'parent', false )
+      ->set_attribute( 'type', 'hidden' )
       ->set_default_value( 0 ),
     Field::make( 'rich_text', 'comment_content', __( 'Content', 'review-plus' ) ),
     Field::make( 'separator', '__separator', __( 'Author', 'review-plus' ) ),
-    Field::make( 'text', 'user_id', __( 'User ID', 'review-plus' ) ),
+    Field::make( 'text', 'user_id', false )
+      ->set_attribute( 'type', 'hidden' ),
     Field::make( 'text', 'name', __( 'Name', 'review-plus' ) ),
     Field::make( 'text', 'email', __( 'Email', 'review-plus' ) ),
     Field::make( 'text', 'url', __( 'URL', 'review-plus' ) ),
+    Field::make( 'text', 'user_ip', false )
+      ->set_attribute( 'type', 'hidden' ),
   ] );
 
   Container::make( 'post_meta', __( 'Review Entry', 'review-plus' ) )
@@ -75,3 +79,65 @@ function rp_review_entry_register_meta_fields() {
 }
 
 add_action( 'carbon_fields_register_fields', 'rp_review_entry_register_meta_fields' );
+
+add_filter( 'manage_review-entries_posts_columns', function( $columns ) {
+  $cb = $columns[ 'cb' ];
+  unset( $columns[ 'cb' ] );
+
+  $push_columns = [
+    'cb' => $cb,
+    'title' => __( 'Title', 'review-plus' ),
+    'rp_author' => __( 'Author', 'review-plus' ),
+    'rp_comment' => __( 'Comment', 'review-plus' ),
+    'response' => __( 'In response to', 'review-plus' ),
+  ];
+
+  return $push_columns + $columns;
+} );
+
+add_action( 'manage_review-entries_posts_custom_column', function( $column, $post_id ) {
+  $review_post_id = carbon_get_post_meta( $post_id, 'review_post_id' );
+
+  switch( $column ) {
+
+    case 'rp_author':
+      ob_start();
+      $user_id = carbon_get_post_meta( $post_id, 'user_id' );
+      $user_name = carbon_get_post_meta( $post_id, 'name' );
+      $url = carbon_get_post_meta( $post_id, 'url' );
+      ?>
+      <?php if( $user_id ) {
+        echo '<a href="'. get_edit_user_link( $user_id ) .'"><strong>'. $user_name .'</strong></a>';
+      } else {
+        echo '<strong>'. $user_name .'</strong>';
+      } ?>
+      (<a href="mailto:<?php echo carbon_get_post_meta( $post_id, 'email' ) ?>"><?php echo carbon_get_post_meta( $post_id, 'email' ) ?></a>)
+      <br />
+      <?php if( ! empty( $url ) ) : ?>
+      <a href="<?php $url ?>" target="_blank"><?php echo $url ?></a>
+      <?php endif; ?>
+      <?php
+      echo ob_get_clean();
+      break;
+
+    case 'rp_comment':
+      echo wpautop( carbon_get_post_meta( $post_id, 'comment_content' ) );
+      break;
+
+    case 'response':
+      ob_start();
+      ?>
+      <a href="<?php echo get_edit_post_link( $review_post_id ) ?>">
+        <strong><?php echo get_the_title( $review_post_id ) ?></strong>
+      </a>
+      <br />
+      <a class="post-com-count post-com-count-approved">
+        <span class="comment-count-approved" aria-hidden="true">
+          <?php echo rp_count_response( $review_post_id ) ?>
+        </span>
+      </a>
+      <?php 
+      echo ob_get_clean();
+      break;
+  }
+}, 20, 2 );
