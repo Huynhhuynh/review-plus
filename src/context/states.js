@@ -17,7 +17,7 @@ function ReviewPlusProvider( { children, postId } ) {
 
   const submitReview = async ( reviewData ) => {
     const result = await postReview( reviewData )
-    console.log( result )
+    return result
   }
 
   const value = { 

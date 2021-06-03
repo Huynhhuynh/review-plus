@@ -11,7 +11,7 @@ class RatingJsonField extends Component {
 
   constructor( props ) {
     super( props )
-    console.log( this.props )
+    // console.log( this.props )
     this.state = {
       label: this.props.field.label,
       name: this.props.name,

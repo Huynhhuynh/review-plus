@@ -216,6 +216,7 @@ function rp_update_review( $post_id = 0, $review_data = [] ) {
     $meta_fields = [ 
       'ratings' => 'rating_json_field',
       'postId' => 'review_post_id',
+      'designId' => 'design_id',
       'parent' => 'parent',
       'comment' => 'comment_content',
       'user_id' => 'user_id',
@@ -361,7 +362,8 @@ add_action( 'init', function() {
   // var_dump( rp_get_review_design( 32 ) );
   if( isset( $_GET[ 'dev' ] ) ) {
     echo '<pre>';
-    echo rp_check_post_in_term( 93, 'category', 5 );
+    echo get_post_meta( 101, '__@_field-1', true );
+    // echo rp_check_post_in_term( 93, 'category', 5 );
     // print_r( carbon_get_post_meta( 32, 'support_category' ) );
     // print_r( rp_get_review_design( 32 ) );
     // print_r( rp_group_tax_per_post_types( [ 'post' ] ) );

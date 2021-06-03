@@ -59,8 +59,11 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
 export default function ReviewForm( { designData, postId } ) {
   const { submitReview } = useReviewPlus()
   const { register, setValue, handleSubmit, trigger, formState: { errors } } = useForm()
+  const [ loading, setLoading ] = useState( false ) 
+  const [ formSubmited, setFormSubmited ] = useState( false ) 
   const [ submitFormData, setSubmitFormData ] = useState( {
     postId,
+    designId: designData.id,
     parent: 0,
     name: '',
     email: '',
@@ -91,9 +94,14 @@ export default function ReviewForm( { designData, postId } ) {
     setSubmitFormData( _submitFormData )
   }
 
-  const onSubmitReview = ( data ) => {
+  const onSubmitReview = async ( data ) => {
+    setLoading( true )
+    
     let newSubmitFormData = { ...submitFormData, ...data }
-    submitReview( newSubmitFormData )
+    const result = await submitReview( newSubmitFormData )
+    
+    setLoading( false )
+    setFormSubmited( true )
   }
 
   return (
@@ -101,50 +109,63 @@ export default function ReviewForm( { designData, postId } ) {
       <div className="review-form-container">
         <h2 className="rp-title">{ designData.label }</h2>
         <p className="rp-desc">{ designData.description }</p>
-        <form 
-          className="review-plus-form" 
-          onSubmit={ handleSubmit( onSubmitReview ) }>
-          {
-            designData.rating_fields.length > 0 && 
-            <>
-              <h4 className="heading-review-list">Your Rating</h4>
-              <div className="rp-review-list">
-              {
-                designData.rating_fields.map( ( r, index ) => {
-                  return <RatingField 
-                    ratingOptions={ r } 
-                    label={ `ratings.${ index }` }
-                    itemIndex={ index }
-                    register={ register } 
-                    setValue={ setValue }
-                    errors={ errors }
-                    onChange={ ( rate, _field ) => {
-                      updateRatingField( _field.slug, rate )
-                      trigger( `ratings.${ index }.rate` )
-                    } } />
-                } )
-              }
-              </div>
-            </>
-          }
-          <div className="rp-field rp-field__comment">
-            <label>
-              <span className="__label">Comment *</span>
-              <div className="__field">
-                <textarea 
-                  { ...register( 'comment', { required: true } ) }
-                  className={ [ 'rp-comment', ( errors.comment ? '__is-invalid' : '' ) ].join( ' ' ) } 
-                  defaultValue={ submitFormData.comment }
-                  ></textarea>{ errors.comment && <span className="__invalid-message">Please enter your comment!</span> }
-              </div>
-            </label>
+        {
+          ( formSubmited == true ) && 
+          <div className="__rp-thank-you">
+            <p>👌 Thanks for your review.</p>
           </div>
-          {
-            PHP_DATA.user_logged_in != 'yes' &&
-            <NotLoggedFields submitFormData={ submitFormData } register={ register } errors={ errors } />
-          }
-          <button type="submit" className="review-button-submit">Submit Review</button>
-        </form>
+        }
+        {
+          (formSubmited == false) &&
+          <form 
+            className="review-plus-form" 
+            onSubmit={ handleSubmit( onSubmitReview ) }>
+            {
+              designData.rating_fields.length > 0 && 
+              <>
+                <h4 className="heading-review-list">Your Rating</h4>
+                <div className="rp-review-list">
+                {
+                  designData.rating_fields.map( ( r, index ) => {
+                    return <RatingField 
+                      ratingOptions={ r } 
+                      label={ `ratings.${ index }` }
+                      itemIndex={ index }
+                      register={ register } 
+                      setValue={ setValue }
+                      errors={ errors }
+                      onChange={ ( rate, _field ) => {
+                        updateRatingField( _field.slug, rate )
+                        trigger( `ratings.${ index }.rate` )
+                      } } />
+                  } )
+                }
+                </div>
+              </>
+            }
+            <div className="rp-field rp-field__comment">
+              <label>
+                <span className="__label">Comment *</span>
+                <div className="__field">
+                  <textarea 
+                    { ...register( 'comment', { required: true } ) }
+                    className={ [ 'rp-comment', ( errors.comment ? '__is-invalid' : '' ) ].join( ' ' ) } 
+                    defaultValue={ submitFormData.comment }
+                    ></textarea>{ errors.comment && <span className="__invalid-message">Please enter your comment!</span> }
+                </div>
+              </label>
+            </div>
+            {
+              PHP_DATA.user_logged_in != 'yes' &&
+              <NotLoggedFields submitFormData={ submitFormData } register={ register } errors={ errors } />
+            }
+            <button 
+              type="submit" 
+              className={ [ 'review-button-submit', ( loading ? '__is-loading' : '' ) ].join( ' ' ) }>
+              { loading ? 'Please waiting...' : 'Submit Review' }
+            </button>
+          </form>
+        }
       </div>
     </>
   )

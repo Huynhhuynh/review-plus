@@ -14,7 +14,8 @@ export default function ReviewPlusApp( props ) {
         reviewDesign &&
         reviewDesign.length > 0 && 
         reviewDesign.map( design => {
-          console.log( design )
+          // console.log( design )
+          if( design?.enable != true ) return;
           return <ReviewForm designData={ design } postId={ postId } />
         } )
       }

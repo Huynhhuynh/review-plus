@@ -8,6 +8,17 @@ add_filter( 'comments_template', function( $template ) {
 
 // add_action( 'comment_form_after', 'rp_comment_form' );
 
-add_action( 'save_post', function( $post_ID, $post, $update ) {
+// add_action( 'carbon_fields_post_meta_container_saved', function( $post_id ) {
+add_filter( 'update_post_metadata', function( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+  if ( $meta_key != '_rating_json_field' ) return $check;
+
+  $rating_fields = maybe_unserialize( maybe_unserialize( $meta_value ) );
+  if( ! $rating_fields || count( $rating_fields ) <= 0 ) return $check;
   
-}, 20, 3 );
+  foreach( $rating_fields as $index => $r ) {
+    $slug = '__@_' . $r[ 'slug' ];
+    update_post_meta( $object_id, $slug, (int) $r[ 'rate' ] );
+  }
+
+  return $check;
+}, 20, 5 );

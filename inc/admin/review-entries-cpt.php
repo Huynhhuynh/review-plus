@@ -57,6 +57,8 @@ function rp_review_entry_register_meta_fields() {
 
   $fields = apply_filters( 'review-plus/review-entry-meta-fields', [
     Field::make( 'ratingjson', 'rating_json_field', __( 'Rating Json Fields', 'review-plus' ) ),
+    Field::make( 'text', 'design_id', __( 'Design ID', 'review-plus' ) )
+      ->set_attribute( 'type', 'hidden' ),
     Field::make( 'text', 'review_post_id', false )
       ->set_attribute( 'type', 'hidden' ),
     Field::make( 'text', 'parent', false )
