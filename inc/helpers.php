@@ -60,7 +60,7 @@ function rp_get_review_design( $id = 'all' ) {
  * 
  */
 function rp_get_review_design_by_id( $post_id ) {
-  $result = get_post( (int) $post_id );
+  $result = get_post( (int) $post_id ); 
   if( !$result ) return false;
 
   $support_post_type = carbon_get_post_meta( $result->ID, 'support_post_type' );
@@ -72,6 +72,7 @@ function rp_get_review_design_by_id( $post_id ) {
     'description' => $result->post_content,
     'support_post_type' => $support_post_type ? $support_post_type : [],
     'support_category' => carbon_get_post_meta( $result->ID, 'support_category' ), 
+    'except_category' => carbon_get_post_meta( $result->ID, 'except_category' ), 
     'theme' => carbon_get_post_meta( $result->ID, 'theme' ),
     'theme_color' => carbon_get_post_meta( $result->ID, 'theme_color' ),
     'enable' => carbon_get_post_meta( $result->ID, 'enable' ),
@@ -109,6 +110,7 @@ function rp_update_review_design_meta_fields( $post_id = 0, $designData = [] ) {
   $postUpdateMetaFields = [ 
     'support_post_type', 
     'support_category',
+    'except_category',
     'theme', 
     'theme_color', 
     'enable', 

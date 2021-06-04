@@ -38,7 +38,7 @@ function rp_register_review_design_cpt() {
     'labels'             => $labels,
     'public'             => true,
     'publicly_queryable' => true,
-    'show_ui'            => false, 
+    'show_ui'            => true, 
     'query_var'          => true,
     'rewrite'            => [ 'slug' => 'review-design' ],
     'capability_type'    => 'post',
@@ -64,7 +64,18 @@ function rp_review_design_register_meta_fields() {
       ->set_default_value( false ),
     Field::make( 'multiselect', 'support_post_type', __( 'Support Post Types', 'review-plus' ) )
       ->add_options( 'rp_build_options_public_post_types' ),
-    Field::make( 'complex', 'support_category', __( 'Category', 'review-plus' ) )
+    Field::make( 'complex', 'support_category', __( 'Support Category', 'review-plus' ) )
+      ->add_fields( [
+        Field::make( 'text', 'group', __( 'Group', 'review-plus' ) )
+          ->set_width( 25 ),
+        Field::make( 'text', 'tax', __( 'Tax Name', 'review-plus' ) )
+          ->set_width( 25 ),
+        Field::make( 'text', 'term_label', __( 'Term Label', 'review-plus' ) )
+          ->set_width( 25 ),
+        Field::make( 'text', 'term_id', __( 'Term ID', 'review-plus' ) )
+          ->set_width( 25 ),
+      ] ),
+    Field::make( 'complex', 'except_category', __( 'Except Category', 'review-plus' ) )
       ->add_fields( [
         Field::make( 'text', 'group', __( 'Group', 'review-plus' ) )
           ->set_width( 25 ),

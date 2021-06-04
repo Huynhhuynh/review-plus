@@ -192,7 +192,7 @@ export default function DesignEditModal() {
 
         if( terms && terms.length > 0 ) {
           terms.forEach( t => {
-            console.log( t )
+            // console.log( t )
             options.push( {
               group: `${ taxLabel } (${ postTypeName })`,
               tax: taxName,
@@ -275,6 +275,23 @@ export default function DesignEditModal() {
     }
   }
 
+  const onUpdateExceptCategory = ( list, item ) => {
+    onUpdateField( list, 'except_category' )
+  }
+
+  let exceptCategoryOptions = {
+    options: [ ...buildGroupOptions() ],
+    selectedValues: designEdit.except_category,
+    groupBy: 'group',
+    displayValue: 'term_label',
+    onSelect: onUpdateExceptCategory,
+    onRemove: onUpdateExceptCategory,
+    style: {
+      searchBox: { 'border-radius': '1px' },
+      chips: { 'border-radius': '30px', 'background': '#3f51b5' }
+    }
+  }
+
   return (
     <div className="design-edit-modal">
       <div className="design-edit-modal__inner">
@@ -343,9 +360,15 @@ export default function DesignEditModal() {
               </div>
             </div>
             <div className="group-field">
-              <label>Select Category (Limit category to display review form)</label>
+              <label>Category (Limit category to display review form)</label>
               <div className="field">
                 <Multiselect {...categoryOptions} />
+              </div>
+            </div>
+            <div className="group-field">
+              <label>Except Category</label>
+              <div className="field">
+                <Multiselect {...exceptCategoryOptions} />
               </div>
             </div>
             <div className="group-field">

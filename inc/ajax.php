@@ -66,10 +66,12 @@ function rp_ajax_get_review_design_by_post_id() {
   $result = rp_get_review_design_by_post_type( get_post_type( $postID ) );
   $design = [];
 
+  // Support Cats 
   if( $result ) {
     foreach( $result as $index => $item ) {
       if( $item[ 'support_category' ] && (count( $item[ 'support_category' ] ) > 0) ) {
         $_support_category = false;
+        
         foreach( $item[ 'support_category' ] as $c_index => $c ) {
           if( rp_check_post_in_term( (int) $postID, $c[ 'tax' ], (int) $c[ 'term_id' ] ) ) {
             $_support_category = true;
@@ -85,9 +87,24 @@ function rp_ajax_get_review_design_by_post_id() {
     }
   }
 
+  // Except Cats
+  if( count( $design ) > 0 ) {
+    foreach( $design as $_index => $_item ) {
+      if( $_item[ 'except_category' ] && (count( $_item[ 'except_category' ] ) > 0) ) {
+        foreach( $_item[ 'except_category' ] as $ex_c_index => $ex_c ) {
+          if( rp_check_post_in_term( (int) $postID, $ex_c[ 'tax' ], (int) $ex_c[ 'term_id' ] ) ) {
+            unset( $design[ $ex_c_index ] );
+            // $design = array_slice( $design, $ex_c_index, 1 );
+            break;
+          }
+        }
+      }
+    }
+  }
+
   wp_send_json( [
     'success' => true,
-    'data' => $design,
+    'data' => array_values( $design ),
   ] );
 }
 
