@@ -293,7 +293,9 @@ function rp_group_tax_per_post_types( $post_types = [] ) {
       array_push( $result[ $post_type ], [
         'tax_label' => $tax->label,
         'tax_name' => $tax->name,
-        'terms' => get_terms( $tax->name ),
+        'terms' => get_terms( $tax->name, [
+          'hide_empty' => false
+        ] ),
       ] );
     } 
   }
