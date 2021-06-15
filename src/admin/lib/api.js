@@ -82,6 +82,19 @@ export async function getReview( idPost ) {
   } )
 }
 
+export async function getLikeReview( idPost ) {
+  return await Request( 'rp_ajax_get_like_review', {
+    idPost
+  } )
+}
+
+export async function getDisLikeReview( idPost ) {
+  return await Request( 'rp_ajax_get_dis_like_review', {
+    idPost
+  } )
+}
+
+
 export async function getAllGroupPostTax() {
   return await Request( 'rp_ajax_get_all_group_tax_per_post_types', {} )
 }

@@ -280,7 +280,7 @@ function rp_new_point_review_session ( $point_data = [],$id_review ) {
 
 function rp_minus_point_travel_dis_like ( $id_review ) {
   if( is_user_logged_in() ) {
-        
+
 
   }
 }
@@ -695,7 +695,98 @@ function get_review_content_by_id_post ( $id_post ) {
         [
           'key' => 'point_type_entrie',
           'value' => 'likeentrie',
-          'compare' => 'LIKE',
+          'compare' => '=',
+        ],
+    ]
+  );
+
+
+  $like = new WP_Query( $arg_points );
+  while ( $like->have_posts() ) : $like->the_post();
+    $id_point = get_the_ID();
+    $id_revew = carbon_get_post_meta($id_point,'review_post_id');
+    array_push($data_points,$id_revew);
+  endwhile;
+  wp_reset_postdata();
+  array_push($data_return,array_unique($data_points));
+  return $data_return;
+
+}
+
+
+function get_dis_like_review ($id_post) {
+  $data_points =[];
+  $data_count_like=[];
+  $data_ob_like = [];
+  if(is_user_logged_in()){
+    $id_user_current = get_current_user_id();
+  }
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'dislikeentrie',
+          'compare' => '=',
+        ],
+    ]
+  );
+
+
+  $dislike = new WP_Query( $arg_points );
+  while ( $dislike->have_posts() ) : $dislike->the_post();
+    $id_point = get_the_ID();
+    $id_revews = carbon_get_post_meta($id_point,'review_post_id');
+    array_push($data_points,[
+      'id_reviews'=>$id_revews,
+    ]);
+
+  endwhile;
+  wp_reset_postdata();
+  foreach ($data_points as $key => $value) {
+    array_push($data_count_like,$value['id_reviews']);
+  }
+
+  $count_like = array_count_values($data_count_like);
+  foreach ($count_like as $key => $value) {
+    array_push($data_ob_like,[
+      'id_review'=>$key,
+      'dislike'=>$value
+    ]);
+  }
+  return $data_ob_like;
+}
+
+function get_like_review ($id_post) {
+  $data_points =[];
+  $data_count_like=[];
+  $data_ob_like = [];
+  if(is_user_logged_in()){
+    $id_user_current = get_current_user_id();
+  }
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'likeentrie',
+          'compare' => '=',
         ],
     ]
   );
@@ -706,18 +797,25 @@ function get_review_content_by_id_post ( $id_post ) {
     $id_point = get_the_ID();
     $id_revews = carbon_get_post_meta($id_point,'review_post_id');
     array_push($data_points,[
-      'id_reviews '=>$id_revews,
+      'id_reviews'=>$id_revews,
     ]);
 
   endwhile;
-
-
-
   wp_reset_postdata();
-  array_push($data_return,$data_points);
-  return $data_return;
+  foreach ($data_points as $key => $value) {
+    array_push($data_count_like,$value['id_reviews']);
+  }
 
+  $count_like = array_count_values($data_count_like);
+  foreach ($count_like as $key => $value) {
+    array_push($data_ob_like,[
+      'id_review'=>$key,
+      'like'=>$value
+    ]);
+  }
+  return $data_ob_like;
 }
+
 
 
 

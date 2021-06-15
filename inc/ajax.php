@@ -177,6 +177,41 @@ function rp_ajax_post_like_review() {
 add_action( 'wp_ajax_rp_ajax_post_dis_like_review', 'rp_ajax_post_dis_like_review' );
 add_action( 'wp_ajax_nopriv_rp_ajax_post_dis_like_review', 'rp_ajax_post_dis_like_review' );
 
+
+
+add_action( 'wp_ajax_rp_ajax_get_like_review', 'rp_ajax_get_like_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_get_like_review', 'rp_ajax_get_like_review' );
+
+
+function rp_ajax_get_like_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  $postID = $postData[ 'idPost' ];
+  $like_reviews =  get_like_review($postID);
+  wp_send_json( [
+    'success' => true,
+    'data' => array_values($like_reviews),
+  ] );
+}
+
+
+add_action( 'wp_ajax_rp_ajax_get_dis_like_review', 'rp_ajax_get_dis_like_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_get_dis_like_review', 'rp_ajax_get_dis_like_review' );
+
+
+function rp_ajax_get_dis_like_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  $postID = $postData[ 'idPost' ];
+  $dislike_reviews =  get_dis_like_review($postID);
+  wp_send_json( [
+    'success' => true,
+    'data' => array_values($dislike_reviews),
+  ] );
+}
+
+
+
 function rp_ajax_post_dis_like_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );

@@ -3,13 +3,16 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { getReviewDesignByPostID, postReview, getReview, postLikeReview,postDisLikeReview } from '../admin/lib/api'
+import { getReviewDesignByPostID, postReview, getReview, postLikeReview, postDisLikeReview, getLikeReview, getDisLikeReview } from '../admin/lib/api'
 const ReviewPlusContext = createContext()
 
 function ReviewPlusProvider( { children, postId } ) {
   const [ reviewDesign, setReviewDesign ] = useState( [] )
 
   const [ reviewContent, setReviewContent ] = useState( [] )
+
+  const [ reviewLike, setReviewLike ] = useState( [] )
+  const [ reviewDisLike, setReviewDisLike ] = useState( [] )
 
   useEffect( async () => {
     const Result = await getReviewDesignByPostID( postId )
@@ -32,15 +35,25 @@ function ReviewPlusProvider( { children, postId } ) {
 
   }, [] )
 
-  // useEffect( async () => {
-  //   const Result_like = await getLikeReview( postId )
-  //   if(Result_like.success==true) {
-  //     setReviewLike(Result_like.data)
-  //   }else{
-  //     return
-  //   }
-  // }, [] )
+  useEffect( async () => {
+    const Result_like_review = await getLikeReview(postId)
+    if(Result_like_review.success==true) {
+      setReviewLike(Result_like_review.data)
+    }else{
+      return
+    }
 
+  }, [] )
+
+  useEffect( async () => {
+    const Result_dis_like_review = await getDisLikeReview(postId)
+    if(Result_dis_like_review.success==true) {
+      setReviewDisLike(Result_dis_like_review.data)
+    }else{
+      return
+    }
+
+  }, [] )
 
 
   const submitReview = async ( reviewData ) => {
@@ -62,7 +75,9 @@ function ReviewPlusProvider( { children, postId } ) {
     submitReview,
     reviewContent,
     submitLike,
-    submitDisLike
+    submitDisLike,
+    reviewLike,
+    reviewDisLike
   }
 
   return (

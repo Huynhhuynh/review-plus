@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import Reviewdata from '../components/review-content'
 
 
-export default function ReviewPlusApp( props ) {
+export default function ReviewContentApp( props ) {
   const dataReview = useReviewPlus()
   return (
     < >
