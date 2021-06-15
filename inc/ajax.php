@@ -181,9 +181,9 @@ function rp_ajax_post_dis_like_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
   $id_review = $postData['reviewID'];
-  // rp_minus_point_review_session ( $point_data = [],$id_review );
-  // rp_minus_point_review_travel( $point_data = [],$id_review );
-  // rp_new_dis_like_point_review($point_data = [],$id_review);
+  rp_minus_point_review_session ( $point_data = [],$id_review );
+  rp_minus_point_review_travel( $point_data = [],$id_review );
+  rp_new_dis_like_point_review($point_data = [],$id_review);
   wp_send_json( [
     'success' => true,
     'data' =>  $id_review
