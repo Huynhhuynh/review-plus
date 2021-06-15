@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import RatingField from './rating-field'
 
 /**
- * Review form 
+ * Review form
  */
 
 const NotLoggedFields = ( { submitFormData, register, errors } ) => {
@@ -15,11 +15,11 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
         <label>
           <span className="__label">Name *</span>
           <div className="__field">
-            <input 
+            <input
               { ...register( 'name', { required: true } ) }
-              type="text" 
-              className={ [ 'rp-name', ( errors.name ? '__is-invalid' : '' ) ].join( ' ' ) } 
-              defaultValue={ submitFormData.name } 
+              type="text"
+              className={ [ 'rp-name', ( errors.name ? '__is-invalid' : '' ) ].join( ' ' ) }
+              defaultValue={ submitFormData.name }
               />
             { errors.name && <span className="__invalid-message">Please enter your name!</span> }
           </div>
@@ -29,11 +29,11 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
         <label>
           <span className="__label">Email *</span>
           <div className="__field">
-            <input 
+            <input
               { ...register( 'email', { required: true, pattern: /\S+@\S+\.\S+/ } ) }
-              type="text" 
-              className={ [ 'rp-email', ( errors.email ? '__is-invalid' : '' ) ].join( ' ' ) } 
-              defaultValue={ submitFormData.email } 
+              type="text"
+              className={ [ 'rp-email', ( errors.email ? '__is-invalid' : '' ) ].join( ' ' ) }
+              defaultValue={ submitFormData.email }
               />
             { errors.email && <span className="__invalid-message">Please enter your E-mail!</span> }
           </div>
@@ -43,11 +43,11 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
         <label>
           <span className="__label">Url</span>
           <div className="__field">
-            <input 
+            <input
               { ...register( 'url' ) }
-              type="text" 
-              className="rp-url" 
-              defaultValue={ submitFormData.url } 
+              type="text"
+              className="rp-url"
+              defaultValue={ submitFormData.url }
             />
           </div>
         </label>
@@ -59,8 +59,9 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
 export default function ReviewForm( { designData, postId } ) {
   const { submitReview } = useReviewPlus()
   const { register, setValue, handleSubmit, trigger, formState: { errors } } = useForm()
-  const [ loading, setLoading ] = useState( false ) 
-  const [ formSubmited, setFormSubmited ] = useState( false ) 
+  const [ loading, setLoading ] = useState( false )
+  const [ formSubmited, setFormSubmited ] = useState( false )
+  const [ showReviewAlready, setshowReviewAlready ] = useState( false )
   const [ submitFormData, setSubmitFormData ] = useState( {
     postId,
     designId: designData.id,
@@ -83,25 +84,32 @@ export default function ReviewForm( { designData, postId } ) {
     if( index == -1 ) return
     _ratings[ index ].rate = rate
     _submitFormData.ratings = _ratings
-    
+
     setSubmitFormData( _submitFormData )
   }
 
   const updateField = ( name, value ) => {
     let _submitFormData = { ...submitFormData }
-    _submitFormData[ name ] = value 
+    _submitFormData[ name ] = value
 
     setSubmitFormData( _submitFormData )
   }
 
   const onSubmitReview = async ( data ) => {
     setLoading( true )
-    
     let newSubmitFormData = { ...submitFormData, ...data }
     const result = await submitReview( newSubmitFormData )
-    
     setLoading( false )
-    setFormSubmited( true )
+    if(result.success){
+        setFormSubmited( true )
+    }else{
+        setFormSubmited( false )
+        if(result.message){
+            setshowReviewAlready( true );
+        }else{
+            setshowReviewAlready( false );
+        }
+    }
   }
 
   return (
@@ -110,28 +118,28 @@ export default function ReviewForm( { designData, postId } ) {
         <h2 className="rp-title">{ designData.label }</h2>
         <p className="rp-desc">{ designData.description }</p>
         {
-          ( formSubmited == true ) && 
+          ( formSubmited == true ) &&
           <div className="__rp-thank-you">
             <p>👌 Thanks for your review.</p>
           </div>
         }
         {
           (formSubmited == false) &&
-          <form 
-            className="review-plus-form" 
+          <form
+            className="review-plus-form"
             onSubmit={ handleSubmit( onSubmitReview ) }>
             {
-              designData.rating_fields.length > 0 && 
+              designData.rating_fields.length > 0 &&
               <>
                 <h4 className="heading-review-list">Your Rating</h4>
                 <div className="rp-review-list">
                 {
                   designData.rating_fields.map( ( r, index ) => {
-                    return <RatingField 
-                      ratingOptions={ r } 
+                    return <RatingField
+                      ratingOptions={ r }
                       label={ `ratings.${ index }` }
                       itemIndex={ index }
-                      register={ register } 
+                      register={ register }
                       setValue={ setValue }
                       errors={ errors }
                       onChange={ ( rate, _field ) => {
@@ -147,20 +155,30 @@ export default function ReviewForm( { designData, postId } ) {
               <label>
                 <span className="__label">Comment *</span>
                 <div className="__field">
-                  <textarea 
+                  <textarea
                     { ...register( 'comment', { required: true } ) }
-                    className={ [ 'rp-comment', ( errors.comment ? '__is-invalid' : '' ) ].join( ' ' ) } 
+                    className={ [ 'rp-comment', ( errors.comment ? '__is-invalid' : '' ) ].join( ' ' ) }
                     defaultValue={ submitFormData.comment }
                     ></textarea>{ errors.comment && <span className="__invalid-message">Please enter your comment!</span> }
                 </div>
               </label>
             </div>
             {
+
               PHP_DATA.user_logged_in != 'yes' &&
               <NotLoggedFields submitFormData={ submitFormData } register={ register } errors={ errors } />
+
             }
-            <button 
-              type="submit" 
+
+            {
+                (showReviewAlready==true) &&
+                <div className="text-already-submit">
+                    You have already submitted this review
+                </div>
+            }
+
+            <button
+              type="submit"
               className={ [ 'review-button-submit', ( loading ? '__is-loading' : '' ) ].join( ' ' ) }>
               { loading ? 'Please waiting...' : 'Submit Review' }
             </button>

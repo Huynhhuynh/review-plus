@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 Plugin Name: Review Plus
 Plugin URI: https://becoding.dev/review-plus/
@@ -36,6 +36,7 @@ require_once( __DIR__ . '/vendor/autoload.php' );
    */
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-entries-cpt.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-design-cpt.php' );
+    require_once( REVIEW_PLUS_DIR . '/inc/admin/review-point-cpt.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-design-panel.php' );
 
   /**

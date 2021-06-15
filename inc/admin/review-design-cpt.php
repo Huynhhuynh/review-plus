@@ -3,7 +3,7 @@ use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 /**
  * Review design custom post type
- * 
+ *
  */
 
 function rp_register_review_design_cpt() {
@@ -38,7 +38,7 @@ function rp_register_review_design_cpt() {
     'labels'             => $labels,
     'public'             => true,
     'publicly_queryable' => true,
-    'show_ui'            => false, 
+    'show_ui'            => true, 
     'query_var'          => true,
     'rewrite'            => [ 'slug' => 'review-design' ],
     'capability_type'    => 'post',
@@ -53,12 +53,12 @@ function rp_register_review_design_cpt() {
 add_action( 'init', 'rp_register_review_design_cpt' );
 
 /**
- * Review design register meta fields 
- * 
+ * Review design register meta fields
+ *
  * @return void
  */
 function rp_review_design_register_meta_fields() {
-  
+
   $fields = apply_filters( 'review-plus/review-design-meta-fields', [
     Field::make( 'checkbox', 'enable', __( 'Enable' ) )
       ->set_default_value( false ),

@@ -1,4 +1,4 @@
-<?php 
+<?php
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 /**
@@ -6,7 +6,7 @@ use Carbon_Fields\Field;
  */
 
 function rp_register_review_entries_cpt() {
-  
+
   $labels = [
     'name'                  => _x( 'Review Entries', 'Post type general name', 'review-plus' ),
     'singular_name'         => _x( 'Review Entries', 'Post type singular name', 'review-plus' ),
@@ -57,7 +57,7 @@ function rp_review_entry_register_meta_fields() {
 
   $fields = apply_filters( 'review-plus/review-entry-meta-fields', [
     Field::make( 'ratingjson', 'rating_json_field', __( 'Rating Json Fields', 'review-plus' ) ),
-    Field::make( 'text', 'design_id', __( 'Design ID', 'review-plus' ) )
+    Field::make( 'text', 'design_id', false )
       ->set_attribute( 'type', 'hidden' ),
     Field::make( 'text', 'review_post_id', false )
       ->set_attribute( 'type', 'hidden' ),
@@ -138,7 +138,7 @@ add_action( 'manage_review-entries_posts_custom_column', function( $column, $pos
           <?php echo rp_count_response( $review_post_id ) ?>
         </span>
       </a>
-      <?php 
+      <?php
       echo ob_get_clean();
       break;
   }

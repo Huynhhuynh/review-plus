@@ -1,7 +1,7 @@
 import { useReviewDesign } from '../context/state'
 /**
  * Review type item
- * 
+ *
  */
 
 const ratingIcons = {
@@ -10,7 +10,7 @@ const ratingIcons = {
 
 export function RatingFieldFake( { name, slug, max_point, default_point, rating_icon } ) {
   let ratingNumber = [ ...Array( parseInt( max_point ) ).keys() ]
-  
+
   return (
     <div className="rating-item">
       <label>{ name }</label>
@@ -86,7 +86,7 @@ export function ReviewDesignItem( { designData } ) {
 }
 
 export function ReviewDesignLoop( { reviewDesign } ) {
-  
+
   return (
     <div class="review-design-loop-container">
       {

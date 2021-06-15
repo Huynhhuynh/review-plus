@@ -7,12 +7,12 @@ import ReviewForm from '../components/review-form'
 export default function ReviewPlusApp( props ) {
 
   const { postId, reviewDesign } = useReviewPlus()
-
   return (
     <>
       {
+
         reviewDesign &&
-        reviewDesign.length > 0 && 
+        reviewDesign.length > 0 &&
         reviewDesign.map( design => {
           // console.log( design )
           if( design?.enable != true ) return;

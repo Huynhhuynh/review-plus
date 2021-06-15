@@ -1,6 +1,6 @@
-<?php 
+<?php
 /**
- * Static 
+ * Static
  */
 
 function rp_enqueue_scripts() {
@@ -20,7 +20,7 @@ wp_enqueue_style( 'review-plus-backend', REVIEW_PLUS_URI . '/dist/css/review-plu
 
 function rp_admin_enqueue_scripts() {
   if( ! isset( $_GET[ 'page' ] ) || $_GET[ 'page' ] != 'review-design-settings-panel' )
-    return; 
+    return;
 
   wp_enqueue_script( 'review-plus-backend', REVIEW_PLUS_URI . '/dist/review-plus.backend.bundle.js', ['jquery', 'carbon-fields-core'], REVIEW_PLUS_VER, true );
 
@@ -34,7 +34,7 @@ function rp_admin_enqueue_scripts() {
 add_action( 'admin_enqueue_scripts', 'rp_admin_enqueue_scripts' );
 
 function rp_cb_field_enqueue_scripts() {
-  wp_enqueue_script( 'review-plus-cb-field', REVIEW_PLUS_URI . '/dist/review-plus.cbFields.bundle.js', ['jquery', 'carbon-fields-core'], REVIEW_PLUS_VER, true ); 
+  wp_enqueue_script( 'review-plus-cb-field', REVIEW_PLUS_URI . '/dist/review-plus.cbFields.bundle.js', ['jquery', 'carbon-fields-core'], REVIEW_PLUS_VER, true );
 }
 
 add_action( 'admin_enqueue_scripts', 'rp_cb_field_enqueue_scripts' );

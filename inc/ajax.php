@@ -1,6 +1,6 @@
-<?php 
+<?php
 /**
- * Ajax 
+ * Ajax
  */
 
 function rp_ajax_get_all_review_design() {
@@ -20,7 +20,7 @@ add_action( 'wp_ajax_nopriv_rp_ajax_get_all_post_type', 'rp_ajax_get_all_post_ty
 function rp_ajax_new_design() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
-  
+
   $designID = rp_new_review_design( $postData[ 'designData' ] );
   wp_send_json( [
     'success' => true,
@@ -66,12 +66,12 @@ function rp_ajax_get_review_design_by_post_id() {
   $result = rp_get_review_design_by_post_type( get_post_type( $postID ) );
   $design = [];
 
-  // Support Cats 
+  // Support Cats
   if( $result ) {
     foreach( $result as $index => $item ) {
       if( $item[ 'support_category' ] && (count( $item[ 'support_category' ] ) > 0) ) {
         $_support_category = false;
-        
+
         foreach( $item[ 'support_category' ] as $c_index => $c ) {
           if( rp_check_post_in_term( (int) $postID, $c[ 'tax' ], (int) $c[ 'term_id' ] ) ) {
             $_support_category = true;
@@ -116,13 +116,31 @@ function rp_ajax_post_review() {
   $postData = json_decode( $json, true );
 
   $reviewData = $postData[ 'reviewData' ];
-  $review_id = rp_post_review( $reviewData );
 
+  spam_reviews_form($reviewData);
+
+
+}
+
+
+add_action( 'wp_ajax_rp_ajax_get_review', 'rp_ajax_get_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_get_review', 'rp_ajax_get_review' );
+
+
+function rp_ajax_get_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+
+  $postID = $postData[ 'idPost' ];
+  // echo $postID;
+  // die();
+  $data_reviews =  get_review_content_by_id_post($postID);
   wp_send_json( [
     'success' => true,
-    'review_id' => $review_id
+    'data' => array_values( $data_reviews ),
   ] );
 }
+
 
 add_action( 'wp_ajax_rp_ajax_post_review', 'rp_ajax_post_review' );
 add_action( 'wp_ajax_nopriv_rp_ajax_post_review', 'rp_ajax_post_review' );
@@ -130,9 +148,46 @@ add_action( 'wp_ajax_nopriv_rp_ajax_post_review', 'rp_ajax_post_review' );
 function rp_ajax_get_all_group_tax_per_post_types() {
   $all_post_types = rp_build_options_public_post_types();
   $result = rp_group_tax_per_post_types( array_keys( $all_post_types ) );
-  
+
   wp_send_json( $result );
 }
 
 add_action( 'wp_ajax_rp_ajax_get_all_group_tax_per_post_types', 'rp_ajax_get_all_group_tax_per_post_types' );
 add_action( 'wp_ajax_nopriv_rp_ajax_get_all_group_tax_per_post_types', 'rp_ajax_get_all_group_tax_per_post_types' );
+
+
+add_action( 'wp_ajax_rp_ajax_post_like_review', 'rp_ajax_post_like_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_post_like_review', 'rp_ajax_post_like_review' );
+
+function rp_ajax_post_like_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  $id_review = $postData['reviewID'];
+  rp_new_point_review_session ( $point_data = [],$id_review );
+  rp_new_like_point_review($point_data = [],$id_review);
+  wp_send_json( [
+    'success' => true,
+    'data' =>  $id_review
+  ] );
+
+
+}
+
+
+add_action( 'wp_ajax_rp_ajax_post_dis_like_review', 'rp_ajax_post_dis_like_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_post_dis_like_review', 'rp_ajax_post_dis_like_review' );
+
+function rp_ajax_post_dis_like_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  $id_review = $postData['reviewID'];
+  // rp_minus_point_review_session ( $point_data = [],$id_review );
+  // rp_minus_point_review_travel( $point_data = [],$id_review );
+  // rp_new_dis_like_point_review($point_data = [],$id_review);
+  wp_send_json( [
+    'success' => true,
+    'data' =>  $id_review
+  ] );
+
+
+}

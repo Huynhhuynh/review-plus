@@ -3,11 +3,11 @@
  */
 
 /**
- * 
- * @param {*} action 
- * @param {*} variables 
- * @param {*} method 
- * @returns 
+ *
+ * @param {*} action
+ * @param {*} variables
+ * @param {*} method
+ * @returns
  */
 export async function Request( action = null, variables = {}, method = 'POST' ) {
   const response = await fetch( `${ PHP_DATA.ajax_url }?action=${ action }`, {
@@ -24,12 +24,12 @@ export async function Request( action = null, variables = {}, method = 'POST' ) 
 }
 
 /**
- * 
- * @returns 
+ *
+ * @returns
  */
 export async function getAllReviewDesign() {
   return await Request( 'rp_ajax_get_all_review_design', {
-    
+
   } )
 }
 
@@ -60,6 +60,25 @@ export async function getReviewDesignByPostID( postID ) {
 export async function postReview( reviewData ) {
   return await Request( 'rp_ajax_post_review', {
     reviewData
+  } )
+}
+
+export async function postLikeReview( reviewID ) {
+  return await Request( 'rp_ajax_post_like_review', {
+    reviewID
+  } )
+}
+
+export async function postDisLikeReview( reviewID ) {
+  return await Request( 'rp_ajax_post_dis_like_review', {
+    reviewID
+  } )
+}
+
+
+export async function getReview( idPost ) {
+  return await Request( 'rp_ajax_get_review', {
+    idPost
   } )
 }
 
