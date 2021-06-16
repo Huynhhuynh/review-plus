@@ -155,9 +155,34 @@ form.review-plus-form {
 .__rp-thank-you {
 
 }
- 
+
 .wrapper-action-review {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 20px;
+  .action-like-count {
+    display: flex;
+    align-items: center;
+    button {
+      margin-right: 10px;
+    }
+  }
+}
+.user-profile {
+  font-size: 25px;
+  font-weight: bold;
+}
+.content-review {
+  padding-left: 25px;
+}
+.wrapper-comment-content-post {
+  margin-bottom: 35px;
+}
+
+.actionlogin-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 60px;
 }

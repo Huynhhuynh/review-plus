@@ -7,57 +7,77 @@ import RatingField from './rating-field'
  * Review form
  */
 
+
+
+
 const NotLoggedFields = ( { submitFormData, register, errors } ) => {
 
+  const { reviewDesign } = useReviewPlus();
   return (
     <>
-      <div className="rp-field rp-field__name">
-        <label>
-          <span className="__label">Name *</span>
-          <div className="__field">
-            <input
-              { ...register( 'name', { required: true } ) }
-              type="text"
-              className={ [ 'rp-name', ( errors.name ? '__is-invalid' : '' ) ].join( ' ' ) }
-              defaultValue={ submitFormData.name }
-              />
-            { errors.name && <span className="__invalid-message">Please enter your name!</span> }
-          </div>
-        </label>
-      </div>
-      <div className="rp-field rp-field__email">
-        <label>
-          <span className="__label">Email *</span>
-          <div className="__field">
-            <input
-              { ...register( 'email', { required: true, pattern: /\S+@\S+\.\S+/ } ) }
-              type="text"
-              className={ [ 'rp-email', ( errors.email ? '__is-invalid' : '' ) ].join( ' ' ) }
-              defaultValue={ submitFormData.email }
-              />
-            { errors.email && <span className="__invalid-message">Please enter your E-mail!</span> }
-          </div>
-        </label>
-      </div>
-      <div className="rp-field rp-field__url">
-        <label>
-          <span className="__label">Url</span>
-          <div className="__field">
-            <input
-              { ...register( 'url' ) }
-              type="text"
-              className="rp-url"
-              defaultValue={ submitFormData.url }
-            />
-          </div>
-        </label>
-      </div>
+      {
+        reviewDesign &&
+        reviewDesign.length > 0 &&
+        reviewDesign.map( design => {
+          console.log( design.login_required )
+          if( design?.login_required == true ){
+            return <div className="rp-field">
+                Please login to leave a full review
+            </div>
+          }else{
+            return <div>
+              <div className="rp-field rp-field__name">
+                <label>
+                  <span className="__label">Name *</span>
+                  <div className="__field">
+                    <input
+                      { ...register( 'name', { required: true } ) }
+                      type="text"
+                      className={ [ 'rp-name', ( errors.name ? '__is-invalid' : '' ) ].join( ' ' ) }
+                      defaultValue={ submitFormData.name }
+                      />
+                    { errors.name && <span className="__invalid-message">Please enter your name!</span> }
+                  </div>
+                </label>
+              </div>
+              <div className="rp-field rp-field__email">
+                <label>
+                  <span className="__label">Email *</span>
+                  <div className="__field">
+                    <input
+                      { ...register( 'email', { required: true, pattern: /\S+@\S+\.\S+/ } ) }
+                      type="text"
+                      className={ [ 'rp-email', ( errors.email ? '__is-invalid' : '' ) ].join( ' ' ) }
+                      defaultValue={ submitFormData.email }
+                      />
+                    { errors.email && <span className="__invalid-message">Please enter your E-mail!</span> }
+                  </div>
+                </label>
+              </div>
+              <div className="rp-field rp-field__url">
+                <label>
+                  <span className="__label">Url</span>
+                  <div className="__field">
+                    <input
+                      { ...register( 'url' ) }
+                      type="text"
+                      className="rp-url"
+                      defaultValue={ submitFormData.url }
+                    />
+                  </div>
+                </label>
+              </div>
+            </div>
+          }
+        } )
+      }
+
     </>
   )
 }
 
 export default function ReviewForm( { designData, postId } ) {
-  const { submitReview } = useReviewPlus()
+  const { submitReview } = useReviewPlus();
   const { register, setValue, handleSubmit, trigger, formState: { errors } } = useForm()
   const [ loading, setLoading ] = useState( false )
   const [ formSubmited, setFormSubmited ] = useState( false )
@@ -75,6 +95,8 @@ export default function ReviewForm( { designData, postId } ) {
       return { name, slug, rate: parseInt( default_point ) }
     } )
   } )
+
+
 
   const updateRatingField = ( slug, rate ) => {
     let _submitFormData = { ...submitFormData }
@@ -151,18 +173,22 @@ export default function ReviewForm( { designData, postId } ) {
                 </div>
               </>
             }
-            <div className="rp-field rp-field__comment">
-              <label>
-                <span className="__label">Comment *</span>
-                <div className="__field">
-                  <textarea
-                    { ...register( 'comment', { required: true } ) }
-                    className={ [ 'rp-comment', ( errors.comment ? '__is-invalid' : '' ) ].join( ' ' ) }
-                    defaultValue={ submitFormData.comment }
-                    ></textarea>{ errors.comment && <span className="__invalid-message">Please enter your comment!</span> }
-                </div>
-              </label>
-            </div>
+            {
+              PHP_DATA.user_logged_in == 'yes' &&
+              <div className="rp-field rp-field__comment">
+                <label>
+                  <span className="__label">Comment *</span>
+                  <div className="__field">
+                    <textarea
+                      { ...register( 'comment', { required: true } ) }
+                      className={ [ 'rp-comment', ( errors.comment ? '__is-invalid' : '' ) ].join( ' ' ) }
+                      defaultValue={ submitFormData.comment }
+                      ></textarea>{ errors.comment && <span className="__invalid-message">Please enter your comment!</span> }
+                  </div>
+                </label>
+              </div>
+            }
+
             {
 
               PHP_DATA.user_logged_in != 'yes' &&
@@ -184,6 +210,22 @@ export default function ReviewForm( { designData, postId } ) {
             </button>
           </form>
         }
+        {
+          PHP_DATA.user_logged_in != 'yes' &&
+          <div className="actionlogin-wrapper">
+            <div className="login">
+              <button>
+                Login
+              </button>
+            </div>
+            <div className="register">
+              <button>
+                Register
+              </button>
+            </div>
+          </div>
+        }
+
       </div>
     </>
   )

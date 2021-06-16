@@ -5,7 +5,7 @@ import ReviewDesignHeaderTool from './review-design-header-tool'
 
 /**
  * Review type wrap
- * 
+ *
  */
 
 function ReviewDesignApp() {
@@ -23,7 +23,7 @@ function ReviewDesignApp() {
 export default function ReviewDesignWrap () {
 
   return (
-    <ReviewDesignProvider> 
+    <ReviewDesignProvider>
       <ReviewDesignApp />
     </ReviewDesignProvider>
   )

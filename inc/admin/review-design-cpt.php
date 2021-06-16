@@ -38,7 +38,7 @@ function rp_register_review_design_cpt() {
     'labels'             => $labels,
     'public'             => true,
     'publicly_queryable' => true,
-    'show_ui'            => true, 
+    'show_ui'            => true,
     'query_var'          => true,
     'rewrite'            => [ 'slug' => 'review-design' ],
     'capability_type'    => 'post',
@@ -62,6 +62,8 @@ function rp_review_design_register_meta_fields() {
   $fields = apply_filters( 'review-plus/review-design-meta-fields', [
     Field::make( 'checkbox', 'enable', __( 'Enable' ) )
       ->set_default_value( false ),
+    Field::make( 'checkbox', 'require_login', __( 'Login' ) )
+      ->set_default_value( true ),  
     Field::make( 'multiselect', 'support_post_type', __( 'Support Post Types', 'review-plus' ) )
       ->add_options( 'rp_build_options_public_post_types' ),
     Field::make( 'complex', 'support_category', __( 'Support Category', 'review-plus' ) )

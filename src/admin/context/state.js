@@ -15,10 +15,10 @@ function ReviewDesignProvider( { children } ) {
   const [ designEdit, setDesignEdit ] = useState( null )
 
   /**
-   * 
-   * @param {*} id 
-   * @param {*} designData 
-   * @returns 
+   *
+   * @param {*} id
+   * @param {*} designData
+   * @returns
    */
   const updateReviewDesignItem = async ( id, designData ) => {
     let newRD = [ ...reviewDesignData ]
@@ -29,7 +29,7 @@ function ReviewDesignProvider( { children } ) {
     if( editIndex == -1 ) return
 
     const result = await updateDesign( designData )
-    if( result.success != true ) return 
+    if( result.success != true ) return
 
     newRD[ editIndex ] = designData
     setReviewDesignData( newRD )
@@ -38,18 +38,18 @@ function ReviewDesignProvider( { children } ) {
   const newReviewDesignItem = async ( designData ) => {
     const result = await newDesign( designData )
     if( result.success != true ) return
-    
+
     let newRD = [ ...reviewDesignData ]
     let newData = { ...designData }
     newData.id = parseInt( result.ID )
 
-    newRD.unshift( newData ) 
+    newRD.unshift( newData )
     setReviewDesignData( newRD )
   }
 
-  const deleteReviewDesign = async ( designID ) => { 
+  const deleteReviewDesign = async ( designID ) => {
     const result = await deleteDesign( designID )
-    if( result.success != true ) return 
+    if( result.success != true ) return
 
     let newRD = [ ...reviewDesignData ]
     remove( newRD, d => {
@@ -64,8 +64,8 @@ function ReviewDesignProvider( { children } ) {
     let ratingFields = [ ...newdesignEdit.rating_fields ]
 
     // get current index
-    let cIndex = findIndex( ratingFields, o => { 
-      return o.id == ratingFieldItemID 
+    let cIndex = findIndex( ratingFields, o => {
+      return o.id == ratingFieldItemID
     } )
 
     let itemMove = ratingFields.splice( cIndex, 1 )[0]; // save item
@@ -83,7 +83,7 @@ function ReviewDesignProvider( { children } ) {
 
     remove( ratingFields, item => {
       return item.id == ratingFieldItemID
-    } )  
+    } )
 
     newdesignEdit.rating_fields = ratingFields
     setDesignEdit( newdesignEdit )
@@ -121,11 +121,11 @@ function ReviewDesignProvider( { children } ) {
     _getAllGroupPostTax()
   }, [] )
 
-  const value = { 
-    reviewDesignData, 
+  const value = {
+    reviewDesignData,
     setReviewDesignData,
-    designEdit, 
-    setDesignEdit, 
+    designEdit,
+    setDesignEdit,
     updateReviewDesignItem,
     moveRatingFieldEdit,
     removeRatingFieldItem,

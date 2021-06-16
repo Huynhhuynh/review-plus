@@ -65,7 +65,6 @@ function rp_ajax_get_review_design_by_post_id() {
   $postID = $postData[ 'postID' ];
   $result = rp_get_review_design_by_post_type( get_post_type( $postID ) );
   $design = [];
-
   // Support Cats
   if( $result ) {
     foreach( $result as $index => $item ) {

@@ -76,6 +76,7 @@ function rp_get_review_design_by_id( $post_id ) {
     'theme' => carbon_get_post_meta( $result->ID, 'theme' ),
     'theme_color' => carbon_get_post_meta( $result->ID, 'theme_color' ),
     'enable' => carbon_get_post_meta( $result->ID, 'enable' ),
+    'login_required' =>carbon_get_post_meta($result->ID,'require_login'),
     'rating_fields' => $rating_fields ? $rating_fields : [],
   ];
 }

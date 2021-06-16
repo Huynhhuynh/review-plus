@@ -55,10 +55,10 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
           <div className="group-field">
             <label>Name</label>
             <div className="field">
-              <input 
-                className="rp-field" 
-                type="text" 
-                value={ fieldData.name } 
+              <input
+                className="rp-field"
+                type="text"
+                value={ fieldData.name }
                 onChange={ e => {
                   onUpdateField( e.target.value, 'name' )
                 } } />
@@ -67,10 +67,10 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
           <div className="group-field">
             <label>Slug</label>
             <div className="field">
-              <input 
-                className="rp-field" 
-                type="text" 
-                value={ fieldData.slug } 
+              <input
+                className="rp-field"
+                type="text"
+                value={ fieldData.slug }
                 onChange={ e => {
                   onUpdateField( e.target.value, 'slug' )
                 } } />
@@ -79,10 +79,10 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
           <div className="group-field">
             <label>Icon</label>
             <div className="field">
-              <input 
-                className="rp-field" 
-                type="text" 
-                value={ fieldData.rating_icon } 
+              <input
+                className="rp-field"
+                type="text"
+                value={ fieldData.rating_icon }
                 onChange={ e => {
                   onUpdateField( e.target.value, 'default_point' )
                 } } />
@@ -91,10 +91,10 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
           <div className="group-field">
             <label>Max Point</label>
             <div className="field">
-              <input 
-                className="rp-field" 
-                type="number" 
-                value={ fieldData.max_point } 
+              <input
+                className="rp-field"
+                type="number"
+                value={ fieldData.max_point }
                 onChange={ e => {
                   onUpdateField( e.target.value, 'max_point' )
                 } } />
@@ -103,17 +103,17 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
           <div className="group-field">
             <label>Default</label>
             <div className="field">
-              <input 
-                className="rp-field" 
-                type="number" 
-                value={ fieldData.default_point } 
+              <input
+                className="rp-field"
+                type="number"
+                value={ fieldData.default_point }
                 onChange={ e => {
                   onUpdateField( e.target.value, 'default_point' )
                 } } />
             </div>
           </div>
         </div>
-        <ControlBar 
+        <ControlBar
           ratingFieldId={ fieldData.id }
         />
       </fieldset>
@@ -169,17 +169,17 @@ function ColorSelector( { color, onChange } ) {
 export default function DesignEditModal() {
   const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, newReviewDesignItem, groupPostTax } = useReviewDesign()
   if( designEdit == null ) return <></>
-  
+
   const [ _groupPostTax, _setGroupPostTax ] = useState( [] )
 
   const buildGroupOptions = ( postTypes = [] ) => {
     let _groupPostTax = {...groupPostTax}
     let options = []
-    
-    Object.keys( _groupPostTax ).forEach( ( postTypeName ) => { 
+
+    Object.keys( _groupPostTax ).forEach( ( postTypeName ) => {
       let taxs = _groupPostTax[ postTypeName ]
       if( ! taxs || taxs.length <= 0 ) return
-      
+
       taxs.forEach( ( tax ) => {
         let taxLabel = tax.tax_label
         let taxName = tax.tax_name
@@ -203,7 +203,7 @@ export default function DesignEditModal() {
         }
       } )
     } )
-    
+
     return options
   }
 
@@ -211,7 +211,7 @@ export default function DesignEditModal() {
     let find = findIndex( reviewDesignData, d => {
       return d.id == designEdit.id
     } )
-    
+
     return find === -1 ? false : true
   } )()
 
@@ -242,7 +242,7 @@ export default function DesignEditModal() {
       // add new
       newReviewDesignItem( designEdit )
     }
-    
+
     onCloseModal()
   }
 
@@ -300,23 +300,35 @@ export default function DesignEditModal() {
           <form className="rp-form">
             <div className="group-field __inline">
               <div className="field" style={ { width: '80px' } }>
-                <Switch 
+                <Switch
                   onColor={ '#3f51b5' }
                   checkedIcon={ false }
                   uncheckedIcon={ false }
-                  onChange={ checked => { onUpdateField( checked, 'enable' ) } } 
-                  checked={ designEdit.enable } 
+                  onChange={ checked => { onUpdateField( checked, 'enable' ) } }
+                  checked={ designEdit.enable }
                 />
               </div>
               <label>Enable Review</label>
             </div>
+            <div className="group-field __inline">
+              <div className="field" style={ { width: '80px' } }>
+                <Switch
+                  onColor={ '#3f51b5' }
+                  checkedIcon={ false }
+                  uncheckedIcon={ false }
+                  onChange={ checked => { onUpdateField( checked, 'require_login' ) } }
+                  checked={ designEdit.require_login }
+                />
+              </div>
+              <label>Required Login</label>
+            </div>
             <div className="group-field">
               <label>Label</label>
               <div className="field">
-                <input 
-                  className="rp-field" 
-                  type="text" 
-                  value={ designEdit.label } 
+                <input
+                  className="rp-field"
+                  type="text"
+                  value={ designEdit.label }
                   onChange={ e => {
                     onUpdateField( e.target.value, 'label' )
                   } } />
@@ -325,15 +337,15 @@ export default function DesignEditModal() {
             <div className="group-field">
               <label>Description</label>
               <div className="field">
-                <textarea 
-                  className="rp-field" 
-                  value={ designEdit.description } 
+                <textarea
+                  className="rp-field"
+                  value={ designEdit.description }
                   onChange={ e => {
                     onUpdateField( e.target.value, 'description' )
-                  } } >  
+                  } } >
                 </textarea>
                 {/* <CKEditor
-                  editor={ ClassicEditor } 
+                  editor={ ClassicEditor }
                   config={ {
                     toolbar: [ 'bold', 'italic' ],
                   } }
@@ -378,9 +390,9 @@ export default function DesignEditModal() {
                   designEdit.rating_fields &&
                   (designEdit.rating_fields.length > 0) &&
                   designEdit.rating_fields.map( ( ratingFieldData, index ) => {
-                    return <RatingFieldItem 
+                    return <RatingFieldItem
                       key={ ratingFieldData.id }
-                      ratingFieldData={ ratingFieldData } 
+                      ratingFieldData={ ratingFieldData }
                       onUpdate={ updateFieldData => {
                         let newRatingFields = [ ...designEdit.rating_fields ]
                         newRatingFields[ index ] = updateFieldData
@@ -402,5 +414,5 @@ export default function DesignEditModal() {
         </div>
       </div>
     </div>
-  ) 
+  )
 }
