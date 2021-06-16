@@ -19,10 +19,10 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
         reviewDesign &&
         reviewDesign.length > 0 &&
         reviewDesign.map( design => {
-          console.log( design.login_required )
+          console.log( design )
           if( design?.login_required == true ){
-            return <div className="rp-field">
-                Please login to leave a full review
+            return <div className="message-not-login">
+                Please <a href="">Login</a> to leave a full review.<a href="#">Register</a>
             </div>
           }else{
             return <div>
@@ -189,12 +189,7 @@ export default function ReviewForm( { designData, postId } ) {
               </div>
             }
 
-            {
 
-              PHP_DATA.user_logged_in != 'yes' &&
-              <NotLoggedFields submitFormData={ submitFormData } register={ register } errors={ errors } />
-
-            }
 
             {
                 (showReviewAlready==true) &&
@@ -211,19 +206,10 @@ export default function ReviewForm( { designData, postId } ) {
           </form>
         }
         {
+
           PHP_DATA.user_logged_in != 'yes' &&
-          <div className="actionlogin-wrapper">
-            <div className="login">
-              <button>
-                Login
-              </button>
-            </div>
-            <div className="register">
-              <button>
-                Register
-              </button>
-            </div>
-          </div>
+          <NotLoggedFields submitFormData={ submitFormData } register={ register } errors={ errors } />
+
         }
 
       </div>

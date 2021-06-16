@@ -20,7 +20,7 @@ export function designItemTemplate() {
     'theme': 'default',
     'theme_color': '#3f51b5',
     'enable': false,
-    'require_login':true,
+    'login_required':true,
     'rating_fields': [],
   }
 }

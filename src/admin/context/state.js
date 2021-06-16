@@ -28,6 +28,8 @@ function ReviewDesignProvider( { children } ) {
 
     if( editIndex == -1 ) return
 
+    console.log('ok',designData);
+
     const result = await updateDesign( designData )
     if( result.success != true ) return
 

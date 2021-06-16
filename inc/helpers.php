@@ -76,7 +76,7 @@ function rp_get_review_design_by_id( $post_id ) {
     'theme' => carbon_get_post_meta( $result->ID, 'theme' ),
     'theme_color' => carbon_get_post_meta( $result->ID, 'theme_color' ),
     'enable' => carbon_get_post_meta( $result->ID, 'enable' ),
-    'login_required' =>carbon_get_post_meta($result->ID,'require_login'),
+    'login_required' =>carbon_get_post_meta($result->ID,'login_required'),
     'rating_fields' => $rating_fields ? $rating_fields : [],
   ];
 }
@@ -115,7 +115,8 @@ function rp_update_review_design_meta_fields( $post_id = 0, $designData = [] ) {
     'theme',
     'theme_color',
     'enable',
-    'rating_fields'
+    'rating_fields',
+    'login_required'
   ];
 
   foreach( $postUpdateMetaFields as $field ) {

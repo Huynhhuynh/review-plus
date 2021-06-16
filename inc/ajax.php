@@ -48,8 +48,11 @@ function rp_ajax_update_design() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
   $designData = $postData[ 'designData' ];
-
+  // echo '<pre>';
+  // print_r($designData);
+  // echo '</pre>';
   rp_update_review_design_meta_fields( $designData[ 'id' ], $designData );
+
   wp_send_json( [
     'success' => true
   ] );

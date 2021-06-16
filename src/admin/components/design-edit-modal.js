@@ -316,8 +316,8 @@ export default function DesignEditModal() {
                   onColor={ '#3f51b5' }
                   checkedIcon={ false }
                   uncheckedIcon={ false }
-                  onChange={ checked => { onUpdateField( checked, 'require_login' ) } }
-                  checked={ designEdit.require_login }
+                  onChange={ checked => { onUpdateField( checked, 'login_required' ) } }
+                  checked={ designEdit.login_required }
                 />
               </div>
               <label>Required Login</label>
