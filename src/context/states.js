@@ -3,7 +3,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { getReviewDesignByPostID, postReview, getReview, postLikeReview, postDisLikeReview, getLikeReview, getDisLikeReview } from '../admin/lib/api'
+import { getReviewDesignByPostID, postReview, getReview, postLikeReview, postDisLikeReview, getLikeReview, getDisLikeReview, postLikedReview, postDisLikedReview } from '../admin/lib/api'
 const ReviewPlusContext = createContext()
 
 function ReviewPlusProvider( { children, postId } ) {
@@ -61,14 +61,26 @@ function ReviewPlusProvider( { children, postId } ) {
     return result
   }
   const submitLike = async ( id_review ) => {
-    const result = await postLikeReview ( id_review )
+    const result = await postLikeReview ( id_review,postId )
     return result
   }
 
-  const submitDisLike = async ( id_review ) => {
-    const result = await postDisLikeReview ( id_review )
+  const submitLiked = async ( id_review,postId ) => {
+    const result = await postLikedReview ( id_review,postId )
     return result
   }
+
+  const submitDisLiked = async ( id_review,postId ) => {
+    const result = await postDisLikedReview ( id_review,postId )
+    return result
+  }
+
+  const submitDisLike = async ( id_review,postId ) => {
+    const result = await postDisLikeReview ( id_review,postId )
+    return result
+  }
+
+  
   const value = {
     postId,
     reviewDesign,
@@ -77,7 +89,9 @@ function ReviewPlusProvider( { children, postId } ) {
     submitLike,
     submitDisLike,
     reviewLike,
-    reviewDisLike
+    reviewDisLike,
+    submitLiked,
+    submitDisLiked
   }
 
   return (

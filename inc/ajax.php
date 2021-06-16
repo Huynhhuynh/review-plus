@@ -165,8 +165,8 @@ function rp_ajax_post_like_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
   $id_review = $postData['reviewID'];
-  rp_new_point_review_session ( $point_data = [],$id_review );
-  rp_new_like_point_review($point_data = [],$id_review);
+  rp_new_point_review_session ( $postData['reviewID'],$postData['postId'] );
+  rp_new_like_point_review($postData['reviewID'],$postData['postId']);
   wp_send_json( [
     'success' => true,
     'data' =>  $id_review
@@ -218,9 +218,45 @@ function rp_ajax_post_dis_like_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
   $id_review = $postData['reviewID'];
-  rp_minus_point_review_session ( $point_data = [],$id_review );
-  rp_minus_point_review_travel( $point_data = [],$id_review );
-  rp_new_dis_like_point_review($point_data = [],$id_review);
+  $id_post = $postData['idPost'];
+  rp_minus_point_review_session ( $id_post,$id_review );
+  rp_minus_point_review_travel( $id_post,$id_review );
+  rp_new_dis_like_point_review( $id_post,$id_review );
+  wp_send_json( [
+    'success' => true,
+    'data' =>  $id_review
+  ] );
+
+
+}
+
+
+
+add_action( 'wp_ajax_rp_ajax_post_liked_review', 'rp_ajax_post_liked_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_post_liked_review', 'rp_ajax_post_liked_review' );
+
+function rp_ajax_post_liked_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  $id_review = $postData['reviewID'];
+  update_status_like($postData['reviewID'],$postData['idPost']);
+  update_status_sesion_type($postData['reviewID'],$postData['idPost']);
+  wp_send_json( [
+    'success' => true,
+    'data' =>  $id_review
+  ] );
+
+}
+
+add_action( 'wp_ajax_rp_ajax_post_disliked_review', 'rp_ajax_post_disliked_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_post_disliked_review', 'rp_ajax_post_disliked_review' );
+
+function rp_ajax_post_disliked_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  update_status_dislike($postData['reviewID'],$postData['idPost']);
+  update_status_sesion_dislike_type($postData['reviewID'],$postData['idPost']);
+  update_status_travel_dislike_type($postData['reviewID'],$postData['idPost']);
   wp_send_json( [
     'success' => true,
     'data' =>  $id_review

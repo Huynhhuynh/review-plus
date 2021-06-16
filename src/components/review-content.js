@@ -25,11 +25,19 @@ export default function dataReview(props) {
         </div>
         <div className="wrapper-action-review">
           <div className="action-like-count">
-            <Btnlike id_review = {thisprop.id_review}/>
+            {
+              PHP_DATA.user_logged_in == 'yes' &&
+              <Btnlike id_review = {thisprop.id_review}/>
+            }
+
             <Reviewlike id_review = {thisprop.id_review}/>
           </div>
           <div className="action-like-count">
-            <Btndislike id_review = {thisprop.id_review}/>
+            {
+              PHP_DATA.user_logged_in == 'yes' &&
+              <Btndislike id_review = {thisprop.id_review}/>
+            }
+
             <Reviewdislike id_review = {thisprop.id_review}/>
           </div>
         </div>

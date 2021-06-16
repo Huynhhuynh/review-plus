@@ -167,6 +167,12 @@ form.review-plus-form {
     button {
       margin-right: 10px;
     }
+    button.liked {
+      background-color: #4a4ad2 !important;
+    }
+    button.disliked {
+      background-color: #4a4ad2 !important;
+    }
   }
 }
 .user-profile {

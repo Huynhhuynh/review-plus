@@ -250,35 +250,153 @@ function rp_update_review( $post_id = 0, $review_data = [] ) {
   return $post_id;
 }
 
-function rp_new_point_review_session ( $point_data = [],$id_review ) {
+function rp_new_point_review_session ( $id_review ,$id_post) {
 
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
     $name = esc_html( $current_user->display_name );
-    $point_data[ 'user_id' ] = $current_user->ID;
-    $point_data[ 'name' ] = esc_html( $current_user->display_name );
-    $point_data[ 'email' ] = $current_user->user_email;
-    $point_data[ 'url' ] = $current_user->user_url;
+    $id_user = $current_user->ID;
+    $namecurrent = esc_html( $current_user->display_name );
   }
 
-  $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
-  $id_post = carbon_get_post_meta($id_review,'review_post_id');
-  $id = wp_insert_post( [
+
+  $arg_points = array(
     'post_type' => 'point-entries',
-    'post_title' => ( isset( $point_data[ 'name' ] ) ? $point_data[ 'name' ] : '' ),
-    'post_status' => 'publish'
-  ] );
+    'post_status' => 'draft',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'sessionpoint',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_number_entrie',
+          'value' => '1',
+          'compare' => '=',
+        ],
+    ]
+  );
 
+  $like = new WP_Query( $arg_points );
+  $total_likes = $like->found_posts;
+  if($total_likes>0){
+    while ( $like->have_posts() ) : $like->the_post();
+      $id_point = get_the_ID();
+      wp_update_post(array(
+         'ID'    =>  $id_point,
+         'post_status'   =>  'publish'
+       ));
 
-  carbon_set_post_meta( $id, 'point_type_entrie', 'sessionpoint');
-  carbon_set_post_meta( $id,'author_action_entrie', $point_data[ 'user_id' ] );
-  carbon_set_post_meta( $id,'review_post_id', $id_review );
-  carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
-  carbon_set_post_meta( $id,'post_id', $id_post );
-  carbon_set_post_meta( $id,'point_number_entrie', 1 );
+    endwhile;
+    wp_reset_postdata();
+    return $id_point;
+  }else{
+    $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
+    $id_post = carbon_get_post_meta($id_review,'review_post_id');
+    $id = wp_insert_post( [
+      'post_type' => 'point-entries',
+      'post_title' => ( isset( $namecurrent ) ? $namecurrent : '' ),
+      'post_status' => 'publish'
+    ] );
+    carbon_set_post_meta( $id, 'point_type_entrie', 'sessionpoint');
+    carbon_set_post_meta( $id,'author_action_entrie', $id_user );
+    carbon_set_post_meta( $id,'review_post_id', $id_review );
+    carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
+    carbon_set_post_meta( $id,'post_id', $id_post );
+    carbon_set_post_meta( $id,'point_number_entrie', 1 );
+    return $id;
+  }
 
-  return $id;
 }
+
+function rp_new_like_point_review  ( $id_review , $id_post ) {
+
+  if( is_user_logged_in() ) {
+    $current_user = wp_get_current_user();
+    $name = esc_html( $current_user->display_name );
+    $id_user = $current_user->ID;
+    $namecurrent = esc_html( $current_user->display_name );
+  }
+
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'draft',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'likeentrie',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ]
+    ]
+  );
+
+  $like = new WP_Query( $arg_points );
+  $total_likes = $like->found_posts;
+
+  if($total_likes>0){
+    while ( $like->have_posts() ) : $like->the_post();
+      $id_point = get_the_ID();
+      wp_update_post(array(
+         'ID'    =>  $id_point,
+         'post_status'   =>  'publish'
+       ));
+
+    endwhile;
+    wp_reset_postdata();
+    return $id_point;
+  }else{
+    $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
+    $id_post = carbon_get_post_meta($id_review,'review_post_id');
+    $id = wp_insert_post( [
+      'post_type' => 'point-entries',
+      'post_title' => ( isset( $namecurrent ) ? $namecurrent : '' ),
+      'post_status' => 'publish'
+    ] );
+    carbon_set_post_meta( $id, 'point_type_entrie', 'likeentrie');
+    carbon_set_post_meta( $id,'author_action_entrie', $id_user );
+    carbon_set_post_meta( $id,'review_post_id', $id_review );
+    carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
+    carbon_set_post_meta( $id,'post_id', $id_post );
+    carbon_set_post_meta( $id,'point_number_entrie', 0 );
+    return $id;
+  }
+}
+
+
 
 function rp_minus_point_travel_dis_like ( $id_review ) {
   if( is_user_logged_in() ) {
@@ -287,123 +405,497 @@ function rp_minus_point_travel_dis_like ( $id_review ) {
   }
 }
 
-function rp_minus_point_review_session ( $point_data = [],$id_review ) {
+function rp_minus_point_review_session ( $id_post,$id_review ) {
 
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
     $name = esc_html( $current_user->display_name );
-    $point_data[ 'user_id' ] = $current_user->ID;
-    $point_data[ 'name' ] = esc_html( $current_user->display_name );
-    $point_data[ 'email' ] = $current_user->user_email;
-    $point_data[ 'url' ] = $current_user->user_url;
+    $id_user = $current_user->ID;
+    $namecurrent = esc_html( $current_user->display_name );
   }
 
-  $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
-  $id_post = carbon_get_post_meta($id_review,'review_post_id');
-  $id = wp_insert_post( [
+
+  $arg_points = array(
     'post_type' => 'point-entries',
-    'post_title' => ( isset( $point_data[ 'name' ] ) ? $point_data[ 'name' ] : '' ),
-    'post_status' => 'publish'
-  ] );
+    'post_status' => 'draft',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'sessionpoint',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_number_entrie',
+          'value' => '-1',
+          'compare' => '=',
+        ],
+    ]
+  );
 
-
-  carbon_set_post_meta( $id, 'point_type_entrie', 'sessionpoint');
-  carbon_set_post_meta( $id,'author_action_entrie', $point_data[ 'user_id' ] );
-  carbon_set_post_meta( $id,'review_post_id', $id_review );
-  carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
-  carbon_set_post_meta( $id,'post_id', $id_post );
-  carbon_set_post_meta( $id,'point_number_entrie', -1 );
-
-  return $id;
+  $dislike = new WP_Query( $arg_points );
+  $total_dislikes = $dislike->found_posts;
+  if($total_dislikes>0){
+    while ( $dislike->have_posts() ) : $dislike->the_post();
+      $id_point = get_the_ID();
+      wp_update_post(array(
+         'ID'    =>  $id_point,
+         'post_status'   =>  'publish'
+       ));
+    endwhile;
+    wp_reset_postdata();
+    return $id_point;
+  }else{
+    $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
+    $id_post = carbon_get_post_meta($id_review,'review_post_id');
+    $id = wp_insert_post( [
+      'post_type' => 'point-entries',
+      'post_title' => ( isset( $namecurrent ) ? $namecurrent : '' ),
+      'post_status' => 'publish'
+    ] );
+    carbon_set_post_meta( $id, 'point_type_entrie', 'sessionpoint');
+    carbon_set_post_meta( $id,'author_action_entrie', $id_user );
+    carbon_set_post_meta( $id,'review_post_id', $id_review );
+    carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
+    carbon_set_post_meta( $id,'post_id', $id_post );
+    carbon_set_post_meta( $id,'point_number_entrie', -1 );
+    return $id;
+  }
 }
 
-function rp_minus_point_review_travel ( $point_data = [],$id_review ) {
+function rp_minus_point_review_travel ( $id_post,$id_review ) {
 
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
     $name = esc_html( $current_user->display_name );
-    $point_data[ 'user_id' ] = $current_user->ID;
-    $point_data[ 'name' ] = esc_html( $current_user->display_name );
-    $point_data[ 'email' ] = $current_user->user_email;
-    $point_data[ 'url' ] = $current_user->user_url;
+    $id_user = $current_user->ID;
+    $namecurrent = esc_html( $current_user->display_name );
   }
 
-  $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
-  $id_post = carbon_get_post_meta($id_review,'review_post_id');
-  $id = wp_insert_post( [
+
+  $arg_points = array(
     'post_type' => 'point-entries',
-    'post_title' => ( isset( $point_data[ 'name' ] ) ? $point_data[ 'name' ] : '' ),
-    'post_status' => 'publish'
-  ] );
+    'post_status' => 'draft',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'travelpoint',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_number_entrie',
+          'value' => '-1',
+          'compare' => '=',
+        ],
+    ]
+  );
 
+  $dislike = new WP_Query( $arg_points );
+  $total_dislikes = $dislike->found_posts;
+  if($total_dislikes>0){
+    while ( $dislike->have_posts() ) : $dislike->the_post();
+      $id_point = get_the_ID();
+      wp_update_post(array(
+         'ID'    =>  $id_point,
+         'post_status'   =>  'publish'
+       ));
 
-  carbon_set_post_meta( $id, 'point_type_entrie', 'travelpoint');
-  carbon_set_post_meta( $id,'author_action_entrie', $point_data[ 'user_id' ] );
-  carbon_set_post_meta( $id,'review_post_id', $id_review );
-  carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
-  carbon_set_post_meta( $id,'post_id', $id_post );
-  carbon_set_post_meta( $id,'point_number_entrie', -1 );
-
-  return $id;
+    endwhile;
+    wp_reset_postdata();
+    return $id_point;
+  }else{
+    $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
+    $id_post = carbon_get_post_meta($id_review,'review_post_id');
+    $id = wp_insert_post( [
+      'post_type' => 'point-entries',
+      'post_title' => ( isset( $namecurrent ) ? $namecurrent : '' ),
+      'post_status' => 'publish'
+    ] );
+    carbon_set_post_meta( $id, 'point_type_entrie', 'travelpoint');
+    carbon_set_post_meta( $id,'author_action_entrie', $id_user );
+    carbon_set_post_meta( $id,'review_post_id', $id_review );
+    carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
+    carbon_set_post_meta( $id,'post_id', $id_post );
+    carbon_set_post_meta( $id,'point_number_entrie', -1 );
+    return $id;
+  }
 }
 
 
-function rp_new_like_point_review ( $point_data = [],$id_review ) {
+
+
+function update_status_like ( $id_review ,$id_post) {
+  $post_id_point = [];
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
     $name = esc_html( $current_user->display_name );
-    $point_data[ 'user_id' ] = $current_user->ID;
-    $point_data[ 'name' ] = esc_html( $current_user->display_name );
-    $point_data[ 'email' ] = $current_user->user_email;
-    $point_data[ 'url' ] = $current_user->user_url;
+    $id_user = $current_user->ID;
   }
-
-  $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
-  $id_post = carbon_get_post_meta($id_review,'review_post_id');
-  $id = wp_insert_post( [
+  $arg_points = array(
     'post_type' => 'point-entries',
-    'post_title' => ( isset( $point_data[ 'name' ] ) ? $point_data[ 'name' ] : '' ),
-    'post_status' => 'publish'
-  ] );
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'likeentrie',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ],
 
+    ]
+  );
 
-  carbon_set_post_meta( $id, 'point_type_entrie', 'likeentrie');
-  carbon_set_post_meta( $id,'author_action_entrie', $point_data[ 'user_id' ] );
-  carbon_set_post_meta( $id,'review_post_id', $id_review );
-  carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
-  carbon_set_post_meta( $id,'post_id', $id_post );
-  carbon_set_post_meta( $id,'point_number_entrie', 0 );
+  $like = new WP_Query( $arg_points );
 
-  return $id;
+  while ( $like->have_posts() ) : $like->the_post();
+    $id_point = get_the_ID();
+    wp_update_post(array(
+       'ID'    =>  $id_point,
+       'post_status'   =>  'draft'
+     ));
+
+  endwhile;
+  wp_reset_postdata();
+  return $id_point;
 }
 
-function rp_new_dis_like_point_review ( $point_data = [],$id_review ) {
+
+function update_status_dislike ( $id_review ,$id_post) {
+  $post_id_point = [];
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
     $name = esc_html( $current_user->display_name );
-    $point_data[ 'user_id' ] = $current_user->ID;
-    $point_data[ 'name' ] = esc_html( $current_user->display_name );
-    $point_data[ 'email' ] = $current_user->user_email;
-    $point_data[ 'url' ] = $current_user->user_url;
+    $id_user = $current_user->ID;
+  }
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'dislikeentrie',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ],
+
+    ]
+  );
+
+  $dislike = new WP_Query( $arg_points );
+
+  while ( $dislike->have_posts() ) : $dislike->the_post();
+    $id_point = get_the_ID();
+    wp_update_post(array(
+       'ID'    =>  $id_point,
+       'post_status'   =>  'draft'
+     ));
+
+  endwhile;
+  wp_reset_postdata();
+  return $id_point;
+}
+
+function update_status_sesion_type ( $id_review ,$id_post) {
+  $post_id_point = [];
+  if( is_user_logged_in() ) {
+    $current_user = wp_get_current_user();
+    $name = esc_html( $current_user->display_name );
+    $id_user = $current_user->ID;
+  }
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'sessionpoint',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_number_entrie',
+          'value' => '1',
+          'compare' => '=',
+        ],
+
+    ]
+  );
+
+  $like = new WP_Query( $arg_points );
+
+  while ( $like->have_posts() ) : $like->the_post();
+    $id_point = get_the_ID();
+    wp_update_post(array(
+       'ID'    =>  $id_point,
+       'post_status'   =>  'draft'
+     ));
+
+  endwhile;
+  wp_reset_postdata();
+  return $id_point;
+}
+
+
+function update_status_sesion_dislike_type ( $id_review ,$id_post) {
+  $post_id_point = [];
+  if( is_user_logged_in() ) {
+    $current_user = wp_get_current_user();
+    $name = esc_html( $current_user->display_name );
+    $id_user = $current_user->ID;
+  }
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'sessionpoint',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_number_entrie',
+          'value' => '-1',
+          'compare' => '=',
+        ],
+
+    ]
+  );
+
+  $dislike = new WP_Query( $arg_points );
+
+  while ( $dislike->have_posts() ) : $dislike->the_post();
+    $id_point = get_the_ID();
+    wp_update_post(array(
+       'ID'    =>  $id_point,
+       'post_status'   =>  'draft'
+     ));
+
+  endwhile;
+  wp_reset_postdata();
+  return $id_point;
+}
+
+function update_status_travel_dislike_type ( $id_review ,$id_post) {
+  $post_id_point = [];
+  if( is_user_logged_in() ) {
+    $current_user = wp_get_current_user();
+    $name = esc_html( $current_user->display_name );
+    $id_user = $current_user->ID;
+  }
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'travelpoint',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_number_entrie',
+          'value' => '-1',
+          'compare' => '=',
+        ],
+
+    ]
+  );
+
+  $dislike = new WP_Query( $arg_points );
+
+  while ( $dislike->have_posts() ) : $dislike->the_post();
+    $id_point = get_the_ID();
+    wp_update_post(array(
+       'ID'    =>  $id_point,
+       'post_status'   =>  'draft'
+     ));
+
+  endwhile;
+  wp_reset_postdata();
+  return $id_point;
+}
+
+function rp_new_dis_like_point_review ( $id_post,$id_review ) {
+  if( is_user_logged_in() ) {
+    $current_user = wp_get_current_user();
+    $name = esc_html( $current_user->display_name );
+    $id_user = $current_user->ID;
+    $namecurrent = esc_html( $current_user->display_name );
   }
 
-  $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
-  $id_post = carbon_get_post_meta($id_review,'review_post_id');
-  $id = wp_insert_post( [
+  $arg_points = array(
     'post_type' => 'point-entries',
-    'post_title' => ( isset( $point_data[ 'name' ] ) ? $point_data[ 'name' ] : '' ),
-    'post_status' => 'publish'
-  ] );
+    'post_status' => 'draft',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'dislikeentrie',
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'review_post_id',
+          'value' => $id_review,
+          'compare' => '=',
+        ]
+    ]
+  );
 
+  $like = new WP_Query( $arg_points );
+  $total_likes = $like->found_posts;
 
-  carbon_set_post_meta( $id, 'point_type_entrie', 'dislikeentrie');
-  carbon_set_post_meta( $id,'author_action_entrie', $point_data[ 'user_id' ] );
-  carbon_set_post_meta( $id,'review_post_id', $id_review );
-  carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
-  carbon_set_post_meta( $id,'post_id', $id_post );
-  carbon_set_post_meta( $id,'point_number_entrie', 0 );
+  if($total_likes>0){
+    while ( $like->have_posts() ) : $like->the_post();
+      $id_point = get_the_ID();
+      wp_update_post(array(
+         'ID'    =>  $id_point,
+         'post_status'   =>  'publish'
+       ));
 
-  return $id;
+    endwhile;
+    wp_reset_postdata();
+    return $id_point;
+  }else{
+    $user_id_reviews = carbon_get_post_meta($id_review,'user_id');
+    $id_post = carbon_get_post_meta($id_review,'review_post_id');
+    $id = wp_insert_post( [
+      'post_type' => 'point-entries',
+      'post_title' => ( isset( $namecurrent ) ? $namecurrent : '' ),
+      'post_status' => 'publish'
+    ] );
+    carbon_set_post_meta( $id, 'point_type_entrie', 'dislikeentrie');
+    carbon_set_post_meta( $id,'author_action_entrie', $id_user );
+    carbon_set_post_meta( $id,'review_post_id', $id_review );
+    carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
+    carbon_set_post_meta( $id,'post_id', $id_post );
+    carbon_set_post_meta( $id,'point_number_entrie', 0 );
+    return $id;
+  }
 }
 
 function rp_new_point_review ( $point_data = [],$id_review ) {
@@ -651,6 +1143,7 @@ function get_review_content_by_id_post ( $id_post ) {
   $data_reviews = [];
   $data_points = [];
   $data_return = [];
+  $data_point_dislike = [];
   $id_user_current = get_current_user_id();
   $args = array(
     'post_type' => 'review-entries',
@@ -678,6 +1171,7 @@ function get_review_content_by_id_post ( $id_post ) {
   endwhile;
   wp_reset_postdata();
   array_push($data_return,$data_reviews);
+
   $arg_points = array(
     'post_type' => 'point-entries',
     'post_status' => 'publish',
@@ -710,7 +1204,45 @@ function get_review_content_by_id_post ( $id_post ) {
     array_push($data_points,$id_revew);
   endwhile;
   wp_reset_postdata();
+
   array_push($data_return,array_unique($data_points));
+
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user_current,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => 'dislikeentrie',
+          'compare' => '=',
+        ],
+    ]
+  );
+
+
+  $dislike = new WP_Query( $arg_points );
+  while ( $dislike->have_posts() ) : $dislike->the_post();
+    $id_point = get_the_ID();
+    $id_revew = carbon_get_post_meta($id_point,'review_post_id');
+    array_push($data_point_dislike,$id_revew);
+  endwhile;
+  wp_reset_postdata();
+
+  array_push($data_return,array_unique($data_point_dislike));
+
+
   return $data_return;
 
 }

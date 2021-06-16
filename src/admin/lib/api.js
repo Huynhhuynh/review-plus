@@ -63,15 +63,27 @@ export async function postReview( reviewData ) {
   } )
 }
 
-export async function postLikeReview( reviewID ) {
+export async function postLikeReview( reviewID,postId ) {
   return await Request( 'rp_ajax_post_like_review', {
-    reviewID
+    reviewID,postId
   } )
 }
 
-export async function postDisLikeReview( reviewID ) {
+export async function postLikedReview( reviewID,idPost ) {
+  return await Request( 'rp_ajax_post_liked_review', {
+    reviewID,idPost
+  } )
+}
+
+export async function postDisLikedReview( reviewID,idPost ) {
+  return await Request( 'rp_ajax_post_disliked_review', {
+    reviewID,idPost
+  } )
+}
+
+export async function postDisLikeReview( reviewID,idPost ) {
   return await Request( 'rp_ajax_post_dis_like_review', {
-    reviewID
+    reviewID,idPost
   } )
 }
 
