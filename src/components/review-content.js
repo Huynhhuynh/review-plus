@@ -10,19 +10,27 @@ import Btndislike from '../components/btn-dislike'
 export default function dataReview(props) {
 
   const thisprop = props
-  const [ showLike, setShowlike ] = useState( false )
-
 
   return (
     <>
 
       <div className="wrapper-comment-content-post">
-        <div className="user-profile">
-          {thisprop.name_author}
+        <div className="avatar-user">
+          <img src={thisprop.url_avatar}/>
         </div>
-        <div className="content-review">
-          {thisprop.comment_rv}
+        <div>
+          <div className="user-profile">
+            { thisprop.name_author }
+
+          </div>
+          <div className="date-comment">
+            { thisprop.date_comment }
+          </div>
+          <div className="content-review">
+            {thisprop.comment_rv}
+          </div>
         </div>
+
         <div className="wrapper-action-review">
           <div className="action-like-count">
             {

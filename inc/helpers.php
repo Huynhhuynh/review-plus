@@ -1164,8 +1164,10 @@ function get_review_content_by_id_post ( $id_post ) {
     $content_reviews = carbon_get_post_meta($id_post_reviews,'comment_content');
     array_push($data_reviews,[
       'id_reviews'=>$id_post_reviews,
+      'url_avatar'=>get_avatar_url($id_post_reviews),
       'name'=>$author_name_reviews,
-      'comment'=>$content_reviews
+      'comment'=>$content_reviews,
+      'date_coment'=>get_the_date( 'l F j, Y' )
     ]);
 
   endwhile;
