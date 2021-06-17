@@ -1,5 +1,3 @@
-import React from "react"
-import ReactDOM from 'react-dom'
 import { useReviewPlus } from '../context/states'
 import { useEffect, useState } from 'react'
 
@@ -18,7 +16,7 @@ export default function likeReview(props) {
 
           likeReview.reviewLike.map( data => {
             if(data.id_review==thisprop.id_review ) {
-              return <div>{data.like}</div>
+              return <div className="number-action">{data.like}</div>
             }
           } )
         }

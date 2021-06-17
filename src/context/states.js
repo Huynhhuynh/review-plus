@@ -8,15 +8,12 @@ const ReviewPlusContext = createContext()
 
 function ReviewPlusProvider( { children, postId } ) {
   const [ reviewDesign, setReviewDesign ] = useState( [] )
-
   const [ reviewContent, setReviewContent ] = useState( [] )
-
   const [ reviewLike, setReviewLike ] = useState( [] )
   const [ reviewDisLike, setReviewDisLike ] = useState( [] )
 
   useEffect( async () => {
     const Result = await getReviewDesignByPostID( postId )
-
     if( Result.success == true ){
       setReviewDesign( Result.data )
     }else{
@@ -55,7 +52,6 @@ function ReviewPlusProvider( { children, postId } ) {
 
   }, [] )
 
-
   const submitReview = async ( reviewData ) => {
     const result = await postReview( reviewData )
     return result
@@ -80,7 +76,7 @@ function ReviewPlusProvider( { children, postId } ) {
     return result
   }
 
-  
+
   const value = {
     postId,
     reviewDesign,

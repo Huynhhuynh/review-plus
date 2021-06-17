@@ -2,13 +2,15 @@ import React from "react"
 import ReactDOM from 'react-dom'
 import { useReviewPlus } from '../context/states'
 import { useEffect, useState } from 'react'
+import { AiTwotoneDislike } from 'react-icons/ai'
+import { BiDislike } from 'react-icons/bi'
 
 
 export default function btndislikeReview(props) {
   const thisprop = props
   const { submitDisLike } = useReviewPlus()
   const { submitDisLiked } = useReviewPlus()
-  const { postId }  = useReviewPlus();
+  const { postId }  = useReviewPlus()
   const data_user_current_dislike = useReviewPlus()
   const [ showbt, setShowbt ] = useState( false )
   const array_id_reviews = data_user_current_dislike.reviewContent[2]
@@ -39,16 +41,16 @@ export default function btndislikeReview(props) {
 
       {
         (showbt==true)&&
-        <button  className="disliked" onClick={handleClickDisLiked}>
-          DisLike
-        </button>
+        <div className="disliked" onClick={handleClickDisLiked}>
+          <AiTwotoneDislike/>
+        </div>
       }
 
       {
         (showbt==false)&&
-        <button className="dislike" onClick={handleClickDisLike}>
-          DisLike
-        </button>
+        <div className="dislike" onClick={handleClickDisLike}>
+          <BiDislike/>
+        </div>
       }
     </>
   )

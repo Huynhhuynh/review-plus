@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 export default function dislikeReview(props) {
   const thisprop = props
   const dislikeReview = useReviewPlus();
-  
+
   return (
     <>
         {
@@ -16,7 +16,7 @@ export default function dislikeReview(props) {
 
           dislikeReview.reviewDisLike.map( data => {
             if(data.id_review==thisprop.id_review ) {
-              return <div>{data.dislike}</div>
+              return <div className="number-action">{data.dislike}</div>
             }
           } )
         }

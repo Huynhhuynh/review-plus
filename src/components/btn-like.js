@@ -1,5 +1,8 @@
 import { useReviewPlus } from '../context/states'
 import { useEffect, useState } from 'react'
+import { AiFillLike } from 'react-icons/ai'
+import { AiOutlineLike } from 'react-icons/ai'
+
 
 
 export default function btnlikeReview(props) {
@@ -18,7 +21,6 @@ export default function btnlikeReview(props) {
     if(result_array.includes(thisprop.id_review)){
       setShowbt(true)
     }
-
   });
 
 
@@ -35,17 +37,17 @@ export default function btnlikeReview(props) {
   return (
     <>
       {
-        (showbt==true)&&
-        <button className="liked" onClick={handleClickLiked}>
-          Like
-        </button>
+        (showbt==true) &&
+        <div className="liked" onClick={handleClickLiked}>
+          <AiFillLike />
+        </div>
       }
 
       {
-        (showbt==false)&&
-        <button className="like" onClick={handleClickLike}>
-          Like
-        </button>
+        (showbt==false) &&
+        <div className="like" onClick={handleClickLike}>
+          <AiOutlineLike />
+        </div>
       }
 
     </>
