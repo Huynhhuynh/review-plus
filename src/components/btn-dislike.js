@@ -13,7 +13,7 @@ export default function btndislikeReview(props) {
   const { postId }  = useReviewPlus()
   const data_user_current_dislike = useReviewPlus()
   const [ showbt, setShowbt ] = useState( false )
-  const array_id_reviews = data_user_current_dislike.reviewContent[2]
+  const array_id_reviews = data_user_current_dislike.pointDisLikeReview
   const result_array = array_id_reviews.map(function (x) {
     return parseInt(x, 10)
   });
@@ -21,6 +21,8 @@ export default function btndislikeReview(props) {
   useEffect(() => {
     if(result_array.includes(thisprop.id_review)){
       setShowbt(true)
+    }else{
+      setShowbt(false)
     }
 
   });

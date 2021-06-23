@@ -116,18 +116,12 @@ add_action( 'wp_ajax_nopriv_rp_ajax_get_review_design_by_post_id', 'rp_ajax_get_
 function rp_ajax_post_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
-
   $reviewData = $postData[ 'reviewData' ];
-
   spam_reviews_form($reviewData);
-
-
 }
-
 
 add_action( 'wp_ajax_rp_ajax_get_review', 'rp_ajax_get_review' );
 add_action( 'wp_ajax_nopriv_rp_ajax_get_review', 'rp_ajax_get_review' );
-
 
 function rp_ajax_get_review() {
   $json = file_get_contents('php://input');
@@ -167,17 +161,17 @@ function rp_ajax_post_like_review() {
   $id_review = $postData['reviewID'];
   rp_new_point_review_session ( $postData['reviewID'],$postData['postId'] );
   rp_new_like_point_review($postData['reviewID'],$postData['postId']);
+  $like_reviews =  get_like_review($postData['postId']);
+  $like_point_user_login = get_like_dislike_user_current($postData['postId'],'likeentrie');
   wp_send_json( [
     'success' => true,
-    'data' =>  $id_review
+    'data' =>  $id_review,
+    'likeupdate' => $like_reviews,
+    'likeuserlogin'=>$like_point_user_login
   ] );
 
 
 }
-
-
-add_action( 'wp_ajax_rp_ajax_post_dis_like_review', 'rp_ajax_post_dis_like_review' );
-add_action( 'wp_ajax_nopriv_rp_ajax_post_dis_like_review', 'rp_ajax_post_dis_like_review' );
 
 
 
@@ -213,6 +207,8 @@ function rp_ajax_get_dis_like_review() {
 }
 
 
+add_action( 'wp_ajax_rp_ajax_post_dis_like_review', 'rp_ajax_post_dis_like_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_post_dis_like_review', 'rp_ajax_post_dis_like_review' );
 
 function rp_ajax_post_dis_like_review() {
   $json = file_get_contents('php://input');
@@ -222,9 +218,13 @@ function rp_ajax_post_dis_like_review() {
   rp_minus_point_review_session ( $id_post,$id_review );
   rp_minus_point_review_travel( $id_post,$id_review );
   rp_new_dis_like_point_review( $id_post,$id_review );
+  $dislike = get_dis_like_review( $id_post );
+  $dislike_point_user_login = get_like_dislike_user_current($id_post,'dislikeentrie');
   wp_send_json( [
     'success' => true,
-    'data' =>  $id_review
+    'data' =>  $id_review,
+    'dislikeupdate'=>$dislike,
+    'dislikeuserlogin'=>$dislike_point_user_login
   ] );
 
 
@@ -241,9 +241,13 @@ function rp_ajax_post_liked_review() {
   $id_review = $postData['reviewID'];
   update_status_like($postData['reviewID'],$postData['idPost']);
   update_status_sesion_type($postData['reviewID'],$postData['idPost']);
+  $like_reviews =  get_like_review($postData['idPost']);
+  $like_point_user_login = get_like_dislike_user_current($postData['idPost'],'likeentrie');
   wp_send_json( [
     'success' => true,
-    'data' =>  $id_review
+    'data' =>  $id_review,
+    'likeupdate' => $like_reviews,
+    'likeuserlogin'=>$like_point_user_login
   ] );
 
 }
@@ -257,10 +261,44 @@ function rp_ajax_post_disliked_review() {
   update_status_dislike($postData['reviewID'],$postData['idPost']);
   update_status_sesion_dislike_type($postData['reviewID'],$postData['idPost']);
   update_status_travel_dislike_type($postData['reviewID'],$postData['idPost']);
+  $dislike = get_dis_like_review($postData['idPost']);
+  $dislike_point_user_login = get_like_dislike_user_current($postData['idPost'],'dislikeentrie');
   wp_send_json( [
     'success' => true,
-    'data' =>  $id_review
+    'data' =>  $id_review,
+    'dislikeupdate'=>$dislike,
+    'dislikeuserlogin'=>$dislike_point_user_login
   ] );
-
-
 }
+
+
+add_action( 'wp_ajax_rp_ajax_get_point_review', 'rp_ajax_get_point_review' );
+add_action( 'wp_ajax_nopriv_rp_ajax_get_point_review', 'rp_ajax_get_point_review' );
+
+
+function rp_ajax_get_point_review() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  $postID = $postData[ 'idPost' ];
+  $point_like_user_login = get_like_dislike_user_current($postID,'likeentrie');
+  $point_dislike_user_login = get_like_dislike_user_current($postID,'dislikeentrie');
+  wp_send_json( [
+    'success' => true,
+    'like'=>array_values($point_like_user_login),
+    'dislike'=>array_values( $point_dislike_user_login )
+  ] );
+}
+
+
+function rp_ajax_post_data_reply() {
+  $json = file_get_contents('php://input');
+  $postData = json_decode( $json, true );
+  $dataReply = $postData['dataReply'];
+  reply_comment_review($dataReply);
+  wp_send_json( [
+    'success' => true
+  ] );
+}
+
+add_action( 'wp_ajax_rp_ajax_post_data_reply', 'rp_ajax_post_data_reply' );
+add_action( 'wp_ajax_nopriv_rp_ajax_post_data_reply', 'rp_ajax_post_data_reply' );

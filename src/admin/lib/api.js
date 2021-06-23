@@ -75,6 +75,13 @@ export async function postLikedReview( reviewID,idPost ) {
   } )
 }
 
+export async function postReply( dataReply ) {
+  return await Request( 'rp_ajax_post_data_reply', {
+    dataReply
+  } )
+}
+
+
 export async function postDisLikedReview( reviewID,idPost ) {
   return await Request( 'rp_ajax_post_disliked_review', {
     reviewID,idPost
@@ -93,6 +100,13 @@ export async function getReview( idPost ) {
     idPost
   } )
 }
+
+export async function getPointReview( idPost ) {
+  return await Request( 'rp_ajax_get_point_review', {
+    idPost
+  } )
+}
+
 
 export async function getLikeReview( idPost ) {
   return await Request( 'rp_ajax_get_like_review', {

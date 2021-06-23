@@ -19,7 +19,6 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
         reviewDesign &&
         reviewDesign.length > 0 &&
         reviewDesign.map( design => {
-          console.log( design )
           if( design?.login_required == true ){
             return <div className="message-not-login">
                 Please <a href="">Login</a> to leave a full review.<a href="#">Register</a>
@@ -77,7 +76,7 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
 }
 
 export default function ReviewForm( { designData, postId } ) {
-  const { submitReview } = useReviewPlus();
+  const { submitReview } = useReviewPlus()
   const { register, setValue, handleSubmit, trigger, formState: { errors } } = useForm()
   const [ loading, setLoading ] = useState( false )
   const [ formSubmited, setFormSubmited ] = useState( false )

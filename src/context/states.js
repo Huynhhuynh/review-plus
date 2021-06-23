@@ -3,12 +3,26 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { getReviewDesignByPostID, postReview, getReview, postLikeReview, postDisLikeReview, getLikeReview, getDisLikeReview, postLikedReview, postDisLikedReview } from '../admin/lib/api'
+import {
+  getReviewDesignByPostID,
+  postReview,
+  getReview,
+  postLikeReview,
+  postDisLikeReview,
+  getLikeReview,
+  getDisLikeReview,
+  postLikedReview,
+  postDisLikedReview,
+  getPointReview ,
+  postReply
+} from '../admin/lib/api'
 const ReviewPlusContext = createContext()
 
 function ReviewPlusProvider( { children, postId } ) {
   const [ reviewDesign, setReviewDesign ] = useState( [] )
   const [ reviewContent, setReviewContent ] = useState( [] )
+  const [ pointLikeReview, setPointLikeReview ] = useState( [] )
+  const [ pointDisLikeReview, setPointDisLikeReview ] = useState( [] )
   const [ reviewLike, setReviewLike ] = useState( [] )
   const [ reviewDisLike, setReviewDisLike ] = useState( [] )
 
@@ -26,6 +40,18 @@ function ReviewPlusProvider( { children, postId } ) {
     const Result_review = await getReview(postId)
     if(Result_review.success==true) {
       setReviewContent(Result_review.data)
+    }else{
+      return
+    }
+
+  }, [] )
+
+
+  useEffect( async () => {
+    const Result_point = await getPointReview(postId)
+    if(Result_point.success==true) {
+      setPointLikeReview(Result_point.like)
+      setPointDisLikeReview(Result_point.dislike)
     }else{
       return
     }
@@ -56,23 +82,36 @@ function ReviewPlusProvider( { children, postId } ) {
     const result = await postReview( reviewData )
     return result
   }
+
+  const submitReply = async ( replyData ) => {
+    const result = await postReply( replyData )
+    return result
+  }
   const submitLike = async ( id_review ) => {
     const result = await postLikeReview ( id_review,postId )
+    setReviewLike( result.likeupdate )
+    setPointLikeReview( result.likeuserlogin )
     return result
   }
 
   const submitLiked = async ( id_review,postId ) => {
     const result = await postLikedReview ( id_review,postId )
+    setReviewLike( result.likeupdate )
+    setPointLikeReview( result.likeuserlogin )
     return result
   }
 
   const submitDisLiked = async ( id_review,postId ) => {
     const result = await postDisLikedReview ( id_review,postId )
+    setReviewDisLike(result.dislikeupdate)
+    setPointDisLikeReview(result.dislikeuserlogin)
     return result
   }
 
   const submitDisLike = async ( id_review,postId ) => {
     const result = await postDisLikeReview ( id_review,postId )
+    setReviewDisLike(result.dislikeupdate)
+    setPointDisLikeReview(result.dislikeuserlogin)
     return result
   }
 
@@ -87,7 +126,10 @@ function ReviewPlusProvider( { children, postId } ) {
     reviewLike,
     reviewDisLike,
     submitLiked,
-    submitDisLiked
+    submitDisLiked,
+    pointLikeReview,
+    pointDisLikeReview,
+    submitReply
   }
 
   return (

@@ -1056,10 +1056,8 @@ function rp_check_user_reviews_form ($id_user,$id_post,$id_form_reviews) {
             $passed = true;
         }
     endwhile;
-
     wp_reset_postdata();
     return $passed;
-
 }
 
 function rp_check_ip_reviews_form ($ip_user,$id_post,$id_form_reviews) {
@@ -1083,10 +1081,19 @@ function rp_check_ip_reviews_form ($ip_user,$id_post,$id_form_reviews) {
             $passed = true;
         }
     endwhile;
-
     wp_reset_postdata();
     return $passed;
+}
 
+function reply_comment_review ($Data) {
+  $replyData = $Data;
+  if(is_user_logged_in()){
+    $reply_id = rp_post_review($replyData);
+    wp_send_json( [
+      'success' => true,
+      'reply_id' => $reply_id
+    ] );
+  }
 }
 
 function spam_reviews_form ($Data) {
@@ -1124,7 +1131,6 @@ function spam_reviews_form ($Data) {
         $passed_reviews = rp_check_ip_reviews_form($id_ip_user_current,$id_post,$id_design);
         if( $passed_reviews ) {
             $review_id = rp_post_review( $reviewData );
-
             wp_send_json( [
               'success' => true,
               'review_id' => $review_id
@@ -1137,6 +1143,44 @@ function spam_reviews_form ($Data) {
         }
     }
 }
+
+
+function get_like_dislike_user_current ($id_post,$slug_metakey) {
+  $data_points=[];
+  $id_user_current = get_current_user_id();
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'author_action_entrie',
+          'value' => $id_user_current,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => $slug_metakey,
+          'compare' => '=',
+        ],
+    ]
+  );
+  $like = new WP_Query( $arg_points );
+  while ( $like->have_posts() ) : $like->the_post();
+    $id_point = get_the_ID();
+    $id_revew = carbon_get_post_meta($id_point,'review_post_id');
+    array_push($data_points,$id_revew);
+  endwhile;
+  wp_reset_postdata();
+  return array_unique($data_points);
+}
+
 
 
 function get_review_content_by_id_post ( $id_post ) {
@@ -1162,93 +1206,22 @@ function get_review_content_by_id_post ( $id_post ) {
     $id_post_reviews = get_the_ID();
     $author_name_reviews = carbon_get_post_meta($id_post_reviews,'name');
     $content_reviews = carbon_get_post_meta($id_post_reviews,'comment_content');
+    $parent = intval(carbon_get_post_meta($id_post_reviews,'parent'));
     array_push($data_reviews,[
       'id_reviews'=>$id_post_reviews,
       'url_avatar'=>get_avatar_url($id_post_reviews),
       'name'=>$author_name_reviews,
       'comment'=>$content_reviews,
-      'date_coment'=>get_the_date( 'l F j, Y' )
+      'date_coment'=>get_the_date( 'l F j, Y' ),
+      'parent' =>$parent
     ]);
 
   endwhile;
   wp_reset_postdata();
-  array_push($data_return,$data_reviews);
-
-  $arg_points = array(
-    'post_type' => 'point-entries',
-    'post_status' => 'publish',
-    'posts_per_page' => -1,
-    'meta_query' => [
-      'relation' => 'AND',
-        [
-          'key' => 'post_id',
-          'value' => $id_post,
-          'compare' => '=',
-        ],
-        [
-          'key' => 'author_action_entrie',
-          'value' => $id_user_current,
-          'compare' => '=',
-        ],
-        [
-          'key' => 'point_type_entrie',
-          'value' => 'likeentrie',
-          'compare' => '=',
-        ],
-    ]
-  );
 
 
-  $like = new WP_Query( $arg_points );
-  while ( $like->have_posts() ) : $like->the_post();
-    $id_point = get_the_ID();
-    $id_revew = carbon_get_post_meta($id_point,'review_post_id');
-    array_push($data_points,$id_revew);
-  endwhile;
-  wp_reset_postdata();
-
-  array_push($data_return,array_unique($data_points));
-
-  $arg_points = array(
-    'post_type' => 'point-entries',
-    'post_status' => 'publish',
-    'posts_per_page' => -1,
-    'meta_query' => [
-      'relation' => 'AND',
-        [
-          'key' => 'post_id',
-          'value' => $id_post,
-          'compare' => '=',
-        ],
-        [
-          'key' => 'author_action_entrie',
-          'value' => $id_user_current,
-          'compare' => '=',
-        ],
-        [
-          'key' => 'point_type_entrie',
-          'value' => 'dislikeentrie',
-          'compare' => '=',
-        ],
-    ]
-  );
-
-
-  $dislike = new WP_Query( $arg_points );
-  while ( $dislike->have_posts() ) : $dislike->the_post();
-    $id_point = get_the_ID();
-    $id_revew = carbon_get_post_meta($id_point,'review_post_id');
-    array_push($data_point_dislike,$id_revew);
-  endwhile;
-  wp_reset_postdata();
-
-  array_push($data_return,array_unique($data_point_dislike));
-
-
-  return $data_return;
-
+  return $data_reviews;
 }
-
 
 function get_dis_like_review ($id_post) {
   $data_points =[];
@@ -1276,7 +1249,6 @@ function get_dis_like_review ($id_post) {
     ]
   );
 
-
   $dislike = new WP_Query( $arg_points );
   while ( $dislike->have_posts() ) : $dislike->the_post();
     $id_point = get_the_ID();
@@ -1284,7 +1256,6 @@ function get_dis_like_review ($id_post) {
     array_push($data_points,[
       'id_reviews'=>$id_revews,
     ]);
-
   endwhile;
   wp_reset_postdata();
   foreach ($data_points as $key => $value) {
@@ -1327,7 +1298,6 @@ function get_like_review ($id_post) {
     ]
   );
 
-
   $like = new WP_Query( $arg_points );
   while ( $like->have_posts() ) : $like->the_post();
     $id_point = get_the_ID();
@@ -1351,6 +1321,23 @@ function get_like_review ($id_post) {
   }
   return $data_ob_like;
 }
+
+
+function recursiveMenu($data, $parent_id=0, $sub=true){
+    echo $sub ? '<ul>': '<ul class="sub-menu">';
+    foreach ($data as $key => $item) {
+         if($item['parent_id'] == $parent_id){
+            unset($data[$key]);
+          ?>
+     <li>
+      <a href="<?php echo $item['slug']?>"><?php echo $item['name']?></a>
+
+      <?php recursiveMenu($data, $item['id'], false); ?>
+     </li>
+        <?php }}
+     echo "</ul>";
+}
+
 
 
 

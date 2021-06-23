@@ -53,3 +53,9 @@
     opacity: .8;
   }
 }
+#primary {
+  .container.comments-area.default-max-width {
+    max-width: 1140px;
+    width: 90%;
+  }
+}
