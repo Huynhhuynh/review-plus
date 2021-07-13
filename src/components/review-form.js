@@ -2,13 +2,10 @@ import { useReviewPlus } from '../context/states'
 import { useEffect, useState } from 'react'
 import { useForm } from "react-hook-form"
 import RatingField from './rating-field'
-
+import { Multiselect } from 'multiselect-react-dropdown'
 /**
  * Review form
  */
-
-
-
 
 const NotLoggedFields = ( { submitFormData, register, errors } ) => {
 
@@ -95,7 +92,19 @@ export default function ReviewForm( { designData, postId } ) {
     } )
   } )
 
-
+  const onProsSelect = (selectedList, selectedItem) => { }
+  const onProsRemove = (selectedList, removedItem) => { }
+  const prosOptions = {
+    options: [{name: 'Option 1', id: 1},{name: 'Option 2', id: 2}], //[ ...buildGroupOptions() ],
+    selectedValues: [],
+    displayValue: 'name',
+    onSelect: onProsSelect,
+    onRemove: onProsRemove,
+    style: {
+      searchBox: { 'border-radius': '1px' },
+      chips: { 'border-radius': '30px', 'background': '#3f51b5' }
+    }
+  }
 
   const updateRatingField = ( slug, rate ) => {
     let _submitFormData = { ...submitFormData }
@@ -173,6 +182,15 @@ export default function ReviewForm( { designData, postId } ) {
               </>
             }
             {
+              designData.pros_fields.length > 0 &&
+              <>
+                <h4 className="heading-pros-list">Your Pros</h4>
+                <div className="rp-pros-list">
+                    <Multiselect {...prosOptions} />
+                </div>
+              </>
+            }
+            {
               PHP_DATA.user_logged_in == 'yes' &&
               <div className="rp-field rp-field__comment">
                 <label>
@@ -212,6 +230,6 @@ export default function ReviewForm( { designData, postId } ) {
         }
 
       </div>
-    </>
+      </>
   )
 }

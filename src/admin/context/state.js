@@ -78,6 +78,40 @@ function ReviewDesignProvider( { children } ) {
     newdesignEdit.rating_fields = ratingFields
     setDesignEdit( newdesignEdit )
   }
+  const moveProsFieldEdit = ( prosFieldItemID, move ) => {
+    let newdesignEdit = {...designEdit}
+    let prosFields = [ ...newdesignEdit.pros_fields ]
+
+    // get current index
+    let cIndex = findIndex( prosFields, o => {
+      return o.id == prosFieldItemID
+    } )
+
+    let itemMove = prosFields.splice( cIndex, 1 )[0]; // save item
+    let newIndex = ( move == 'up' ) ? cIndex -= 1 : cIndex += 1 // new index
+
+    prosFields.splice( newIndex, 0, itemMove ) // move item to new index
+
+    newdesignEdit.pros_fields = prosFields
+    setDesignEdit( newdesignEdit )
+  }
+  const moveConsFieldEdit = ( consFieldItemID, move ) => {
+    let newdesignEdit = {...designEdit}
+    let consFields = [ ...newdesignEdit.cons_fields ]
+
+    // get current index
+    let cIndex = findIndex( consFields, o => {
+      return o.id == consFieldItemID
+    } )
+
+    let itemMove = consFields.splice( cIndex, 1 )[0]; // save item
+    let newIndex = ( move == 'up' ) ? cIndex -= 1 : cIndex += 1 // new index
+
+    consFields.splice( newIndex, 0, itemMove ) // move item to new index
+
+    newdesignEdit.cons_fields = consFields
+    setDesignEdit( newdesignEdit )
+  }
 
   const removeRatingFieldItem = ( ratingFieldItemID ) => {
     let newdesignEdit = {...designEdit}
@@ -88,6 +122,28 @@ function ReviewDesignProvider( { children } ) {
     } )
 
     newdesignEdit.rating_fields = ratingFields
+    setDesignEdit( newdesignEdit )
+  }
+  const removeProsFieldItem = ( prosFieldItemID ) => {
+    let newdesignEdit = {...designEdit}
+    let prosFields = [ ...newdesignEdit.pros_fields ]
+
+    remove( prosFields, item => {
+      return item.id == prosFieldItemID
+    } )
+
+    newdesignEdit.pros_fields = prosFields
+    setDesignEdit( newdesignEdit )
+  }
+  const removeConsFieldItem = ( consFieldItemID ) => {
+    let newdesignEdit = {...designEdit}
+    let consFields = [ ...newdesignEdit.cons_fields ]
+
+    remove( consFields, item => {
+      return item.id == consFieldItemID
+    } )
+
+    newdesignEdit.cons_fields = consFields
     setDesignEdit( newdesignEdit )
   }
 
@@ -104,6 +160,24 @@ function ReviewDesignProvider( { children } ) {
 
     ratingFields.push( newField )
     newdesignEdit.rating_fields = ratingFields
+    setDesignEdit( newdesignEdit )
+  }
+  const addProsFieldItem = () => {
+    let newdesignEdit = {...designEdit}
+    let prosFields = [ ...newdesignEdit.pros_fields ]
+
+    let newField = Helpers.prosConsItemTemplate()
+    prosFields.push( newField )
+    newdesignEdit.pros_fields = prosFields
+    setDesignEdit( newdesignEdit )
+  }
+  const addConsFieldItem = () => {
+    let newdesignEdit = {...designEdit}
+    let consFields = [ ...newdesignEdit.cons_fields ]
+
+    let newField = Helpers.prosConsItemTemplate()
+    consFields.push( newField )
+    newdesignEdit.cons_fields = consFields
     setDesignEdit( newdesignEdit )
   }
 
@@ -132,6 +206,12 @@ function ReviewDesignProvider( { children } ) {
     moveRatingFieldEdit,
     removeRatingFieldItem,
     addRatingFieldItem,
+    moveProsFieldEdit,
+    removeProsFieldItem,
+    addProsFieldItem,
+    moveConsFieldEdit,
+    removeConsFieldItem,
+    addConsFieldItem,
     addNewDesign,
     newReviewDesignItem,
     deleteReviewDesign,

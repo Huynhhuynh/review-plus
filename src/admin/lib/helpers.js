@@ -11,6 +11,13 @@ export function reviewItemTemplate() {
   }
 }
 
+export function prosConsItemTemplate() {
+  return {
+    id: uuidv4(),
+    name: '',
+  }
+}
+
 export function designItemTemplate() {
   return {
     'id': uuidv4(),
@@ -22,5 +29,7 @@ export function designItemTemplate() {
     'enable': false,
     'login_required':true,
     'rating_fields': [],
+    'pros_fields': [],
+    'cons_fields': [],
   }
 }

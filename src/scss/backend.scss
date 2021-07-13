@@ -23,7 +23,7 @@
     border: solid 1px #d8d8d8;
     width: 100%;
   }
-  
+
   textarea.rp-field {
     height: 120px;
   }
@@ -34,9 +34,21 @@
   }
 }
 
+.two-col {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 10px;
+  border-left: solid 2px #3f51b5;
+  margin-bottom: 20px;
+
+  > div {
+    width: 48%;
+    margin-bottom: 0;
+  }
+}
 .group-field {
   margin-bottom: 20px;
-  
+
   label {
     margin-right: 15px;
     font-weight: 600;
@@ -131,6 +143,78 @@
       }
     }
   }
+  .pros-field-item-control, .cons-field-item-control {
+    margin-bottom: 20px;
+
+    fieldset {
+      padding: 15px 15px 5px;
+      border: solid 1px #d8d8d8;
+      border-radius: 1px;
+
+      legend {
+        font-weight: 600;
+        padding: 4px 6px;
+        color: black;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 11px;
+      }
+    }
+
+    &__body {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -5px;
+
+      > * {
+        padding: 0 5px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    &__control {
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+
+      button {
+        border: none;
+        background: none;
+        padding: 0 0 2px;
+        border-bottom: solid 1px;
+        color: $accent-color;
+        font-weight: 600;
+        font-size: 12px;
+        cursor: pointer;
+
+        &:not(:last-child) {
+          margin-right: 15px;
+        }
+
+        &.__remove-item {
+          margin-left: auto;
+          color: red;
+        }
+      }
+    }
+
+    &:first-child {
+
+      .__move-up {
+        pointer-events: none;
+        opacity: .5;
+      }
+    }
+
+    &:last-child {
+
+      .__move-down {
+        pointer-events: none;
+        opacity: .5;
+      }
+    }
+  }
 }
 
 .rd-color-ui {
@@ -146,7 +230,7 @@
   }
 }
 
-.button-add-more-rating-field {
+.button-add-more-rating-field, .button-add-more-pros-field, .button-add-more-cons-field {
   display: block;
   width: 100%;
   background: black;
@@ -155,7 +239,7 @@
   font-weight: 600;
   border: none;
   border-radius: 1px;
-  padding: 15px; 
+  padding: 15px;
   cursor: pointer;
   transition: .3s ease;
   -webkit-transition: .3s ease;
@@ -165,10 +249,10 @@
   }
 }
 
-.rating-json-field__list {
+.rating-json-field__list, .pros-json-field__list, .cons-json-field__list {
   border: solid #eee;
   border-width: 1px 1px 0 1px;
-  
+
   li {
     display: flex;
     flex-wrap: wrap;
@@ -197,7 +281,7 @@
     max-width: 100%;
     background: #fafafa;
   }
-  
+
   th, td {
     border: solid 1px #e2e4e7;
     padding: 10px;
@@ -222,7 +306,7 @@
   }
 
   td {
-    
+
     &.__label {
       color: black;
     }
