@@ -34,6 +34,46 @@ const ControlBar = ( { ratingFieldId } ) => {
     </div>
   )
 }
+const ProsControlBar = ( { prosFieldId } ) => {
+  const { moveProsFieldEdit, removeProsFieldItem } = useReviewDesign()
+
+  const onMove = ( move ) => {
+    moveProsFieldEdit( prosFieldId, move )
+  }
+
+  const onRemoveItem = () => {
+    let r = confirm( 'Remove this item?' )
+    if( r ) removeProsFieldItem( prosFieldId )
+  }
+
+  return (
+    <div className="pros-field-item-control__control">
+      <button type="button" className="__move-up" onClick={ e => { onMove( 'up' ) } }>↑ Move Up</button>
+      <button type="button" className="__move-down" onClick={ e => { onMove( 'down' ) } }>↓ Move Down</button>
+      <button type="button" className="__remove-item" onClick={ onRemoveItem }>Remove Item</button>
+    </div>
+  )
+}
+const ConsControlBar = ( {consFieldId } ) => {
+  const { moveConsFieldEdit, removeConsFieldItem } = useReviewDesign()
+
+  const onMove = ( move ) => {
+    moveConsFieldEdit( consFieldId, move )
+  }
+
+  const onRemoveItem = () => {
+    let r = confirm( 'Remove this item?' )
+    if( r ) removeConsFieldItem( consFieldId )
+  }
+
+  return (
+    <div className="cons-field-item-control__control">
+      <button type="button" className="__move-up" onClick={ e => { onMove( 'up' ) } }>↑ Move Up</button>
+      <button type="button" className="__move-down" onClick={ e => { onMove( 'down' ) } }>↓ Move Down</button>
+      <button type="button" className="__remove-item" onClick={ onRemoveItem }>Remove Item</button>
+    </div>
+  )
+}
 
 
 function RatingFieldItem( { ratingFieldData, onUpdate } ) {
@@ -120,6 +160,74 @@ function RatingFieldItem( { ratingFieldData, onUpdate } ) {
     </div>
   )
 }
+function ProsFieldItem( { prosFieldData, onUpdate } ) {
+  const [ fieldData, setFieldData ] = useState( prosFieldData )
+
+  const onUpdateField = ( value, fieldName ) => {
+    let newData = { ...fieldData }
+    newData[ fieldName ] = value
+
+    setFieldData( newData )
+    onUpdate ? onUpdate( newData ) : ''
+  }
+
+  return (
+    <div className="pros-field-item-control">
+      <fieldset>
+        <legend>{ fieldData.name }</legend>
+        <div className="pros-field-item-control__body">
+          <div className="group-field">
+            <label>Name</label>
+            <div className="field">
+              <input
+                className="rp-field"
+                type="text"
+                value={ fieldData.name }
+                onChange={ e => {
+                  onUpdateField( e.target.value, 'name' )
+                } } />
+            </div>
+          </div>
+        </div>
+        <ProsControlBar prosFieldId={ fieldData.id } />
+      </fieldset>
+    </div>
+  )
+}
+function ConsFieldItem( { consFieldData, onUpdate } ) {
+  const [ fieldData, setFieldData ] = useState( consFieldData )
+
+  const onUpdateField = ( value, fieldName ) => {
+    let newData = { ...fieldData }
+    newData[ fieldName ] = value
+
+    setFieldData( newData )
+    onUpdate ? onUpdate( newData ) : ''
+  }
+
+  return (
+    <div className="cons-field-item-control">
+      <fieldset>
+        <legend>{ fieldData.name }</legend>
+        <div className="cons-field-item-control__body">
+          <div className="group-field">
+            <label>Name</label>
+            <div className="field">
+              <input
+                className="rp-field"
+                type="text"
+                value={ fieldData.name }
+                onChange={ e => {
+                  onUpdateField( e.target.value, 'name' )
+                } } />
+            </div>
+          </div>
+        </div>
+        <ConsControlBar consFieldId={ fieldData.id } />
+      </fieldset>
+    </div>
+  )
+}
 
 function ColorSelector( { color, onChange } ) {
   const [ open, setOpen ] = useState( false )
@@ -167,7 +275,7 @@ function ColorSelector( { color, onChange } ) {
 }
 
 export default function DesignEditModal() {
-  const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, newReviewDesignItem, groupPostTax } = useReviewDesign()
+  const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, addProsFieldItem, addConsFieldItem, newReviewDesignItem, groupPostTax } = useReviewDesign()
   if( designEdit == null ) return <></>
 
   const [ _groupPostTax, _setGroupPostTax ] = useState( [] )
@@ -298,29 +406,31 @@ export default function DesignEditModal() {
         <div className="design-edit-modal__heading">{ isEdit ? 'Edit' : 'New' } Design</div>
         <div className="design-edit-modal__body">
           <form className="rp-form">
-            <div className="group-field __inline">
-              <div className="field" style={ { width: '80px' } }>
-                <Switch
-                  onColor={ '#3f51b5' }
-                  checkedIcon={ false }
-                  uncheckedIcon={ false }
-                  onChange={ checked => { onUpdateField( checked, 'enable' ) } }
-                  checked={ designEdit.enable }
-                />
+            <div className="two-col">
+              <div className="group-field __inline">
+                <div className="field" style={ { width: '80px' } }>
+                  <Switch
+                    onColor={ '#3f51b5' }
+                    checkedIcon={ false }
+                    uncheckedIcon={ false }
+                    onChange={ checked => { onUpdateField( checked, 'enable' ) } }
+                    checked={ designEdit.enable }
+                  />
+                </div>
+                <label>Enable Review</label>
               </div>
-              <label>Enable Review</label>
-            </div>
-            <div className="group-field __inline">
-              <div className="field" style={ { width: '80px' } }>
-                <Switch
-                  onColor={ '#3f51b5' }
-                  checkedIcon={ false }
-                  uncheckedIcon={ false }
-                  onChange={ checked => { onUpdateField( checked, 'login_required' ) } }
-                  checked={ designEdit.login_required }
-                />
+              <div className="group-field __inline">
+                <div className="field" style={ { width: '80px' } }>
+                  <Switch
+                    onColor={ '#3f51b5' }
+                    checkedIcon={ false }
+                    uncheckedIcon={ false }
+                    onChange={ checked => { onUpdateField( checked, 'login_required' ) } }
+                    checked={ designEdit.login_required }
+                  />
+                </div>
+                <label>Required Login</label>
               </div>
-              <label>Required Login</label>
             </div>
             <div className="group-field">
               <label>Label</label>
@@ -405,6 +515,54 @@ export default function DesignEditModal() {
                 e.preventDefault()
                 addRatingFieldItem()
               } }>Add Item</button>
+            </div>
+            <div className="two-col">
+                <div className="group-field">
+                  <label>Pros Fields</label>
+                  <div className="field repeater-field">
+                    {
+                      designEdit.pros_fields &&
+                      (designEdit.pros_fields.length > 0) &&
+                      designEdit.pros_fields.map( ( prosFieldData, index ) => {
+                        return <ProsFieldItem
+                          key={ prosFieldData.id }
+                          prosFieldData={ prosFieldData }
+                          onUpdate={ updateFieldData => {
+                            let newProsFields = [ ...designEdit.pros_fields ]
+                            newProsFields[ index ] = updateFieldData
+                            onUpdateField( newProsFields, 'pros_fields' )
+                          } } />
+                      } )
+                    }
+                  </div>
+                  <button type="button" className="button-add-more-pros-field" onClick={ e => {
+                    e.preventDefault()
+                    addProsFieldItem()
+                  } }>Add Item</button>
+                </div>
+                <div className="group-field">
+                  <label>Cons Fields</label>
+                  <div className="field repeater-field">
+                    {
+                      designEdit.cons_fields &&
+                      (designEdit.cons_fields.length > 0) &&
+                      designEdit.cons_fields.map( ( consFieldData, index ) => {
+                        return <ConsFieldItem
+                          key={ consFieldData.id }
+                          consFieldData={ consFieldData }
+                          onUpdate={ updateFieldData => {
+                            let newConsFields = [ ...designEdit.cons_fields ]
+                            newConsFields[ index ] = updateFieldData
+                            onUpdateField( newConsFields, 'cons_fields' )
+                          } } />
+                      } )
+                    }
+                  </div>
+                  <button type="button" className="button-add-more-cons-field" onClick={ e => {
+                    e.preventDefault()
+                    addConsFieldItem()
+                  } }>Add Item</button>
+                </div>
             </div>
           </form>
           <div className="modal-actions">

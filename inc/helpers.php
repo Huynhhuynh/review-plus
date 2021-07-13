@@ -65,6 +65,8 @@ function rp_get_review_design_by_id( $post_id ) {
 
   $support_post_type = carbon_get_post_meta( $result->ID, 'support_post_type' );
   $rating_fields = carbon_get_post_meta( $result->ID, 'rating_fields' );
+  $pros_fields = carbon_get_post_meta( $result->ID, 'pros_fields' );
+  $cons_fields = carbon_get_post_meta( $result->ID, 'cons_fields' );
 
   return [
     'id' => $result->ID,
@@ -78,6 +80,8 @@ function rp_get_review_design_by_id( $post_id ) {
     'enable' => carbon_get_post_meta( $result->ID, 'enable' ),
     'login_required' =>carbon_get_post_meta($result->ID,'login_required'),
     'rating_fields' => $rating_fields ? $rating_fields : [],
+    'pros_fields' => $pros_fields ? $pros_fields : [],
+    'cons_fields' => $cons_fields ? $cons_fields : [],
   ];
 }
 
@@ -116,6 +120,8 @@ function rp_update_review_design_meta_fields( $post_id = 0, $designData = [] ) {
     'theme_color',
     'enable',
     'rating_fields',
+    'pros_fields',
+    'cons_fields',
     'login_required'
   ];
 
