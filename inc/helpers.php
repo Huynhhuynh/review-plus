@@ -1324,17 +1324,18 @@ function get_like_review ($id_post) {
 
 
 function recursiveMenu($data, $parent_id=0, $sub=true){
-    echo $sub ? '<ul>': '<ul class="sub-menu">';
+    echo $sub ? '<ul>': '<ul className="sub-menu">';
     foreach ($data as $key => $item) {
-         if($item['parent_id'] == $parent_id){
+         if($item['parent'] == $parent_id){
             unset($data[$key]);
           ?>
      <li>
-      <a href="<?php echo $item['slug']?>"><?php echo $item['name']?></a>
+      <a href="#"><?php echo $item['comment']?></a>
 
-      <?php recursiveMenu($data, $item['id'], false); ?>
+      <?php recursiveMenu($data, $item['id_reviews'], false); ?>
      </li>
-        <?php }}
+        <?php }
+    }
      echo "</ul>";
 }
 

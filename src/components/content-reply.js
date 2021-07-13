@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 
-
-
 export default function contentReply(props) {
   const { submitReply } = useReviewPlus()
   const thisprop = props
@@ -19,6 +17,7 @@ export default function contentReply(props) {
     parent:thisprop.id_review,
     designId:reviewDesign[0].id
   })
+
   const onSubmitReply = async ( data ) => {
     let newSubmitFormData = { ...submitFormData, ...data }
     const result = await submitReply( newSubmitFormData )
@@ -41,9 +40,6 @@ export default function contentReply(props) {
               Reply
             </button>
           </form>
-        </div>
-        <div className="show-reply-comment">
-          ssadas
         </div>
       </div>
 

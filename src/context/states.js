@@ -78,6 +78,8 @@ function ReviewPlusProvider( { children, postId } ) {
 
   }, [] )
 
+
+
   const submitReview = async ( reviewData ) => {
     const result = await postReview( reviewData )
     return result
@@ -129,7 +131,7 @@ function ReviewPlusProvider( { children, postId } ) {
     submitDisLiked,
     pointLikeReview,
     pointDisLikeReview,
-    submitReply
+    submitReply,
   }
 
   return (
