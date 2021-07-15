@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { ReviewPlusProvider } from './context/states'
 import ReviewPlusApp from './components/review-plus-app'
 import GetReview from './components/review'
+import RatingAverage from './components/rating-average'
 
 /**
  * Review type script
@@ -11,6 +12,7 @@ import GetReview from './components/review'
 const ReviewPlusWrap = ( { postId } ) => {
   return (
     <ReviewPlusProvider postId={ postId }>
+      <RatingAverage />
       <GetReview />
       <ReviewPlusApp />
     </ReviewPlusProvider>

@@ -101,6 +101,11 @@ export async function getReview( idPost ) {
   } )
 }
 
+export async function getScoreUser(  ) {
+  return await Request( 'rp_ajax_get_score_user' )
+}
+
+
 export async function getPointReview( idPost ) {
   return await Request( 'rp_ajax_get_point_review', {
     idPost

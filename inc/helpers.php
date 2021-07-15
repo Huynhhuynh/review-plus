@@ -1189,6 +1189,116 @@ function get_like_dislike_user_current ($id_post,$slug_metakey) {
 
 
 
+function get_score_user () {
+  $id_user = get_current_user_id();
+  $data_score = [];
+  $travel_score = 0;
+  $session_score = 0;
+  $args = array (
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      [
+        'key' => 'review_user_id',
+        'value' => $id_user,
+        'compare' => '=',
+      ]
+    ]
+  );
+
+
+  $point = new WP_Query($args);
+
+  while ( $point->have_posts() ) : $point->the_post();
+    $id_point = get_the_ID();
+    $type_score = carbon_get_post_meta($id_point,'point_type_entrie');
+    if($type_score == 'sessionpoint'){
+      $point_score = intval(carbon_get_post_meta($id_point,'point_number_entrie'));
+      $session_score = $session_score + $point_score;
+    }
+    if($type_score == 'travelpoint') {
+      $point_score = intval(carbon_get_post_meta($id_point,'point_number_entrie'));
+      $travel_score = $travel_score + $point_score;
+    }
+
+  endwhile;
+  wp_reset_postdata();
+  $data_score = [
+    'travel'=>$travel_score,
+    'session'=>$session_score
+  ];
+
+  return $data_score;
+
+}
+
+function get_review_rating_by_id_post( $id_post ) {
+  $data_rating = [];
+  $data_rating_number =[];
+  $args = array(
+    'post_type' => 'review-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+      [
+        'key' => 'review_post_id',
+        'value' => $id_post,
+        'compare' => '=',
+      ],
+      [
+        'key' => 'parent',
+        'value' => 0,
+        'compare' => '=',
+      ],
+
+    ]
+  );
+  $rating_all = [];
+  $sumArray = array();
+  $ratings = new WP_Query( $args );
+  $data_name_field =[];
+  $data_all_rating = [];
+  while ( $ratings->have_posts() ) : $ratings->the_post();
+    $id_post= get_the_ID();
+    $rating = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
+
+    array_push($data_rating,$rating);
+
+  endwhile;
+
+  wp_reset_postdata();
+  if(!empty($data_rating)){
+    $data_length = count($data_rating[0]);
+    $data_length_rating_p = count($data_rating);
+    foreach ($data_rating as $key => $data) {
+      foreach ($data as $key => $value) {
+        array_push($rating_all,$value['rate']);
+      }
+    }
+    foreach (array_chunk($rating_all,$data_length) as $k=>$subArray) {
+      foreach ($subArray as $id=>$value) {
+        $sumArray[$id]+=$value;
+      }
+    }
+    foreach ($sumArray as $key => $value) {
+      $sumArray[$key]=$sumArray[$key]/$data_length_rating_p;
+      array_push($data_name_field,$data_rating[0][$key]['name']);
+    }
+  }
+  // echo '<pre>';
+  // print_r($data_name_field);
+  // echo '</pre>';
+
+  array_push($data_all_rating,$sumArray);
+  array_push($data_all_rating,$data_name_field);
+
+
+  return $data_all_rating;
+
+}
+
 function get_review_content_by_id_post ( $id_post ) {
   $data_reviews = [];
   $data_points = [];
@@ -1355,7 +1465,8 @@ add_action( 'init', function() {
   if( isset( $_GET[ 'dev' ] ) ) {
 
     echo '<pre>';
-    echo get_post_meta( 101, '__@_field-1', true );
+    echo (get_post_meta( 271, '__@_field1', true ));
+    print_r(unserialize(get_post_meta(271, '_rating_json_field', true )));
     // echo rp_check_post_in_term( 93, 'category', 5 );
     // print_r( carbon_get_post_meta( 32, 'support_category' ) );
     // print_r( rp_get_review_design( 32 ) );

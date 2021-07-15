@@ -14,7 +14,8 @@ import {
   postLikedReview,
   postDisLikedReview,
   getPointReview ,
-  postReply
+  postReply,
+  getScoreUser
 } from '../admin/lib/api'
 const ReviewPlusContext = createContext()
 
@@ -25,6 +26,8 @@ function ReviewPlusProvider( { children, postId } ) {
   const [ pointDisLikeReview, setPointDisLikeReview ] = useState( [] )
   const [ reviewLike, setReviewLike ] = useState( [] )
   const [ reviewDisLike, setReviewDisLike ] = useState( [] )
+  const [ scoreUser, setScoreUser ] = useState( [] )
+  const [rating, setRating] = useState([])
 
   useEffect( async () => {
     const Result = await getReviewDesignByPostID( postId )
@@ -36,10 +39,18 @@ function ReviewPlusProvider( { children, postId } ) {
 
   }, [] )
 
+  // useEffect(async () => {
+  //   const Score = await getScoreUser();
+  //   if(Score.success){
+  //     setScoreUser(Score.score)
+  //   }
+  // })
+
   useEffect( async () => {
     const Result_review = await getReview(postId)
     if(Result_review.success==true) {
       setReviewContent(Result_review.data)
+      setRating(Result_review.rating)
     }else{
       return
     }
@@ -132,6 +143,7 @@ function ReviewPlusProvider( { children, postId } ) {
     pointLikeReview,
     pointDisLikeReview,
     submitReply,
+    rating
   }
 
   return (

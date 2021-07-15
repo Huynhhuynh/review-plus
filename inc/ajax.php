@@ -128,11 +128,12 @@ function rp_ajax_get_review() {
   $postData = json_decode( $json, true );
   $postID = $postData[ 'idPost' ];
   $data_reviews =  get_review_content_by_id_post($postID);
+  $data_rating = get_review_rating_by_id_post($postID);
   ob_start();
-  $html = ob_get_clean();
   wp_send_json( [
     'success' => true,
     'data' => array_values( $data_reviews ),
+    'rating' =>$data_rating
   ] );
 }
 
@@ -301,3 +302,14 @@ function rp_ajax_post_data_reply() {
 
 add_action( 'wp_ajax_rp_ajax_post_data_reply', 'rp_ajax_post_data_reply' );
 add_action( 'wp_ajax_nopriv_rp_ajax_post_data_reply', 'rp_ajax_post_data_reply' );
+
+function rp_ajax_get_score_user() {
+  $data_score = get_score_user();
+  wp_send_json( [
+    'success' => true,
+    'score'=>$data_score
+  ] );
+}
+
+add_action( 'wp_ajax_rp_ajax_get_score_user', 'rp_ajax_get_score_user' );
+add_action( 'wp_ajax_nopriv_rp_ajax_get_score_user', 'rp_ajax_get_score_user' );

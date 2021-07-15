@@ -1,6 +1,6 @@
-<?php 
+<?php
 /**
- * Hooks 
+ * Hooks
  */
 add_filter( 'comments_template', function( $template ) {
   return REVIEW_PLUS_DIR . '/templates/comment.php';
@@ -14,7 +14,7 @@ add_filter( 'update_post_metadata', function( $check, $object_id, $meta_key, $me
 
   $rating_fields = maybe_unserialize( maybe_unserialize( $meta_value ) );
   if( ! $rating_fields || count( $rating_fields ) <= 0 ) return $check;
-  
+
   foreach( $rating_fields as $index => $r ) {
     $slug = '__@_' . $r[ 'slug' ];
     update_post_meta( $object_id, $slug, (int) $r[ 'rate' ] );

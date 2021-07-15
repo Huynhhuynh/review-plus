@@ -245,7 +245,7 @@ form.review-plus-form {
     justify-content: space-between;
   }
 }
-.action-like-count { 
+.action-like-count {
   margin-top: 5px;
   svg {
     width: 25px;
@@ -266,5 +266,12 @@ form.review-plus-form {
   }
   .dislike {
     line-height: 1;
+  }
+}
+.wrapper-rating-average {
+  display: block;
+  margin-bottom: 50px;
+  .review-plus-rating-field {
+    pointer-events: none;
   }
 }
