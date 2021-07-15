@@ -19,48 +19,44 @@ export default function dataReview(props) {
 
   return (
     <>
-      <div className="wrapper-comment-content-post">
+      <div className="reviews-item">
         <div className="wrapper-user">
           <div className="avatar-user">
             <img src={thisprop.url_avatar}/>
           </div>
-          <div className="action-like-count">
-            {
-              PHP_DATA.user_logged_in == 'yes' &&
-              <Btnlike id_review = {thisprop.id_review}/>
-            }
-          </div>
-
-          <div className="action-like-count">
-            {
-              PHP_DATA.user_logged_in == 'yes' &&
-              <Btndislike id_review = {thisprop.id_review}/>
-            }
-          </div>
         </div>
-        <div className="wrapper-right">
-          <div className="review-0">
-            <div className="top-user-profile">
-              <div className="user-profile">
-                { thisprop.name_author }
-
-              </div>
-              <div className="date-comment">
-                { thisprop.date_comment }
-              </div>
+        <div className="wrapper-content">
+          <div className="name-crt-date">
+            <div className="name">
+              { thisprop.name_author }
             </div>
-            <div className="content-review">
-              {thisprop.comment_rv}
+            <div className="crt-date">
+              { thisprop.date_comment }
             </div>
           </div>
-          <div className="wrapper-action-review">
+          <div className="reviews-content">
+            {thisprop.comment_rv}
+          </div>
+          <div className="reviews-action">
             <div>
-              Like <Reviewlike id_review = {thisprop.id_review}/>
+              <div className="action-like-count act-item">
+                {
+                  PHP_DATA.user_logged_in == 'yes' &&
+                  <Btnlike id_review = {thisprop.id_review}/>
+                }
+              </div>
+              <span>Like</span> <Reviewlike id_review = {thisprop.id_review}/>
             </div>
             <div>
-              Dislike  <Reviewdislike id_review = {thisprop.id_review}/>
+              <div className="action-like-count act-item">
+                {
+                  PHP_DATA.user_logged_in == 'yes' &&
+                  <Btndislike id_review = {thisprop.id_review}/>
+                }
+              </div>
+              <span>Dislike</span> <Reviewdislike id_review = {thisprop.id_review}/>
             </div>
-            <div className="action-like-count">
+            <div className="action-like-count act-item">
               {
                 PHP_DATA.user_logged_in == 'yes' &&
                 <Btnreply  parentCallback={callbackFunction} id_review = {thisprop.id_review} parent = {thisprop.parent}/>
