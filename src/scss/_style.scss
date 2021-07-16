@@ -25,7 +25,7 @@
     .av-rating-bl {
       border: 1px solid rgba(0, 0, 0, 0.1);
       box-sizing: border-box;
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
 
       .av-rating-item {
@@ -42,14 +42,14 @@
         }
 
         .rating-content {
-          width: 50%;
+          width: 60%;
           padding-right: 20px;
           padding-right: 20px;
           border-right: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .rating-data {
-          width: 50%;
+          width: 40%;
           display: flex;
           align-items: center;
           padding-left: 20px;
@@ -72,6 +72,7 @@
   }
 
   .wrapper-review-lst {
+      margin-bottom: 50px;
       h3 {
         font-size: 30px;
         line-height: 135%;
@@ -141,6 +142,18 @@
                   display: flex;
                   align-items: center;
                   margin-right: 32px;
+                  color: #3f51b5;
+                  // color: #909090;
+
+                  // span {
+                  //   color: #909090;
+                  // }
+
+                  .number-action {
+                      margin-left: 4px;
+                      font-weight: bold;
+                      color: #3f51b5;
+                  }
 
                   .act-item {
                     svg {
@@ -148,6 +161,42 @@
                       height: 25px;
                       margin-right: 6px;
                       cursor: pointer;
+                    }
+                  }
+                }
+              }
+
+              .content-reply {
+                margin-top: 20px;
+                width: 100%;
+
+                .wrapper-reply-custom {
+                  cursor: pointer;
+
+                  .form-reply {
+                    margin-bottom: 20px;
+
+                    input, textarea {
+                       border-radius: 4px;
+                    }
+
+                    button[type="submit"] {
+                        margin-top: 16px;
+                        font-size: 16px;
+                        border-radius: 4px;
+                        min-width: 160px;
+                        height: 44px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 10px;
+                    }
+
+                    input {
+                      width: 100%;
+                      border-radius: 40px;
+                      border: none;
+                      outline: none !important;
                     }
                   }
                 }

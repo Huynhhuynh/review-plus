@@ -21,34 +21,36 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
                 Please <a href="">Login</a> to leave a full review.<a href="#">Register</a>
             </div>
           }else{
-            return <div>
-              <div className="rp-field rp-field__name">
-                <label>
-                  <span className="__label">Name *</span>
-                  <div className="__field">
-                    <input
-                      { ...register( 'name', { required: true } ) }
-                      type="text"
-                      className={ [ 'rp-name', ( errors.name ? '__is-invalid' : '' ) ].join( ' ' ) }
-                      defaultValue={ submitFormData.name }
-                      />
-                    { errors.name && <span className="__invalid-message">Please enter your name!</span> }
+            return <>
+              <div className="one-line">
+                  <div className="rp-field rp-field__name">
+                    <label>
+                      <span className="__label">Name *</span>
+                      <div className="__field">
+                        <input
+                          { ...register( 'name', { required: true } ) }
+                          type="text"
+                          className={ [ 'rp-name', ( errors.name ? '__is-invalid' : '' ) ].join( ' ' ) }
+                          defaultValue={ submitFormData.name }
+                          />
+                        { errors.name && <span className="__invalid-message">Please enter your name!</span> }
+                      </div>
+                    </label>
                   </div>
-                </label>
-              </div>
-              <div className="rp-field rp-field__email">
-                <label>
-                  <span className="__label">Email *</span>
-                  <div className="__field">
-                    <input
-                      { ...register( 'email', { required: true, pattern: /\S+@\S+\.\S+/ } ) }
-                      type="text"
-                      className={ [ 'rp-email', ( errors.email ? '__is-invalid' : '' ) ].join( ' ' ) }
-                      defaultValue={ submitFormData.email }
-                      />
-                    { errors.email && <span className="__invalid-message">Please enter your E-mail!</span> }
+                  <div className="rp-field rp-field__email">
+                    <label>
+                      <span className="__label">Email *</span>
+                      <div className="__field">
+                        <input
+                          { ...register( 'email', { required: true, pattern: /\S+@\S+\.\S+/ } ) }
+                          type="text"
+                          className={ [ 'rp-email', ( errors.email ? '__is-invalid' : '' ) ].join( ' ' ) }
+                          defaultValue={ submitFormData.email }
+                          />
+                        { errors.email && <span className="__invalid-message">Please enter your E-mail!</span> }
+                      </div>
+                    </label>
                   </div>
-                </label>
               </div>
               <div className="rp-field rp-field__url">
                 <label>
@@ -63,7 +65,7 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
                   </div>
                 </label>
               </div>
-            </div>
+            </>
           }
         } )
       }
@@ -95,11 +97,28 @@ export default function ReviewForm( { designData, postId } ) {
   const onProsSelect = (selectedList, selectedItem) => { }
   const onProsRemove = (selectedList, removedItem) => { }
   const prosOptions = {
-    options: [{name: 'Option 1', id: 1},{name: 'Option 2', id: 2}], //[ ...buildGroupOptions() ],
+    options: [{name: 'Option 1', id: 1},{name: 'Option 2', id: 2}, {name: 'Test Post Pros 3', id: 3} ], //[ ...buildGroupOptions() ],
     selectedValues: [],
     displayValue: 'name',
     onSelect: onProsSelect,
     onRemove: onProsRemove,
+    placeholder: 'Choose pros',
+    showCheckbox: true,
+    style: {
+      searchBox: { 'border-radius': '1px' },
+      chips: { 'border-radius': '30px', 'background': '#3f51b5' }
+    }
+  }
+  const onConsSelect = (selectedList, selectedItem) => { }
+  const onConsRemove = (selectedList, removedItem) => { }
+  const consOptions = {
+    options: [{name: 'Option 1', id: 1},{name: 'Option 2', id: 2}, {name: 'Test Post Cons 3', id: 3} ], //[ ...buildGroupOptions() ],
+    selectedValues: [],
+    displayValue: 'name',
+    onSelect: onProsSelect,
+    onRemove: onProsRemove,
+    placeholder: 'Choose cons',
+    showCheckbox: true,
     style: {
       searchBox: { 'border-radius': '1px' },
       chips: { 'border-radius': '30px', 'background': '#3f51b5' }
@@ -145,7 +164,7 @@ export default function ReviewForm( { designData, postId } ) {
   return (
     <>
       <div className="review-form-container">
-        <h2 className="rp-title">{ designData.label }</h2>
+        <h3 className="rp-title">{ designData.label }</h3>
         <p className="rp-desc">{ designData.description }</p>
         {
           ( formSubmited == true ) &&
@@ -161,7 +180,7 @@ export default function ReviewForm( { designData, postId } ) {
             {
               designData.rating_fields.length > 0 &&
               <>
-                <h4 className="heading-review-list">Your Rating</h4>
+                <span className="__label">Your Rating *</span>
                 <div className="rp-review-list">
                 {
                   designData.rating_fields.map( ( r, index ) => {
@@ -181,15 +200,30 @@ export default function ReviewForm( { designData, postId } ) {
                 </div>
               </>
             }
+            <div className="one-line">
             {
               designData.pros_fields.length > 0 &&
               <>
-                <h4 className="heading-pros-list">Your Pros</h4>
-                <div className="rp-pros-list">
-                    <Multiselect {...prosOptions} />
+                <div>
+                  <span className="__label">Pros</span>
+                  <div className="rp-pros-list">
+                      <Multiselect {...prosOptions} />
+                  </div>
                 </div>
               </>
             }
+            {
+              designData.cons_fields.length > 0 &&
+              <>
+                <div>
+                  <span className="__label">Cons</span>
+                  <div className="rp-cons-list">
+                      <Multiselect {...consOptions} />
+                  </div>
+                </div>
+              </>
+            }
+            </div>
             {
               PHP_DATA.user_logged_in == 'yes' &&
               <div className="rp-field rp-field__comment">
@@ -205,28 +239,22 @@ export default function ReviewForm( { designData, postId } ) {
                 </label>
               </div>
             }
-
-
-
+            {
+              PHP_DATA.user_logged_in != 'yes' &&
+              <NotLoggedFields submitFormData={ submitFormData } register={ register } errors={ errors } />
+            }
             {
                 (showReviewAlready==true) &&
                 <div className="text-already-submit">
                     You have already submitted this review
                 </div>
             }
-
             <button
               type="submit"
               className={ [ 'review-button-submit', ( loading ? '__is-loading' : '' ) ].join( ' ' ) }>
               { loading ? 'Please waiting...' : 'Submit Review' }
             </button>
           </form>
-        }
-        {
-
-          PHP_DATA.user_logged_in != 'yes' &&
-          <NotLoggedFields submitFormData={ submitFormData } register={ register } errors={ errors } />
-
         }
 
       </div>

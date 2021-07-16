@@ -10,7 +10,7 @@ export default function btnReply(props) {
   return (
     <>
       <div className="wrapper-reply"  onClick={handleClickreply}>
-        reply
+        Reply
       </div>
     </>
   )
