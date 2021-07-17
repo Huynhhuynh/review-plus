@@ -58,21 +58,33 @@ function rp_review_entry_register_meta_fields() {
   $fields = apply_filters( 'review-plus/review-entry-meta-fields', [
     Field::make( 'ratingjson', 'rating_json_field', __( 'Rating Json Fields', 'review-plus' ) ),
     Field::make( 'text', 'design_id', false )
-      ->set_attribute( 'type', 'hidden' ),
+      ->set_classes( 'field-hidden' ),
     Field::make( 'text', 'review_post_id', false )
-      ->set_attribute( 'type', 'hidden' ),
+      ->set_classes( 'field-hidden' ),
     Field::make( 'text', 'parent', false )
       ->set_attribute( 'type', 'hidden' )
       ->set_default_value( 0 ),
+    Field::make( 'complex', 'pros', __( 'Pros', 'review-plus' ) )
+      ->add_fields( [
+        Field::make( 'text', 'id', __( 'ID', 'review-plus' ) )
+          ->set_classes( 'field-hidden' ),
+        Field::make( 'text', 'name', __( 'Name', 'review-plus' ) )
+      ] ) ->set_width( 50 ) ,
+    Field::make( 'complex', 'cons', __( 'Cons', 'review-plus' ) )
+      ->add_fields( [
+        Field::make( 'text', 'id', __( 'ID', 'review-plus' ) )
+          ->set_classes( 'field-hidden' ),
+        Field::make( 'text', 'name', __( 'Name', 'review-plus' ) )
+      ] ) ->set_width( 50 ),
     Field::make( 'rich_text', 'comment_content', __( 'Content', 'review-plus' ) ),
     Field::make( 'separator', '__separator', __( 'Author', 'review-plus' ) ),
     Field::make( 'text', 'user_id', false )
-      ->set_attribute( 'type', 'hidden' ),
+      ->set_classes( 'field-hidden' ),
     Field::make( 'text', 'name', __( 'Name', 'review-plus' ) ),
     Field::make( 'text', 'email', __( 'Email', 'review-plus' ) ),
     Field::make( 'text', 'url', __( 'URL', 'review-plus' ) ),
     Field::make( 'text', 'user_ip', false )
-      ->set_attribute( 'type', 'hidden' ),
+      ->set_classes( 'field-hidden' ),
   ] );
 
   Container::make( 'post_meta', __( 'Review Entry', 'review-plus' ) )

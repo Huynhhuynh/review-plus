@@ -94,35 +94,40 @@ export default function ReviewForm( { designData, postId } ) {
     } )
   } )
 
-  const onProsSelect = (selectedList, selectedItem) => { }
-  const onProsRemove = (selectedList, removedItem) => { }
+  var prosOptionsData = designData.pros_fields.map( item => {
+    let { id, name } = item
+    return { id, name }
+  } )
+  const onUpdatePros = (selectedList, selectedItem) => {
+      let prosList = selectedList.map( pros => pros.name )
+      console.log(prosList);
+  }
   const prosOptions = {
-    options: [{name: 'Option 1', id: 1},{name: 'Option 2', id: 2}, {name: 'Test Post Pros 3', id: 3} ], //[ ...buildGroupOptions() ],
+    options: prosOptionsData,
     selectedValues: [],
     displayValue: 'name',
-    onSelect: onProsSelect,
-    onRemove: onProsRemove,
+    onSelect: onUpdatePros,
+    onRemove: onUpdatePros,
     placeholder: 'Choose pros',
     showCheckbox: true,
-    style: {
-      searchBox: { 'border-radius': '1px' },
-      chips: { 'border-radius': '30px', 'background': '#3f51b5' }
-    }
   }
-  const onConsSelect = (selectedList, selectedItem) => { }
-  const onConsRemove = (selectedList, removedItem) => { }
+
+  var consOptionsData = designData.cons_fields.map( item => {
+    let { id, name } = item
+    return { id, name }
+  } )
+  const onUpdateCons = (selectedList, selectedItem) => {
+    let consList = selectedList.map( pros => pros.name )
+    console.log(consList);
+  }
   const consOptions = {
-    options: [{name: 'Option 1', id: 1},{name: 'Option 2', id: 2}, {name: 'Test Post Cons 3', id: 3} ], //[ ...buildGroupOptions() ],
+    options: consOptionsData,
     selectedValues: [],
     displayValue: 'name',
-    onSelect: onProsSelect,
-    onRemove: onProsRemove,
+    onSelect: onUpdateCons,
+    onRemove: onUpdateCons,
     placeholder: 'Choose cons',
     showCheckbox: true,
-    style: {
-      searchBox: { 'border-radius': '1px' },
-      chips: { 'border-radius': '30px', 'background': '#3f51b5' }
-    }
   }
 
   const updateRatingField = ( slug, rate ) => {

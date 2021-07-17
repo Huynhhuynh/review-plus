@@ -1260,6 +1260,7 @@ function get_review_rating_by_id_post( $id_post ) {
   $ratings = new WP_Query( $args );
   $data_name_field =[];
   $data_all_rating = [];
+  $data_max_point = [];
   while ( $ratings->have_posts() ) : $ratings->the_post();
     $id_post= get_the_ID();
     $rating = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
@@ -1287,13 +1288,12 @@ function get_review_rating_by_id_post( $id_post ) {
       array_push($data_name_field,$data_rating[0][$key]['name']);
     }
   }
-  // echo '<pre>';
-  // print_r($data_name_field);
-  // echo '</pre>';
+  $id_design = intval(carbon_get_post_meta($id_post,'design_id'));
+  $rating_field_raw = carbon_get_post_meta($id_design,'rating_fields');
 
   array_push($data_all_rating,$sumArray);
   array_push($data_all_rating,$data_name_field);
-
+  array_push($data_all_rating,$rating_field_raw[0]['max_point']);
 
   return $data_all_rating;
 
