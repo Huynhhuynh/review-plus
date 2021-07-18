@@ -88,6 +88,8 @@ export default function ReviewForm( { designData, postId } ) {
     email: '',
     comment: '',
     url: '',
+    pros:[],
+    cons:[],
     ratings: designData.rating_fields.map( item => {
       let { name, slug, default_point } = item
       return { name, slug, rate: parseInt( default_point ) }
@@ -100,7 +102,15 @@ export default function ReviewForm( { designData, postId } ) {
   } )
   const onUpdatePros = (selectedList, selectedItem) => {
       let prosList = selectedList.map( pros => pros.name )
-      console.log(prosList);
+      let _submitFormData = { ...submitFormData }
+      let prosList_r =[]
+      for (var i in prosList) {
+        prosList_r.push({
+          'name':prosList[i]
+        })
+      }
+      _submitFormData.pros = prosList_r;
+      setSubmitFormData(_submitFormData);
   }
   const prosOptions = {
     options: prosOptionsData,
@@ -118,7 +128,15 @@ export default function ReviewForm( { designData, postId } ) {
   } )
   const onUpdateCons = (selectedList, selectedItem) => {
     let consList = selectedList.map( pros => pros.name )
-    console.log(consList);
+    let conslist_r =[]
+    for (var i in consList) {
+      conslist_r.push({
+        'name':consList[i]
+      })
+    }
+    let _submitFormData = { ...submitFormData }
+    _submitFormData.cons = conslist_r;
+    setSubmitFormData(_submitFormData);
   }
   const consOptions = {
     options: consOptionsData,

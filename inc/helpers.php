@@ -234,6 +234,8 @@ function rp_update_review( $post_id = 0, $review_data = [] ) {
       'email' => 'email',
       'url' => 'url',
       'user_ip' => 'user_ip',
+      'cons'=>'cons',
+      'pros'=>'pros'
     ];
 
     $review_data[ 'user_ip' ] = rp_get_client_ip();

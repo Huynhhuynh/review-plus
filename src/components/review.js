@@ -12,8 +12,13 @@ export default function ReviewContentApp( props ) {
   }
   return (
     < >
+    {
+      dataReview.reviewContent &&
+      dataReview.reviewContent.length > 0 &&
       <div className="wrapper-review-lst">
-        <h3>Community Reviews</h3>
+
+            <h3>Community Reviews</h3>
+
       {
         dataReview.reviewContent &&
         dataReview.reviewContent.length > 0 &&
@@ -24,6 +29,7 @@ export default function ReviewContentApp( props ) {
         } )
       }
       </div>
+    }
     </>
   )
 

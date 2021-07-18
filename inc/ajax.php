@@ -117,6 +117,10 @@ function rp_ajax_post_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
   $reviewData = $postData[ 'reviewData' ];
+  // echo '<pre>';
+  // print_r($reviewData);
+  // echo '</pre>';
+  // die();
   spam_reviews_form($reviewData);
 }
 
