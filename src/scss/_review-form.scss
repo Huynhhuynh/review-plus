@@ -43,7 +43,7 @@ form.review-plus-form {
     font-weight: bold;
     line-height: 135%;
     padding: 0;
-    margin: 0 0 10px;
+    margin: 0 0 16px;
     color: #32373c;
   }
 
@@ -57,8 +57,10 @@ form.review-plus-form {
       > span {
         background: #3f51b5 !important;
         border-radius: 15px;
-        padding: 0 10px;
+        padding: 2px 10px;
         font-size: 14px;
+        line-height: 150%;
+        margin-bottom: 8px;
       }
 
       > input {
@@ -100,6 +102,10 @@ form.review-plus-form {
       // left: 0;
       width: 100%;
     }
+
+    &.rp-field__comment {
+      margin-bottom: 24px;
+    }
   }
 
   .review-button-submit {
@@ -107,6 +113,23 @@ form.review-plus-form {
     margin-left: auto;
     border-radius: 4px;
     margin-top: 24px;
+    background-color: #4db2ec;
+    font-size: 1.7rem;
+    font-weight: 600;
+    letter-spacing: 0.0333em;
+    line-height: 1.25;
+    margin: 0;
+    opacity: 1;
+    padding: 1.1em 1.44em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.15s linear;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    border: none;
+    -webkit-appearance: none;
 
     &.__is-loading {
       pointer-events: none;
@@ -139,7 +162,7 @@ form.review-plus-form {
     flex-wrap: wrap;
     justify-content: space-between;
     line-height: normal;
-    padding: 12px 24px;
+    padding: 16px 24px;
 
     &:not(:last-child) {
         border-bottom: 1px solid rgba(0,0,0,.1);
@@ -147,6 +170,8 @@ form.review-plus-form {
 
     &__name {
       padding-right: 24px;
+      font-size: 16px;
+      line-height: normal;
     }
 
     &__icons{

@@ -118,8 +118,9 @@ export default function ReviewForm( { designData, postId } ) {
     displayValue: 'name',
     onSelect: onUpdatePros,
     onRemove: onUpdatePros,
-    placeholder: 'Choose pros',
+    placeholder: 'Pick Your Top 3 Pros',
     showCheckbox: true,
+    selectionLimit: 3,
   }
 
   var consOptionsData = designData.cons_fields.map( item => {
@@ -144,8 +145,9 @@ export default function ReviewForm( { designData, postId } ) {
     displayValue: 'name',
     onSelect: onUpdateCons,
     onRemove: onUpdateCons,
-    placeholder: 'Choose cons',
+    placeholder: 'Pick Your Top 3 Cons',
     showCheckbox: true,
+    selectionLimit: 3,
   }
 
   const updateRatingField = ( slug, rate ) => {
