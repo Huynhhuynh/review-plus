@@ -76,6 +76,13 @@ function rp_review_entry_register_meta_fields() {
           ->set_classes( 'field-hidden' ),
         Field::make( 'text', 'name', __( 'Name', 'review-plus' ) )
       ] ) ->set_width( 50 ),
+    Field::make( 'complex', 'categories', __( 'Categories', 'review-plus' ) )
+      ->add_fields( [
+        Field::make( 'text', 'id', __( 'ID', 'review-plus' ) )
+          ->set_classes( 'field-hidden' ),
+        Field::make( 'text', 'score', __( 'Score', 'review-plus' ) ) ->set_width( 25 ),
+        Field::make( 'text', 'name', __( 'Name', 'review-plus' ) ) ->set_width( 75 )
+      ] ),
     Field::make( 'rich_text', 'comment_content', __( 'Content', 'review-plus' ) ),
     Field::make( 'separator', '__separator', __( 'Author', 'review-plus' ) ),
     Field::make( 'text', 'user_id', false )

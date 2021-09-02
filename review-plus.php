@@ -43,8 +43,6 @@ require_once( __DIR__ . '/vendor/autoload.php' );
    * CB Fields
    */
   require_once( REVIEW_PLUS_DIR . '/inc/cb-custom-fields/rating-json/field.php' );
-  // require_once( REVIEW_PLUS_DIR . '/inc/cb-custom-fields/pros-json/field.php' );
-  // require_once( REVIEW_PLUS_DIR . '/inc/cb-custom-fields/cons-json/field.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/cb-custom-fields/loader.php' );
 }
 

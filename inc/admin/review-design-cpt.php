@@ -132,7 +132,16 @@ function rp_review_design_register_meta_fields() {
             ->set_width( 40 ),
           Field::make( 'text', 'name', __( 'Cons Name', 'review-plus' ) )
             ->set_width( 60 ),
-        ] ) ->set_width( 50 )
+        ] ) ->set_width( 50 ),
+      Field::make( 'complex', 'categories_fields', __( 'Categories Fields', 'review-plus' ) )
+        ->add_fields( [
+          Field::make( 'text', 'id', __( 'ID', 'review-plus' ) )
+            ->set_width( 25 ),
+          Field::make( 'text', 'score', __( 'Score', 'review-plus' ) )
+            ->set_width( 25 ),
+          Field::make( 'text', 'name', __( 'Category Name', 'review-plus' ) )
+            ->set_width( 50 ),
+        ] ) ->set_width( 100 )
     ->set_header_template( '
       <% if (name) { %>
         <%- name %>

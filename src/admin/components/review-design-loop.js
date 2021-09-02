@@ -82,6 +82,10 @@ export function ReviewDesignItem( { designData } ) {
               <label>Cons Fields</label>
               <div>{ designData.cons_fields.length }</div>
             </li>
+            <li className="review-design-item__meta-item">
+              <label>Categories Fields</label>
+              <div>{ designData.categories_fields.length }</div>
+            </li>
           </ul>
           <div className="review-design-item__button-actions">
             <a href="#" className="delete-design" onClick={ onDeleteDesign }>Delete design</a>

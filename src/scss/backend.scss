@@ -147,7 +147,7 @@
       }
     }
   }
-  .pros-field-item-control, .cons-field-item-control {
+  .pros-field-item-control, .cons-field-item-control, .categories-field-item-control {
     margin-bottom: 20px;
 
     fieldset {
@@ -234,7 +234,8 @@
   }
 }
 
-.button-add-more-rating-field, .button-add-more-pros-field, .button-add-more-cons-field {
+.button-add-more-rating-field, .button-add-more-categories-field,
+.button-add-more-pros-field, .button-add-more-cons-field {
   display: block;
   width: 100%;
   background: black;
@@ -253,7 +254,8 @@
   }
 }
 
-.rating-json-field__list, .pros-json-field__list, .cons-json-field__list {
+.rating-json-field__list, .categories-json-field__list,
+.pros-json-field__list, .cons-json-field__list {
   border: solid #eee;
   border-width: 1px 1px 0 1px;
 

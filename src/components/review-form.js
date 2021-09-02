@@ -90,6 +90,7 @@ export default function ReviewForm( { designData, postId } ) {
     url: '',
     pros:[],
     cons:[],
+    categories:[],
     ratings: designData.rating_fields.map( item => {
       let { name, slug, default_point } = item
       return { name, slug, rate: parseInt( default_point ) }
@@ -128,7 +129,7 @@ export default function ReviewForm( { designData, postId } ) {
     return { id, name }
   } )
   const onUpdateCons = (selectedList, selectedItem) => {
-    let consList = selectedList.map( pros => pros.name )
+    let consList = selectedList.map( cons => cons.name )
     let conslist_r =[]
     for (var i in consList) {
       conslist_r.push({
@@ -148,6 +149,33 @@ export default function ReviewForm( { designData, postId } ) {
     placeholder: 'Pick Your Top 3 Cons',
     showCheckbox: true,
     selectionLimit: 3,
+  }
+
+  var categoriesOptionsData = designData.categories_fields.map( item => {
+    let { id, score, name } = item
+    return { id, score, name }
+  } )
+  const onUpdateCategories = (selectedList, selectedItem) => {
+    let categoriesList = selectedList.map( categories => categories.name )
+    let categoriesList_r =[]
+    for (var i in categoriesList) {
+      categoriesList_r.push({
+        'name':categoriesList_r[i]
+      })
+    }
+    let _submitFormData = { ...submitFormData }
+    _submitFormData.categories = categoriesList_r;
+    setSubmitFormData(_submitFormData);
+  }
+  const categoriesOptions = {
+    options: categoriesOptionsData,
+    selectedValues: [],
+    displayValue: 'name',
+    onSelect: onUpdateCategories,
+    onRemove: onUpdateCategories,
+    placeholder: 'Pick Your Categories',
+    showCheckbox: true,
+    // selectionLimit: 3,
   }
 
   const updateRatingField = ( slug, rate ) => {
@@ -249,6 +277,17 @@ export default function ReviewForm( { designData, postId } ) {
               </>
             }
             </div>
+            {
+              designData.categories_fields.length > 0 &&
+              <>
+                <div>
+                  <span className="__label">Categories</span>
+                  <div className="rp-categories-list">
+                      <Multiselect {...catgoriesOptions} />
+                  </div>
+                </div>
+              </>
+            }
             {
               PHP_DATA.user_logged_in == 'yes' &&
               <div className="rp-field rp-field__comment">

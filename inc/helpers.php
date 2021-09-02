@@ -67,6 +67,7 @@ function rp_get_review_design_by_id( $post_id ) {
   $rating_fields = carbon_get_post_meta( $result->ID, 'rating_fields' );
   $pros_fields = carbon_get_post_meta( $result->ID, 'pros_fields' );
   $cons_fields = carbon_get_post_meta( $result->ID, 'cons_fields' );
+  $categories_fields = carbon_get_post_meta( $result->ID, 'categories_fields' );
 
   return [
     'id' => $result->ID,
@@ -82,6 +83,7 @@ function rp_get_review_design_by_id( $post_id ) {
     'rating_fields' => $rating_fields ? $rating_fields : [],
     'pros_fields' => $pros_fields ? $pros_fields : [],
     'cons_fields' => $cons_fields ? $cons_fields : [],
+    'categories_fields' => $categories_fields ? $categories_fields : [],
   ];
 }
 
@@ -122,6 +124,7 @@ function rp_update_review_design_meta_fields( $post_id = 0, $designData = [] ) {
     'rating_fields',
     'pros_fields',
     'cons_fields',
+    'categories_fields',
     'login_required'
   ];
 
@@ -235,7 +238,8 @@ function rp_update_review( $post_id = 0, $review_data = [] ) {
       'url' => 'url',
       'user_ip' => 'user_ip',
       'cons'=>'cons',
-      'pros'=>'pros'
+      'pros'=>'pros',
+      'categories'=>'categories'
     ];
 
     $review_data[ 'user_ip' ] = rp_get_client_ip();

@@ -74,7 +74,26 @@ const ConsControlBar = ( {consFieldId } ) => {
     </div>
   )
 }
+const CategoriesControlBar = ( {categoriesFieldId } ) => {
+  const { moveCategoriesFieldEdit, removeCategoriesFieldItem } = useReviewDesign()
 
+  const onMove = ( move ) => {
+    moveCategoriesFieldEdit( categoriesFieldId, move )
+  }
+
+  const onRemoveItem = () => {
+    let r = confirm( 'Remove this item?' )
+    if( r ) removeCategoriesFieldItem( categoriesFieldId )
+  }
+
+  return (
+    <div className="categories-field-item-control__control">
+      <button type="button" className="__move-up" onClick={ e => { onMove( 'up' ) } }>↑ Move Up</button>
+      <button type="button" className="__move-down" onClick={ e => { onMove( 'down' ) } }>↓ Move Down</button>
+      <button type="button" className="__remove-item" onClick={ onRemoveItem }>Remove Item</button>
+    </div>
+  )
+}
 
 function RatingFieldItem( { ratingFieldData, onUpdate } ) {
   const [ fieldData, setFieldData ] = useState( ratingFieldData )
@@ -229,6 +248,53 @@ function ConsFieldItem( { consFieldData, onUpdate } ) {
   )
 }
 
+function CategoriesFieldItem( { categoriesFieldData, onUpdate } ) {
+  const [ fieldData, setFieldData ] = useState( categoriesFieldData )
+
+  const onUpdateField = ( value, fieldName ) => {
+    let newData = { ...fieldData }
+    newData[ fieldName ] = value
+
+    setFieldData( newData )
+    onUpdate ? onUpdate( newData ) : ''
+  }
+
+  return (
+    <div className="categories-field-item-control">
+      <fieldset>
+        <legend>{ fieldData.name }</legend>
+        <div className="categories-field-item-control__body">
+          <div className="group-field" style="width: 50%;">
+            <label>Name</label>
+            <div className="field">
+              <input
+                className="rp-field"
+                type="text"
+                value={ fieldData.name }
+                onChange={ e => {
+                  onUpdateField( e.target.value, 'name' )
+                } } />
+            </div>
+          </div>
+          <div className="group-field" style="width: 50%;">
+            <label>Score</label>
+            <div className="field">
+              <input
+                className="rp-field"
+                type="number"
+                value={ fieldData.score }
+                onChange={ e => {
+                  onUpdateField( e.target.score, 'score' )
+                } } />
+            </div>
+          </div>
+        </div>
+        <CategoriesControlBar categoriesFieldId={ fieldData.id } />
+      </fieldset>
+    </div>
+  )
+}
+
 function ColorSelector( { color, onChange } ) {
   const [ open, setOpen ] = useState( false )
 
@@ -275,7 +341,7 @@ function ColorSelector( { color, onChange } ) {
 }
 
 export default function DesignEditModal() {
-  const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, addProsFieldItem, addConsFieldItem, newReviewDesignItem, groupPostTax } = useReviewDesign()
+  const { reviewDesignData, designEdit, setDesignEdit, updateReviewDesignItem, addRatingFieldItem, addProsFieldItem, addConsFieldItem, addCategoriesFieldItem, newReviewDesignItem, groupPostTax } = useReviewDesign()
   if( designEdit == null ) return <></>
 
   const [ _groupPostTax, _setGroupPostTax ] = useState( [] )
@@ -563,6 +629,29 @@ export default function DesignEditModal() {
                     addConsFieldItem()
                   } }>Add Item</button>
                 </div>
+            </div>
+            <div className="group-field">
+              <label>Categories Fields</label>
+              <div className="field repeater-field">
+                {
+                  designEdit.categories_fields &&
+                  (designEdit.categories_fields.length > 0) &&
+                  designEdit.categories_fields.map( ( categoriesFieldData, index ) => {
+                    return <CategoriesFieldItem
+                      key={ categoriesFieldData.id }
+                      categoriesFieldData={ categoriesFieldData }
+                      onUpdate={ updateFieldData => {
+                        let newCategoriesFields = [ ...designEdit.categories_fields ]
+                        newCategoriesFields[ index ] = updateFieldData
+                        onUpdateField( newCategoriesFields, 'categories_fields' )
+                      } } />
+                  } )
+                }
+              </div>
+              <button type="button" className="button-add-more-categories-field" onClick={ e => {
+                e.preventDefault()
+                addCategoriesFieldItem()
+              } }>Add Item</button>
             </div>
           </form>
           <div className="modal-actions">

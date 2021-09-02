@@ -112,6 +112,23 @@ function ReviewDesignProvider( { children } ) {
     newdesignEdit.cons_fields = consFields
     setDesignEdit( newdesignEdit )
   }
+  const moveCategoriesFieldEdit = ( categoriesFieldItemID, move ) => {
+    let newdesignEdit = {...designEdit}
+    let categoriesFields = [ ...newdesignEdit.categories_fields ]
+
+    // get current index
+    let cIndex = findIndex( categoriesFields, o => {
+      return o.id == categoriesFieldItemID
+    } )
+
+    let itemMove = categoriesFields.splice( cIndex, 1 )[0]; // save item
+    let newIndex = ( move == 'up' ) ? cIndex -= 1 : cIndex += 1 // new index
+
+    categoriesFields.splice( newIndex, 0, itemMove ) // move item to new index
+
+    newdesignEdit.categories_fields = categoriesFields
+    setDesignEdit( newdesignEdit )
+  }
 
   const removeRatingFieldItem = ( ratingFieldItemID ) => {
     let newdesignEdit = {...designEdit}
@@ -144,6 +161,16 @@ function ReviewDesignProvider( { children } ) {
     } )
 
     newdesignEdit.cons_fields = consFields
+    setDesignEdit( newdesignEdit )
+  }
+  const removeCategoriesFieldItem = ( categoriesFieldItemID ) => {
+    let newdesignEdit = {...designEdit}
+    let categoriesFields = [ ...newdesignEdit.categories_fields ]
+
+    remove( categoriesFields, item => {
+      return item.id == categoriesFieldItemID
+    } )
+    newdesignEdit.categories_fields = categoriesFields
     setDesignEdit( newdesignEdit )
   }
 
@@ -180,6 +207,15 @@ function ReviewDesignProvider( { children } ) {
     newdesignEdit.cons_fields = consFields
     setDesignEdit( newdesignEdit )
   }
+  const addCategoriesFieldItem = () => {
+    let newdesignEdit = {...designEdit}
+    let categoriesFields = [ ...newdesignEdit.categories_fields ]
+
+    let newField = Helpers.categoriesItemTemplate()
+    categoriesFields.push( newField )
+    newdesignEdit.categories_fields = categoriesFields
+    setDesignEdit( newdesignEdit )
+  }
 
   useEffect( () => {
 
@@ -212,6 +248,9 @@ function ReviewDesignProvider( { children } ) {
     moveConsFieldEdit,
     removeConsFieldItem,
     addConsFieldItem,
+    moveCategoriesFieldEdit,
+    removeCategoriesFieldItem,
+    addCategoriesFieldItem,
     addNewDesign,
     newReviewDesignItem,
     deleteReviewDesign,
