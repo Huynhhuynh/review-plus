@@ -151,20 +151,28 @@ export default function ReviewForm( { designData, postId } ) {
     selectionLimit: 3,
   }
 
-  var categoriesOptionsData = designData.categories_fields.map( item => {
-    let { id, score, name } = item
-    return { id, score, name }
+  var categoriesOptionsData = designData.categories_fields.map( (item, index) => {
+    let { id, score, name } = item;
+    id = index + "-" + score;
+    return { id, name }
   } )
   const onUpdateCategories = (selectedList, selectedItem) => {
-    let categoriesList = selectedList.map( categories => categories.name )
+    console.log(selectedList);
+    let categoriesList = selectedList.map( categories => {
+      let { id, name } = categories;
+      return { id, name}
+    } )
     let categoriesList_r =[]
     for (var i in categoriesList) {
+      let score = (categoriesList[i].id).split("-");
       categoriesList_r.push({
-        'name':categoriesList_r[i]
+        'score': score[1],
+        'name': categoriesList[i].name
       })
     }
     let _submitFormData = { ...submitFormData }
     _submitFormData.categories = categoriesList_r;
+    console.log(_submitFormData);
     setSubmitFormData(_submitFormData);
   }
   const categoriesOptions = {
@@ -280,10 +288,10 @@ export default function ReviewForm( { designData, postId } ) {
             {
               designData.categories_fields.length > 0 &&
               <>
-                <div>
+                <div className="rv-categories-field">
                   <span className="__label">Categories</span>
                   <div className="rp-categories-list">
-                      <Multiselect {...catgoriesOptions} />
+                      <Multiselect {...categoriesOptions} />
                   </div>
                 </div>
               </>

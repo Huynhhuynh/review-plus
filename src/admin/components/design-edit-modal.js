@@ -258,13 +258,12 @@ function CategoriesFieldItem( { categoriesFieldData, onUpdate } ) {
     setFieldData( newData )
     onUpdate ? onUpdate( newData ) : ''
   }
-
   return (
     <div className="categories-field-item-control">
       <fieldset>
         <legend>{ fieldData.name }</legend>
         <div className="categories-field-item-control__body">
-          <div className="group-field" style="width: 50%;">
+          <div className="group-field half-col">
             <label>Name</label>
             <div className="field">
               <input
@@ -276,7 +275,7 @@ function CategoriesFieldItem( { categoriesFieldData, onUpdate } ) {
                 } } />
             </div>
           </div>
-          <div className="group-field" style="width: 50%;">
+          <div className="group-field half-col">
             <label>Score</label>
             <div className="field">
               <input
@@ -284,7 +283,7 @@ function CategoriesFieldItem( { categoriesFieldData, onUpdate } ) {
                 type="number"
                 value={ fieldData.score }
                 onChange={ e => {
-                  onUpdateField( e.target.score, 'score' )
+                  onUpdateField( e.target.value, 'score' )
                 } } />
             </div>
           </div>
