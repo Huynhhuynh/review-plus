@@ -918,13 +918,20 @@ function rp_new_point_review ( $point_data = [],$id_review ) {
     'post_status' => 'publish'
   ] );
 
+  $point_total = 1;
+
+  $review_cats = carbon_get_post_meta($id_review,'categories');
+  foreach ($review_cats as $key => $value) {
+     if ( $value['score'] ) $point_total += $value['score'];
+  }
+
   $id_post = carbon_get_post_meta($id_review,'review_post_id');
   carbon_set_post_meta( $id, 'point_type_entrie','travelpoint');
   carbon_set_post_meta( $id,'author_action_entrie', $point_data[ 'user_id' ] );
   carbon_set_post_meta( $id,'review_post_id', $id_review );
   carbon_set_post_meta( $id,'review_user_id', $point_data['user_id_reviews'] );
   carbon_set_post_meta( $id,'post_id', $id_post );
-  carbon_set_post_meta( $id,'point_number_entrie', 1 );
+  carbon_set_post_meta( $id,'point_number_entrie', $point_total );
 
   return $id;
 
