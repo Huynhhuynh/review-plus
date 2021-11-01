@@ -99,6 +99,7 @@
 
         foreach ($id_form_post  as $key => $value) {
           $array_cat  = carbon_get_post_meta($value,'categories_fields');
+          $point_form_all =0;
           if($key==0){
             $class_active_tab = 'active';
           }else{
@@ -149,12 +150,14 @@
                     )
                   );
                   $q_svl_new = new \WP_Query( $args_form );
+                  $total_reviews_form=$q_svl_new->found_posts;
                 ?>
 
                   <?php
                     if($q_svl_new->have_posts()){
                       $index=0;
                       while($q_svl_new->have_posts()){
+
                         $q_svl_new->the_post();
                         $id = get_the_ID();
                         $index++;
@@ -172,6 +175,7 @@
                               array_push($cat_in_point_rw_name,$cat_in_point['name']);
                               $all_point_cat=$all_point_cat+$cat_in_point['score'];
                             }
+                            $point_form_all = $point_form_all+$all_point_cat;
                             $result = array_intersect( $cat_raw_form_all,$cat_in_point_rw_name);
 
 
@@ -186,31 +190,31 @@
                                 $array_show[$key_new_show]=$array_show_score[$key_new_show];
                               }
                             }
-
                             ?>
                             <td>
                               <a href="<?php echo get_permalink($id_post)?>">
                                 <?php echo get_the_title($id_post)?>
                               </a>
-                          </td>
+                            </td>
                             <td><?php echo $all_point_cat/$count_item_cat?></td>
                             <td><?php echo get_the_date('M j, Y')?></td>
                             <?php
-
-
-                            foreach ($array_show as $value) {
-                              ?>
-                                <td><?php echo $value?></td>
-                              <?php
-                            }
+                              foreach ($array_show as $value) {
+                                ?>
+                                  <td><?php echo $value?></td>
+                                <?php
+                              }
                             ?>
                           </tr>
                         <?php
-
                       }
                     }
                   ?>
               </table>
+              <div class="wrapper-review-form-detail">
+                <span>Total Point Form: <?php echo $point_form_all?></span>
+                <span>Total Review Form: <?php echo $total_reviews_form?></span>
+              </div>
             </div>
           <?php
         }
@@ -349,6 +353,11 @@
     height:100%;
     display: none;
     background: rgba(0,0,0,0.6);
+  }
+  .wrapper-review-form-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   .cv-spinner {
     height: 100%;
