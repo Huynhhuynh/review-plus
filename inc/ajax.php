@@ -317,3 +317,21 @@ function rp_ajax_get_score_user() {
 
 add_action( 'wp_ajax_rp_ajax_get_score_user', 'rp_ajax_get_score_user' );
 add_action( 'wp_ajax_nopriv_rp_ajax_get_score_user', 'rp_ajax_get_score_user' );
+
+
+add_action( 'wp_ajax_update_show_review_user', 'update_show_review_user_init' );
+add_action( 'wp_ajax_nopriv_update_show_review_user', 'update_show_review_user_init' );
+function update_show_review_user_init() {
+	$review_show;
+	$id_user = intval($_POST['user_id']);
+	if($_POST['review_show']=='true'){
+		$review_show = 1;
+	}
+	if($_POST['review_show']=='false'){
+		$review_show = 0;
+	}
+	update_user_meta($id_user,'review_show_profile',$review_show);
+	wp_send_json( [
+		'success' => true,
+	] );
+}

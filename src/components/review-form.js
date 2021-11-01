@@ -172,7 +172,7 @@ export default function ReviewForm( { designData, postId } ) {
     }
     let _submitFormData = { ...submitFormData }
     _submitFormData.categories = categoriesList_r;
-    console.log(_submitFormData);
+    // console.log(_submitFormData);
     setSubmitFormData(_submitFormData);
   }
   const categoriesOptions = {

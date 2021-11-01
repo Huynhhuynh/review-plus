@@ -69,6 +69,16 @@ function rp_review_point_register_meta_fields() {
     Field::make( 'text', 'post_id', __( 'Post ID', 'review-plus' ) ),
     Field::make( 'text', 'review_user_id', __( 'User Review ID', 'review-plus' ) ),
     Field::make( 'text', 'point_number_entrie', __( 'Point', 'review-plus' ) ),
+    Field::make( 'text', 'id_form_design', __( 'ID Form Design', 'review-plus' ) ),
+    Field::make( 'complex', 'categories_fields_point', __( 'Categories Fields', 'review-plus' ) )
+      ->add_fields( [
+          Field::make( 'text', 'name', __( 'Category Name', 'review-plus' ) )
+            ->set_width( 50 ),
+          Field::make( 'text', 'score', __( 'Score', 'review-plus' ) )
+            ->set_attribute( 'type', 'number' )
+            ->set_default_value( 0 )
+            ->set_width( 25 ),
+      ] ) ->set_width( 100 )
   ] );
 
   Container::make( 'post_meta', __( 'Point Entry', 'review-plus' ) )

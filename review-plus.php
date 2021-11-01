@@ -11,6 +11,7 @@ Author URI: https://becoding.dev/
 */
 
 require_once( __DIR__ . '/vendor/autoload.php' );
+require_once( __DIR__ . '/plugin_template_page.php' );
 
 {
   /**
@@ -36,7 +37,7 @@ require_once( __DIR__ . '/vendor/autoload.php' );
    */
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-entries-cpt.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-design-cpt.php' );
-    require_once( REVIEW_PLUS_DIR . '/inc/admin/review-point-cpt.php' );
+  require_once( REVIEW_PLUS_DIR . '/inc/admin/review-point-cpt.php' );
   require_once( REVIEW_PLUS_DIR . '/inc/admin/review-design-panel.php' );
 
   /**

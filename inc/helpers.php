@@ -932,6 +932,8 @@ function rp_new_point_review ( $point_data = [],$id_review ) {
   carbon_set_post_meta( $id,'review_user_id', $point_data['user_id_reviews'] );
   carbon_set_post_meta( $id,'post_id', $id_post );
   carbon_set_post_meta( $id,'point_number_entrie', $point_total );
+  carbon_set_post_meta( $id,'id_form_design', $point_data['id_form_design']);
+  carbon_set_post_meta( $id,'categories_fields_point', $review_cats);
 
   return $id;
 
@@ -1068,7 +1070,7 @@ function rp_check_user_reviews_form ($id_user,$id_post,$id_form_reviews) {
         $id_user_entri = carbon_get_post_meta( $id_entrie, 'user_id' );
         $review_post_id = carbon_get_post_meta( $id_entrie, 'review_post_id' );
         $review_design_id = carbon_get_post_meta( $id_entrie, 'design_id' );
-        if( $id_user == $id_user_entri && $id_post == $review_post_id && $id_form_reviews) {
+        if( $id_user == $id_user_entri && $id_post == $review_post_id && $id_form_reviews == $review_design_id) {
             $passed = false;
             break;
         }else {
@@ -1131,6 +1133,7 @@ function spam_reviews_form ($Data) {
             $review_id = rp_post_review( $reviewData );
             $user_id_reviews = carbon_get_post_meta($review_id,'user_id');
             $point_data['user_id_reviews'] = $user_id_reviews;
+            $point_data['id_form_design'] = $id_design;
             rp_new_point_review($point_data,$review_id);
             wp_send_json( [
               'success' => true,
