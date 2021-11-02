@@ -81,7 +81,7 @@
             ?>
               <div class="notice-message-profile">
                 <span>Profile review is not publich</span>
-                <a href="<?php echo get_home_url()?>">Home</a>
+                <a href="<?php echo get_home_url()?>">Back to home</a>
               </div>
             <?php
           }
