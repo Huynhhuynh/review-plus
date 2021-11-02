@@ -32,7 +32,20 @@
           $id_user=intval($id_user_link);
         }else{
           $id_user=Null;
+          ?>
+            <div class="notice-message-profile">
+              <span>Profile review is not publich</span>
+              <a href="<?php echo get_home_url()?>">Back to home</a>
+            </div>
+          <?php
         }
+      }else{
+        ?>
+          <div class="notice-message-profile">
+            <span>Profile review is not publich</span>
+            <a href="<?php echo get_home_url()?>">Home</a>
+          </div>
+        <?php
       }
     }
 
@@ -311,7 +324,7 @@
      position: relative;
      width: 1140px;
      max-width: 100%;
-     margin: 100px auto 0;
+     margin:auto;
   }
 
   .naccs .menu div span {
@@ -320,8 +333,8 @@
   .naccs .menu div {
      padding: 15px 20px 15px 40px;
      margin-bottom: 10px;
-     color: #fff;
-     background: #292e4b;
+     color: #000;
+     line-height: 1;
      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
      cursor: pointer;
      position: relative;
@@ -342,13 +355,13 @@
      -webkit-transform: translateY(-50%);
      transform: translateY(-50%);
      left: 15px;
-     background-color: #fff;
+     background-color: #000;
      border-radius: 100%;
      transition: 1s all cubic-bezier(0.075, 0.82, 0.165, 1);
   }
 
   .naccs .menu div.active span.light {
-     background-color: #FBC02D;
+     background-color: #3F51B5;
      left: 0;
      height: 100%;
      width: 3px;
@@ -358,8 +371,9 @@
   }
 
   .naccs .menu div.active {
-     color: #FBC02D;
+     color: #3F51B5;
      padding: 15px 20px 15px 20px;
+
   }
 
   ul.nacc {
