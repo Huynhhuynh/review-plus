@@ -115,7 +115,6 @@
       <div class="gc gc--2-of-3">
         <ul class="nacc">
         <?php
-
           foreach ($id_form_post  as $key => $id_form_item) {
             $array_cat  = carbon_get_post_meta($id_form_item,'categories_fields');
             $point_form_all =0;
@@ -125,7 +124,6 @@
               $class_active_tab ='';
             }
             ?>
-
                 <li class="<?php echo $class_active_tab?>">
                   <div>
                     <table class="styled-table">
@@ -135,10 +133,10 @@
                         <th>Average point</th>
                         <th>Reviews Date</th>
                         <?php
-                        $cat_raw_form_all =[];
-                        $array_show_score=[];
-                        $array_show=[];
-                        $count_item_cat = count($array_cat);
+                          $cat_raw_form_all =[];
+                          $array_show_score=[];
+                          $array_show=[];
+                          $count_item_cat = count($array_cat);
                           foreach ($array_cat as $cat) {
                             array_push($cat_raw_form_all,$cat['name']);
                             array_push($array_show_score,$cat['score']);
@@ -177,7 +175,6 @@
                           if($q_svl_new->have_posts()){
                             $index=0;
                             while($q_svl_new->have_posts()){
-
                               $q_svl_new->the_post();
                               $id = get_the_ID();
                               $index++;
@@ -216,7 +213,7 @@
                                       <?php echo get_the_title($id_post)?>
                                     </a>
                                   </td>
-                                  <td><?php echo $all_point_cat/$count_item_cat?></td>
+                                  <td><?php echo round($all_point_cat/$count_item_cat,2)?></td>
                                   <td><?php echo get_the_date('M j, Y')?></td>
                                   <?php
                                     foreach ($array_show as $value) {
@@ -510,7 +507,6 @@
       justify-content: flex-start;
       top: auto;
       margin-bottom: 10px;
-
     }
     .wrapper-review-form-detail span{
       width: 100%;
@@ -528,33 +524,22 @@
 <script>
 
 jQuery( document ).ready(function($) {
-    // $('.tab-link').click( function() {
-    //     var tabID = $(this).attr('data-tab');
-    //
-    //     $(this).addClass('active').siblings().removeClass('active');
-    //
-    //     $('#tab-'+tabID).addClass('active').siblings().removeClass('active');
-    // });
-
     let height_li_active_first = $('.nacc li.active').innerHeight();
-
     $('.naccs ul').height(height_li_active_first + 'px');
-
-
     $(document).on("click", ".naccs .menu div", function() {
     	var numberIndex = $(this).index();
 
     	if (!$(this).is("active")) {
-    		$(".naccs .menu div").removeClass("active");
-    		$(".naccs ul li").removeClass("active");
+    		$('.naccs .menu div').removeClass('active');
+    		$('.naccs ul li').removeClass('active');
 
-    		$(this).addClass("active");
-    		$(".naccs ul").find("li:eq(" + numberIndex + ")").addClass("active");
+    		$(this).addClass('active');
+    		$('.naccs ul').find('li:eq(' + numberIndex + ')').addClass('active');
 
-    		var listItemHeight = $(".naccs ul")
-    			.find("li:eq(" + numberIndex + ")")
+    		var listItemHeight = $('.naccs ul')
+    			.find('li:eq(' + numberIndex + ')')
     			.innerHeight();
-    		$(".naccs ul").height(listItemHeight + "px");
+    		$('.naccs ul').height(listItemHeight + 'px');
     	}
     });
 
