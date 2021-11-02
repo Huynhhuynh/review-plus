@@ -12,43 +12,6 @@
     <div class="content-template-history-point grid">
   <?php
     $id_user = get_current_user_id();
-    if(!empty($id_user)){
-      if(get_user_meta($id_user,'review_show_profile',true)=='1'){
-        $key_checked = 'checked';
-      }
-      if(get_user_meta($id_user,'review_show_profile',true)=='0'){
-        $key_checked = '';
-      }
-      ?>
-        <div class="show-infor-review">
-          <label for="show_review_user"> Publish review page</label>
-          <input type="checkbox" id="show_review_user" name="show-review-user"  data-user-id="<?php echo $id_user?>" <?php echo $key_checked?>>
-        </div>
-      <?php
-    }else{
-      $id_user_link = $_GET['userID'];
-      if(!empty($id_user_link)){
-        if(get_user_meta($id_user_link,'review_show_profile',true)=='1'){
-          $id_user=intval($id_user_link);
-        }else{
-          $id_user=Null;
-          ?>
-            <div class="notice-message-profile">
-              <span>Profile review is not publich</span>
-              <a href="<?php echo get_home_url()?>">Back to home</a>
-            </div>
-          <?php
-        }
-      }else{
-        ?>
-          <div class="notice-message-profile">
-            <span>Profile review is not publich</span>
-            <a href="<?php echo get_home_url()?>">Home</a>
-          </div>
-        <?php
-      }
-    }
-
     $args = array(
       'post_type'=>'point-entries',
       'posts_per_page'=>-1,
@@ -87,6 +50,42 @@
         </div>
       <?php
       }
+        if(!empty($id_user)){
+          if(get_user_meta($id_user,'review_show_profile',true)=='1'){
+            $key_checked = 'checked';
+          }
+          if(get_user_meta($id_user,'review_show_profile',true)=='0'){
+            $key_checked = '';
+          }
+          ?>
+            <div class="show-infor-review">
+              <label for="show_review_user"> Publish review page</label>
+              <input type="checkbox" id="show_review_user" name="show-review-user"  data-user-id="<?php echo $id_user?>" <?php echo $key_checked?>>
+            </div>
+          <?php
+        }else{
+          $id_user_link = $_GET['userID'];
+          if(!empty($id_user_link)){
+            if(get_user_meta($id_user_link,'review_show_profile',true)=='1'){
+              $id_user=intval($id_user_link);
+            }else{
+              $id_user=Null;
+              ?>
+                <div class="notice-message-profile">
+                  <span>Profile review is not publich</span>
+                  <a href="<?php echo get_home_url()?>">Back to home</a>
+                </div>
+              <?php
+            }
+          }else{
+            ?>
+              <div class="notice-message-profile">
+                <span>Profile review is not publich</span>
+                <a href="<?php echo get_home_url()?>">Home</a>
+              </div>
+            <?php
+          }
+        }
       ?>
       <div class="gc gc--1-of-3">
         <div class="menu">
@@ -116,8 +115,8 @@
         <ul class="nacc">
         <?php
 
-          foreach ($id_form_post  as $key => $value) {
-            $array_cat  = carbon_get_post_meta($value,'categories_fields');
+          foreach ($id_form_post  as $key => $id_form_item) {
+            $array_cat  = carbon_get_post_meta($id_form_item,'categories_fields');
             $point_form_all =0;
             if($key==0){
               $class_active_tab = 'active';
@@ -164,7 +163,7 @@
                             ),
                             array(
                               'key'     => 'id_form_design',
-                              'value'   => $value,
+                              'value'   => $id_form_item,
                               'compare' => '=',
                             ),
                           )
@@ -212,7 +211,7 @@
                                   }
                                   ?>
                                   <td>
-                                    <a href="<?php echo get_permalink($id_post)?>">
+                                    <a href="<?php echo get_permalink($id_post)?>" target="_blank">
                                       <?php echo get_the_title($id_post)?>
                                     </a>
                                   </td>
@@ -232,8 +231,8 @@
                         ?>
                     </table>
                     <div class="wrapper-review-form-detail">
-                      <span>Total Point Form: <?php echo $point_form_all?></span>
-                      <span>Total Review Form: <?php echo $total_reviews_form?></span>
+                      <span>Total Point <?php echo get_the_title($id_form_item).': '.$point_form_all?></span>
+                      <span>Total Review <?php echo get_the_title($id_form_item).': '.$total_reviews_form?></span>
                     </div>
                   </div>
                 </li>
@@ -258,18 +257,18 @@
     width: 1140px;
     margin: auto;
     max-width: 95%;
+    position: relative;
   }
   .infor-user-review {
-    text-align: center;
-    max-width: 1140px;
-    display: flex;
-    margin: auto;
-    justify-content: space-between;
+    text-align: left;
+    display: block;
+    /* margin: auto;
+    justify-content: space-between; */
     margin-bottom: 32px;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
   }
   .infor-user-review span {
-    display: inline-block;
+    display: block;
     margin-bottom: 5px;
   }
 
@@ -436,6 +435,9 @@
   }
 
   .show-infor-review {
+    position: absolute;
+    top: 40px;
+    right: 0;
     max-width:1140px;
     display:flex;
     align-items:center;
@@ -502,6 +504,12 @@
     }
   }
   @media(max-width:450px) {
+    .show-infor-review {
+      position: relative;
+      justify-content: flex-start;
+      top: auto;
+      margin-bottom: 11px;
+    }
     .wrapper-review-form-detail span{
       width: 100%;
     }
