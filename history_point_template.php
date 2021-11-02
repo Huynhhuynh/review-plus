@@ -38,7 +38,7 @@
           $id_user=Null;
           ?>
             <div class="notice-message-profile">
-              <span>Profile review is not public</span>
+              <span>Profile review is not publish </span>
               <a href="<?php echo get_home_url()?>">Back to home</a>
             </div>
           <?php
@@ -46,7 +46,7 @@
       }else{
         ?>
           <div class="notice-message-profile">
-            <span>Profile review is not publich</span>
+            <span>Profile review is not publish </span>
             <a href="<?php echo get_home_url()?>">Back to home</a>
           </div>
         <?php
