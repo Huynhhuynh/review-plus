@@ -12,6 +12,43 @@
     <div class="content-template-history-point grid">
   <?php
     $id_user = get_current_user_id();
+    if(!empty($id_user)){
+      if(get_user_meta($id_user,'review_show_profile',true)=='1'){
+        $key_checked = 'checked';
+      }
+      if(get_user_meta($id_user,'review_show_profile',true)=='0'){
+        $key_checked = '';
+      }
+      ?>
+        <div class="show-infor-review">
+          <label for="show_review_user"> Publish review page</label>
+          <input type="checkbox" id="show_review_user" name="show-review-user"  data-user-id="<?php echo $id_user?>" <?php echo $key_checked?>>
+        </div>
+      <?php
+    }else{
+      $id_user_link = $_GET['userID'];
+      if(!empty($id_user_link)){
+        if(get_user_meta($id_user_link,'review_show_profile',true)=='1'){
+          $id_user=intval($id_user_link);
+        }else{
+          $id_user=Null;
+          ?>
+            <div class="notice-message-profile">
+              <span>Profile review is not publich</span>
+              <a href="<?php echo get_home_url()?>">Back to home</a>
+            </div>
+          <?php
+        }
+      }else{
+        ?>
+          <div class="notice-message-profile">
+            <span>Profile review is not publich</span>
+            <a href="<?php echo get_home_url()?>">Home</a>
+          </div>
+        <?php
+      }
+    }
+
     $args = array(
       'post_type'=>'point-entries',
       'posts_per_page'=>-1,
@@ -50,42 +87,6 @@
         </div>
       <?php
       }
-        if(!empty($id_user)){
-          if(get_user_meta($id_user,'review_show_profile',true)=='1'){
-            $key_checked = 'checked';
-          }
-          if(get_user_meta($id_user,'review_show_profile',true)=='0'){
-            $key_checked = '';
-          }
-          ?>
-            <div class="show-infor-review">
-              <label for="show_review_user"> Publish review page</label>
-              <input type="checkbox" id="show_review_user" name="show-review-user"  data-user-id="<?php echo $id_user?>" <?php echo $key_checked?>>
-            </div>
-          <?php
-        }else{
-          $id_user_link = $_GET['userID'];
-          if(!empty($id_user_link)){
-            if(get_user_meta($id_user_link,'review_show_profile',true)=='1'){
-              $id_user=intval($id_user_link);
-            }else{
-              $id_user=Null;
-              ?>
-                <div class="notice-message-profile">
-                  <span>Profile review is not publich</span>
-                  <a href="<?php echo get_home_url()?>">Back to home</a>
-                </div>
-              <?php
-            }
-          }else{
-            ?>
-              <div class="notice-message-profile">
-                <span>Profile review is not publich</span>
-                <a href="<?php echo get_home_url()?>">Back to home</a>
-              </div>
-            <?php
-          }
-        }
       ?>
       <div class="gc gc--1-of-3">
         <div class="menu">
@@ -508,7 +509,8 @@
       position: relative;
       justify-content: flex-start;
       top: auto;
-      margin-bottom: 11px;
+      margin-bottom: 10px;
+
     }
     .wrapper-review-form-detail span{
       width: 100%;
