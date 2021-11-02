@@ -1,6 +1,7 @@
 
 <?php
   get_header();
+
 ?>
 <div id="overlay">
   <div class="cv-spinner">
@@ -12,6 +13,9 @@
     <div class="content-template-history-point grid">
   <?php
     $id_user = get_current_user_id();
+    if(!empty($_GET['pp'])){
+      var_dump($id_user);
+    }
     if(!empty($id_user)){
       if(get_user_meta($id_user,'review_show_profile',true)=='1'){
         $key_checked = 'checked';
@@ -34,7 +38,7 @@
           $id_user=Null;
           ?>
             <div class="notice-message-profile">
-              <span>Profile review is not publich</span>
+              <span>Profile review is not public</span>
               <a href="<?php echo get_home_url()?>">Back to home</a>
             </div>
           <?php
@@ -43,7 +47,7 @@
         ?>
           <div class="notice-message-profile">
             <span>Profile review is not publich</span>
-            <a href="<?php echo get_home_url()?>">Home</a>
+            <a href="<?php echo get_home_url()?>">Back to home</a>
           </div>
         <?php
       }

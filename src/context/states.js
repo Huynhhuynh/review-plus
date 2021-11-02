@@ -13,7 +13,7 @@ import {
   getDisLikeReview,
   postLikedReview,
   postDisLikedReview,
-  getPointReview ,
+  getPointReview,
   postReply,
   getScoreUser
 } from '../admin/lib/api'
