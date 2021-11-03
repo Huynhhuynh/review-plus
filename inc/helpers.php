@@ -262,7 +262,7 @@ function rp_update_review( $post_id = 0, $review_data = [] ) {
   return $post_id;
 }
 
-function rp_new_point_review_session ( $id_review ,$id_post) {
+function rp_new_point_review_session ( $id_review ,$id_post,$id_design_form) {
 
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
@@ -333,12 +333,13 @@ function rp_new_point_review_session ( $id_review ,$id_post) {
     carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
     carbon_set_post_meta( $id,'post_id', $id_post );
     carbon_set_post_meta( $id,'point_number_entrie', 1 );
+    carbon_set_post_meta( $id,'id_form_design', $id_design_form );
     return $id;
   }
 
 }
 
-function rp_new_like_point_review  ( $id_review , $id_post ) {
+function rp_new_like_point_review  ( $id_review , $id_post,$id_design_form ) {
 
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
@@ -404,6 +405,7 @@ function rp_new_like_point_review  ( $id_review , $id_post ) {
     carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
     carbon_set_post_meta( $id,'post_id', $id_post );
     carbon_set_post_meta( $id,'point_number_entrie', 0 );
+    carbon_set_post_meta( $id,'id_form_design', $id_design_form );
     return $id;
   }
 }
@@ -417,7 +419,7 @@ function rp_minus_point_travel_dis_like ( $id_review ) {
   }
 }
 
-function rp_minus_point_review_session ( $id_post,$id_review ) {
+function rp_minus_point_review_session ( $id_post,$id_review,$id_design_form ) {
 
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
@@ -487,11 +489,12 @@ function rp_minus_point_review_session ( $id_post,$id_review ) {
     carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
     carbon_set_post_meta( $id,'post_id', $id_post );
     carbon_set_post_meta( $id,'point_number_entrie', -1 );
+    carbon_set_post_meta( $id,'id_form_design', $id_design_form );
     return $id;
   }
 }
 
-function rp_minus_point_review_travel ( $id_post,$id_review ) {
+function rp_minus_point_review_travel ( $id_post,$id_review,$id_design_form ) {
 
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
@@ -562,6 +565,7 @@ function rp_minus_point_review_travel ( $id_post,$id_review ) {
     carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
     carbon_set_post_meta( $id,'post_id', $id_post );
     carbon_set_post_meta( $id,'point_number_entrie', -1 );
+    carbon_set_post_meta( $id,'id_form_design', $id_design_form );
     return $id;
   }
 }
@@ -621,7 +625,7 @@ function update_status_like ( $id_review ,$id_post) {
 }
 
 
-function update_status_dislike ( $id_review ,$id_post) {
+function update_status_dislike ( $id_review ,$id_post,$id_design_form) {
   $post_id_point = [];
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
@@ -729,7 +733,7 @@ function update_status_sesion_type ( $id_review ,$id_post) {
 }
 
 
-function update_status_sesion_dislike_type ( $id_review ,$id_post) {
+function update_status_sesion_dislike_type ( $id_review ,$id_post,$id_design) {
   $post_id_point = [];
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
@@ -785,7 +789,7 @@ function update_status_sesion_dislike_type ( $id_review ,$id_post) {
   return $id_point;
 }
 
-function update_status_travel_dislike_type ( $id_review ,$id_post) {
+function update_status_travel_dislike_type ( $id_review ,$id_post,$id_design_form) {
   $post_id_point = [];
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
@@ -841,7 +845,7 @@ function update_status_travel_dislike_type ( $id_review ,$id_post) {
   return $id_point;
 }
 
-function rp_new_dis_like_point_review ( $id_post,$id_review ) {
+function rp_new_dis_like_point_review ( $id_post,$id_review,$id_design_form ) {
   if( is_user_logged_in() ) {
     $current_user = wp_get_current_user();
     $name = esc_html( $current_user->display_name );
@@ -906,6 +910,7 @@ function rp_new_dis_like_point_review ( $id_post,$id_review ) {
     carbon_set_post_meta( $id,'review_user_id', $user_id_reviews );
     carbon_set_post_meta( $id,'post_id', $id_post );
     carbon_set_post_meta( $id,'point_number_entrie', 0 );
+    carbon_set_post_meta( $id,'id_form_design', $id_design_form );
     return $id;
   }
 }

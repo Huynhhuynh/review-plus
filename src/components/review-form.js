@@ -157,7 +157,6 @@ export default function ReviewForm( { designData, postId } ) {
     return { id, name }
   } )
   const onUpdateCategories = (selectedList, selectedItem) => {
-    console.log(selectedList);
     let categoriesList = selectedList.map( categories => {
       let { id, name } = categories;
       return { id, name}

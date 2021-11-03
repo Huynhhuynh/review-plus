@@ -18,7 +18,7 @@ export default function btnlikeReview(props) {
   });
 
   useEffect(() => {
-    
+
     if(result_array.includes(thisprop.id_review)){
       setShowbt(true)
     }else{

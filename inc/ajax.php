@@ -163,8 +163,9 @@ function rp_ajax_post_like_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
   $id_review = $postData['reviewID'];
-  rp_new_point_review_session ( $postData['reviewID'],$postData['postId'] );
-  rp_new_like_point_review($postData['reviewID'],$postData['postId']);
+  $id_design = carbon_get_post_meta( intval($id_review), 'design_id' );
+  rp_new_point_review_session ( $postData['reviewID'],$postData['postId'],$id_design );
+  rp_new_like_point_review($postData['reviewID'],$postData['postId'],$id_design);
   $like_reviews =  get_like_review($postData['postId']);
   $like_point_user_login = get_like_dislike_user_current($postData['postId'],'likeentrie');
   wp_send_json( [
@@ -219,9 +220,10 @@ function rp_ajax_post_dis_like_review() {
   $postData = json_decode( $json, true );
   $id_review = $postData['reviewID'];
   $id_post = $postData['idPost'];
-  rp_minus_point_review_session ( $id_post,$id_review );
-  rp_minus_point_review_travel( $id_post,$id_review );
-  rp_new_dis_like_point_review( $id_post,$id_review );
+  $id_design = carbon_get_post_meta( intval($id_review), 'design_id' );
+  rp_minus_point_review_session ( $id_post,$id_review,$id_design );
+  rp_minus_point_review_travel( $id_post,$id_review,$id_design );
+  rp_new_dis_like_point_review( $id_post,$id_review,$id_design );
   $dislike = get_dis_like_review( $id_post );
   $dislike_point_user_login = get_like_dislike_user_current($id_post,'dislikeentrie');
   wp_send_json( [
@@ -262,9 +264,10 @@ add_action( 'wp_ajax_nopriv_rp_ajax_post_disliked_review', 'rp_ajax_post_dislike
 function rp_ajax_post_disliked_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
-  update_status_dislike($postData['reviewID'],$postData['idPost']);
-  update_status_sesion_dislike_type($postData['reviewID'],$postData['idPost']);
-  update_status_travel_dislike_type($postData['reviewID'],$postData['idPost']);
+  $id_design = carbon_get_post_meta( intval($postData['reviewID']), 'design_id' );
+  update_status_dislike($postData['reviewID'],$postData['idPost'],$id_design);
+  update_status_sesion_dislike_type($postData['reviewID'],$postData['idPost'],$id_design);
+  update_status_travel_dislike_type($postData['reviewID'],$postData['idPost'],$id_design);
   $dislike = get_dis_like_review($postData['idPost']);
   $dislike_point_user_login = get_like_dislike_user_current($postData['idPost'],'dislikeentrie');
   wp_send_json( [

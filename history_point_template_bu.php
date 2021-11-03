@@ -58,49 +58,36 @@
       'posts_per_page'=>-1,
       'post_status'=>'publish',
       'meta_query'=>array(
-        'relation' => 'AND',
         array(
           'key'     => 'review_user_id',
           'value'   => $id_user,
           'compare' => '=',
-        ),
-        array(
-          'key'     => 'point_type_entrie',
-          'value'   => ['dislikeentrie','likeentrie'],
-          'compare' => 'NOT IN',
-        ),
+        )
       )
     );
     $q_svl = new \WP_Query( $args );
-    $total_point_travel = 0;
-    $total_point_session= 0;
+    $total_reviews=$q_svl->found_posts;
     $id_form_designs =[];
+    $total_point = 0;
     if($q_svl->have_posts()){
       while($q_svl->have_posts()){
         $q_svl->the_post();
         $id= get_the_ID();
-        $type_point_review = carbon_get_post_meta($id,'point_type_entrie');
-
-        $point_number = carbon_get_post_meta($id,'point_number_entrie');
-        if($type_point_review=='travelpoint'){
-          $total_point_travel = $total_point_travel + $point_number;
-        }
-        if($type_point_review=='sessionpoint'){
-          $total_point_session = $total_point_session + $point_number;
-        }
         $id_form_design = carbon_get_post_meta($id,'id_form_design');
         array_push($id_form_designs,$id_form_design);
-
+        $cat_point_show_all= carbon_get_post_meta($id,'categories_fields_point');
+        foreach ($cat_point_show_all as $cat_point_show_key => $cat_point_show_item) {
+          $total_point = $total_point+intval($cat_point_show_item['score']);
+        }
       }
-      wp_reset_postdata();
 
     }
     $id_form_post = array_unique($id_form_designs);
       if(!empty($id_user)){
       ?>
         <div class="infor-user-review">
-            <span>Total Travel Point: <?php echo $total_point_travel?></span>
-            <span>Total Travel Authority Point: <?php echo $total_point_session?></span>
+            <span>Total Point: <?php echo $total_point?></span>
+            <span>Total Review: <?php echo $total_reviews?></span>
         </div>
       <?php
       }
@@ -133,36 +120,13 @@
         <ul class="nacc">
         <?php
           foreach ($id_form_post  as $key => $id_form_item) {
+            $array_cat  = carbon_get_post_meta($id_form_item,'categories_fields');
             $point_form_all =0;
             if($key==0){
               $class_active_tab = 'active';
             }else{
               $class_active_tab ='';
             }
-              $args_form = array(
-                'post_type'=>'review-entries',
-                'posts_per_page'=>-1,
-                'post_status'=>'publish',
-                'meta_query'=>array(
-                  'relation' => 'AND',
-                  array(
-                    'key'     => 'user_id',
-                    'value'   => $id_user,
-                    'compare' => '=',
-                  ),
-                  array(
-                    'key'     => 'design_id',
-                    'value'   => $id_form_item,
-                    'compare' => '=',
-                  ),
-                )
-              );
-              $q_svl_new = new \WP_Query( $args_form );
-              $total_reviews_form=$q_svl_new->found_posts;
-              $rating_fields_form = carbon_get_post_meta($id_form_item,'rating_fields');
-              $length_rating = count($rating_fields_form);
-
-
             ?>
                 <li class="<?php echo $class_active_tab?>">
                   <div>
@@ -173,15 +137,43 @@
                         <th>Average point</th>
                         <th>Reviews Date</th>
                         <?php
-                          foreach ($rating_fields_form as $key_rating_form => $data_rating_form) {
+                          $cat_raw_form_all =[];
+                          $array_show_score=[];
+                          $array_show=[];
+                          $count_item_cat = count($array_cat);
+                          foreach ($array_cat as $cat) {
+                            array_push($cat_raw_form_all,$cat['name']);
+                            array_push($array_show_score,$cat['score']);
                             ?>
-                              <th><?php echo $data_rating_form['name']?></th>
+                              <th>
+                                <?php echo $cat['name']?>
+                              </th>
                             <?php
                           }
-
                         ?>
                       </tr>
-
+                      <?php
+                        $args_form = array(
+                          'post_type'=>'point-entries',
+                          'posts_per_page'=>-1,
+                          'post_status'=>'publish',
+                          'meta_query'=>array(
+                            'relation' => 'AND',
+                            array(
+                              'key'     => 'review_user_id',
+                              'value'   => $id_user,
+                              'compare' => '=',
+                            ),
+                            array(
+                              'key'     => 'id_form_design',
+                              'value'   => $id_form_item,
+                              'compare' => '=',
+                            ),
+                          )
+                        );
+                        $q_svl_new = new \WP_Query( $args_form );
+                        $total_reviews_form=$q_svl_new->found_posts;
+                      ?>
 
                         <?php
                           if($q_svl_new->have_posts()){
@@ -189,43 +181,61 @@
                             while($q_svl_new->have_posts()){
                               $q_svl_new->the_post();
                               $id = get_the_ID();
-                              $id_post = carbon_get_post_meta($id,'review_post_id');
                               $index++;
-                              $rating = unserialize(get_post_meta( $id, '_rating_json_field', true ));
+                              $id_post = carbon_get_post_meta($id,'post_id');
                               ?><tr>
                                   <td>
                                     <?php echo $index?>
                                   </td>
+                                  <?php
+                                  $cat_in_point_rw = carbon_get_post_meta($id,'categories_fields_point');
+                                  $cat_in_point_rw_name = [];
+                                  $all_point_cat = 0;
 
+                                  foreach ($cat_in_point_rw as $cat_in_point) {
+                                    array_push($cat_in_point_rw_name,$cat_in_point['name']);
+                                    $all_point_cat=$all_point_cat+$cat_in_point['score'];
+                                  }
+                                  $point_form_all = $point_form_all+$all_point_cat;
+                                  $result = array_intersect( $cat_raw_form_all,$cat_in_point_rw_name);
+
+
+                                  foreach ($array_cat as $_key_s => $vldf_show) {
+                                    $array_show[$_key_s]='-';
+                                  }
+                                  foreach ($result as $key_new => $result_item) {
+                                    $array_show[$key_new]=$result_item;
+                                  }
+                                  foreach ($array_show as $key_new_show => $item_show) {
+                                    if($item_show!='-'){
+                                      $array_show[$key_new_show]=$array_show_score[$key_new_show];
+                                    }
+                                  }
+                                  ?>
                                   <td>
-                                    <a href="<?php echo get_permalink($id_post )?>" target="_blank">
+                                    <a href="<?php echo get_permalink($id_post)?>" target="_blank">
                                       <?php echo get_the_title($id_post)?>
                                     </a>
                                   </td>
-                                  <?php
-                                    $total_rating_point = 0;
-                                    foreach ($rating as $key_rating => $value_rating) {
-                                      $total_rating_point=$total_rating_point+$value_rating['rate'];
-                                    }
-                                  ?>
-                                  <td><?php echo round($total_rating_point/$length_rating,2)?></td>
+                                  <td><?php echo round($all_point_cat/$count_item_cat,2)?></td>
                                   <td><?php echo get_the_date('M j, Y')?></td>
                                   <?php
-                                    foreach ($rating as $key_rating => $value_rating) {
+                                    foreach ($array_show as $value) {
                                       ?>
-
-                                        <td><?php echo $value_rating['rate']?></td>
+                                        <td><?php echo $value?></td>
                                       <?php
                                     }
                                   ?>
-
                                 </tr>
                               <?php
                             }
                           }
-                          wp_reset_postdata();
                         ?>
                     </table>
+                    <div class="wrapper-review-form-detail">
+                      <span>Total Point <?php echo get_the_title($id_form_item).': '.$point_form_all?></span>
+                      <span>Total Review <?php echo get_the_title($id_form_item).': '.$total_reviews_form?></span>
+                    </div>
                   </div>
                 </li>
 
@@ -272,7 +282,7 @@
     font-size: 16px;
   }
   .nacc li div table::-webkit-scrollbar {
-    height: 6px;
+    width: 6px;
     background-color: #F5F5F5;
   }
 
@@ -284,12 +294,6 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     background-color: #F5F5F5;
   }
-  .nacc li div table::-webkit-scrollbar-thumb:hover {
-    background: #3F51B2;
-  }
-
-
-
 
   .nacc li div table tbody {
     display: table;
