@@ -13,14 +13,11 @@
     <div class="content-template-history-point grid">
   <?php
     $id_user = get_current_user_id();
-    if(!empty($_GET['pp'])){
-      var_dump($id_user);
-    }
     if(!empty($id_user)){
-      if(get_user_meta($id_user,'review_show_profile',true)=='1'){
+      if(get_user_meta($id_user,'review_show_profile',true)=='show'){
         $key_checked = 'checked';
       }
-      if(get_user_meta($id_user,'review_show_profile',true)=='0'){
+      if(get_user_meta($id_user,'review_show_profile',true)=='hide'){
         $key_checked = '';
       }
       ?>
@@ -32,7 +29,7 @@
     }else{
       $id_user_link = $_GET['userID'];
       if(!empty($id_user_link)){
-        if(get_user_meta($id_user_link,'review_show_profile',true)=='1'){
+        if(get_user_meta($id_user_link,'review_show_profile',true)=='show'){
           $id_user=intval($id_user_link);
         }else{
           $id_user=Null;
@@ -546,6 +543,7 @@ jQuery( document ).ready(function($) {
     $('#show_review_user').on('change',function(e){
       let data_user_update = $(this).is(':checked');
       let user_id = $(this).data('user-id');
+      console.log('ok',data_user_update);
       $.ajax({
          cache: false,
          timeout: 8000,

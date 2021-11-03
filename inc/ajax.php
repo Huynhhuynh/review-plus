@@ -328,10 +328,10 @@ function update_show_review_user_init() {
 	$review_show;
 	$id_user = intval($_POST['user_id']);
 	if($_POST['review_show']=='true'){
-		$review_show = 1;
+		$review_show = 'show';
 	}
 	if($_POST['review_show']=='false'){
-		$review_show = 0;
+		$review_show = 'hide';
 	}
 	update_user_meta($id_user,'review_show_profile',$review_show);
 	wp_send_json( [
