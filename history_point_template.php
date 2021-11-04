@@ -13,7 +13,39 @@
     <div class="content-template-history-point grid">
   <?php
     $id_user = get_current_user_id();
-    if(!empty($id_user)){
+    $id_user_link = $_GET['userID'];
+    if(!empty($id_user_link)){
+      if(get_user_meta($id_user_link,'review_show_profile',true)=='show'){
+        $id_user=intval($id_user_link);
+        ?>
+          <div class="name-user-show">
+            <?php
+              $display_name = get_display_name($id_user);
+              echo $display_name;
+            ?>
+          </div>
+        <?php
+      }else{
+        $id_user=Null;
+        ?>
+          <div class="notice-message-profile">
+            <span>Profile review is not publish. </span>
+            <a href="<?php echo get_home_url()?>">Back to home</a>
+          </div>
+        <?php
+      }
+    }else{
+      if(empty($id_user)){
+        ?>
+          <div class="notice-message-profile">
+            <span>Profile review is not publish. </span>
+            <a href="<?php echo get_home_url()?>">Back to home</a>
+          </div>
+        <?php
+      }
+    }
+
+    if(!empty($id_user) && empty($id_user_link)){
       if(get_user_meta($id_user,'review_show_profile',true)=='show'){
         $key_checked = 'checked';
       }
@@ -26,28 +58,6 @@
           <input type="checkbox" id="show_review_user" name="show-review-user"  data-user-id="<?php echo $id_user?>" <?php echo $key_checked?>>
         </div>
       <?php
-    }else{
-      $id_user_link = $_GET['userID'];
-      if(!empty($id_user_link)){
-        if(get_user_meta($id_user_link,'review_show_profile',true)=='show'){
-          $id_user=intval($id_user_link);
-        }else{
-          $id_user=Null;
-          ?>
-            <div class="notice-message-profile">
-              <span>Profile review is not publish </span>
-              <a href="<?php echo get_home_url()?>">Back to home</a>
-            </div>
-          <?php
-        }
-      }else{
-        ?>
-          <div class="notice-message-profile">
-            <span>Profile review is not publish </span>
-            <a href="<?php echo get_home_url()?>">Back to home</a>
-          </div>
-        <?php
-      }
     }
 
     $args = array(
@@ -136,30 +146,28 @@
             }else{
               $class_active_tab ='';
             }
-              $args_form = array(
-                'post_type'=>'review-entries',
-                'posts_per_page'=>-1,
-                'post_status'=>'publish',
-                'meta_query'=>array(
-                  'relation' => 'AND',
-                  array(
-                    'key'     => 'user_id',
-                    'value'   => $id_user,
-                    'compare' => '=',
-                  ),
-                  array(
-                    'key'     => 'design_id',
-                    'value'   => $id_form_item,
-                    'compare' => '=',
-                  ),
-                )
-              );
-              $q_svl_new = new \WP_Query( $args_form );
-              $total_reviews_form=$q_svl_new->found_posts;
-              $rating_fields_form = carbon_get_post_meta($id_form_item,'rating_fields');
-              $length_rating = count($rating_fields_form);
-
-
+            $args_form = array(
+              'post_type'=>'review-entries',
+              'posts_per_page'=>-1,
+              'post_status'=>'publish',
+              'meta_query'=>array(
+                'relation' => 'AND',
+                array(
+                  'key'     => 'user_id',
+                  'value'   => $id_user,
+                  'compare' => '=',
+                ),
+                array(
+                  'key'     => 'design_id',
+                  'value'   => $id_form_item,
+                  'compare' => '=',
+                ),
+              )
+            );
+            $q_svl_new = new \WP_Query( $args_form );
+            $total_reviews_form=$q_svl_new->found_posts;
+            $rating_fields_form = carbon_get_post_meta($id_form_item,'rating_fields');
+            $length_rating = count($rating_fields_form);
             ?>
                 <li class="<?php echo $class_active_tab?>">
                   <div>
@@ -399,6 +407,9 @@
     margin: 0;
   }
 
+  table.styled-table tr th {
+    text-align: center;
+  }
   .styled-table {
     border-collapse: collapse;
     font-size: 0.9em;
@@ -478,6 +489,12 @@
     border-radius: 50%;
     animation: sp-anime 0.8s infinite linear;
   }
+  .name-user-show {
+    font-size: 30px;
+    margin-bottom: 30px;
+    font-weight: bold;
+  }
+
   @keyframes sp-anime {
     100% {
       transform: rotate(360deg);

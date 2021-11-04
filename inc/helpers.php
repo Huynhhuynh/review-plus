@@ -1477,6 +1477,12 @@ function recursiveMenu($data, $parent_id=0, $sub=true){
 }
 
 
+function get_display_name($user_id) {
+    if (!$user = get_userdata($user_id))
+      return false;
+    return $user->data->display_name;
+}
+
 
 
 
