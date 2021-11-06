@@ -129,7 +129,6 @@
                 echo get_the_title($value);
               ?>
             </span>
-
           </div>
           <?php
             }
@@ -186,8 +185,6 @@
 
                         ?>
                       </tr>
-
-
                         <?php
                           if($q_svl_new->have_posts()){
                             $index=0;
@@ -201,7 +198,6 @@
                                   <td>
                                     <?php echo $index?>
                                   </td>
-
                                   <td>
                                     <a href="<?php echo get_permalink($id_post )?>" target="_blank">
                                       <?php echo get_the_title($id_post)?>
@@ -218,7 +214,6 @@
                                   <?php
                                     foreach ($rating as $key_rating => $value_rating) {
                                       ?>
-
                                         <td><?php echo $value_rating['rate']?></td>
                                       <?php
                                     }
@@ -231,6 +226,10 @@
                           wp_reset_postdata();
                         ?>
                     </table>
+                    <div class="show-form-point">
+                      <span>Travel Point: <?php echo get_all_point_travel($id_form_item,$id_user)[0]?></span>
+                      <span>Travel Authority Point: <?php echo get_all_point_travel($id_form_item,$id_user)[1]?></span>
+                    </div>
                   </div>
                 </li>
 
@@ -243,7 +242,10 @@
     </div>
   </div>
 </div>
+
+
 <?php
+
   get_footer();
 ?>
 
@@ -259,10 +261,7 @@
   .infor-user-review {
     text-align: left;
     display: block;
-    /* margin: auto;
-    justify-content: space-between; */
     margin-bottom: 32px;
-    /* flex-wrap: wrap; */
   }
   .infor-user-review span {
     display: block;
@@ -494,6 +493,11 @@
     margin-bottom: 30px;
     font-weight: bold;
   }
+
+  .show-form-point span {
+    display:block;
+  }
+
 
   @keyframes sp-anime {
     100% {
