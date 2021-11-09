@@ -170,6 +170,49 @@
             ?>
                 <li class="<?php echo $class_active_tab?>">
                   <div>
+                    <div class="show-form-point">
+
+                      <div class="ss-score-total">
+                        <span>Travel Session Score</span>
+                        <p><?php echo get_all_point_travel($id_form_item,$id_user)[1]?></p>
+                        <div class="raw-score">
+                          <span>Raw Score</span>
+                          <div class="icon-start">
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                          </div>
+                        </div>
+                      </div>
+                      <div class="cat-score-total ss-score-total">
+                        <span>Travel Category Score</span>
+                        <?php
+                          if(!empty(get_current_user_id())){
+                            ?>
+                              <p><?php echo get_score_category($id_user,$id_form_item)?></p>
+                            <?php
+                          }else{
+                            ?>
+                              <a href="#">Login or Register To See Personal Travel Score</a>
+                            <?php
+                          }
+                        ?>
+
+                        <div class="raw-score">
+                          <span>Raw Score</span>
+                          <div class="icon-start">
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     <table class="styled-table">
                       <tr>
                         <th>No</th>
@@ -226,10 +269,7 @@
                           wp_reset_postdata();
                         ?>
                     </table>
-                    <div class="show-form-point">
-                      <span>Travel Point: <?php echo get_all_point_travel($id_form_item,$id_user)[0]?></span>
-                      <span>Travel Authority Point: <?php echo get_all_point_travel($id_form_item,$id_user)[1]?></span>
-                    </div>
+
                   </div>
                 </li>
 
@@ -249,296 +289,7 @@
   get_footer();
 ?>
 
-<style>
 
-
-  .content-template-history-point {
-    width: 1140px;
-    margin: auto;
-    max-width: 95%;
-    position: relative;
-  }
-  .infor-user-review {
-    text-align: left;
-    display: block;
-    margin-bottom: 32px;
-  }
-  .infor-user-review span {
-    display: block;
-    margin-bottom: 5px;
-  }
-
-  .nacc li div table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-    text-align: center;
-    font-size: 16px;
-  }
-  .nacc li div table::-webkit-scrollbar {
-    height: 6px;
-    background-color: #F5F5F5;
-  }
-
-  .nacc li div table::-webkit-scrollbar-thumb {
-    background-color: #3F51B5;
-  }
-
-  .nacc li div table::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    background-color: #F5F5F5;
-  }
-  .nacc li div table::-webkit-scrollbar-thumb:hover {
-    background: #3F51B2;
-  }
-
-
-
-
-  .nacc li div table tbody {
-    display: table;
-    width: 100%;
-  }
-
-  .grid {
-     list-style: none;
-  }
-
-  .gc {
-     box-sizing: border-box;
-     display: inline-block;
-     margin-right: -.25em;
-     min-height: 1;
-     vertical-align: top;
-  }
-
-  .gc--1-of-3 {
-    width: calc(100%/4);
-    padding-right: 25px;
-  }
-
-  .gc--2-of-3 {
-    width: calc(100% - calc(100%/4));
-  }
-
-  .naccs {
-     position: relative;
-     width: 1140px;
-     max-width: 100%;
-     margin:auto;
-  }
-
-  .naccs .menu div span {
-    font-size: 18px;
-  }
-  .naccs .menu div {
-     padding: 15px 20px 15px 40px;
-     margin-bottom: 10px;
-     color: #000;
-     line-height: 1;
-     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-     cursor: pointer;
-     position: relative;
-     vertical-align: middle;
-     font-weight: 700;
-     transition: 1s all cubic-bezier(0.075, 0.82, 0.165, 1);
-  }
-
-  .naccs .menu div:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .naccs .menu div span.light {
-     height: 10px;
-     width: 10px;
-     position: absolute;
-     top:50%;
-     -webkit-transform: translateY(-50%);
-     transform: translateY(-50%);
-     left: 15px;
-     background-color: #000;
-     border-radius: 100%;
-     transition: 1s all cubic-bezier(0.075, 0.82, 0.165, 1);
-  }
-
-  .naccs .menu div.active span.light {
-     background-color: #3F51B5;
-     left: 0;
-     height: 100%;
-     width: 3px;
-     top: 0;
-     border-radius: 0;
-     transform: translateY(0);
-  }
-
-  .naccs .menu div.active {
-     color: #3F51B5;
-     padding: 15px 20px 15px 20px;
-
-  }
-
-  ul.nacc {
-     position: relative;
-     height: 0px;
-     list-style: none;
-     margin: 0;
-     padding: 0;
-     transition: .5s all cubic-bezier(0.075, 0.82, 0.165, 1);
-  }
-
-  ul.nacc li {
-     opacity: 0;
-     transform: translateX(50px);
-     position: absolute;
-     list-style: none;
-     transition: 1s all cubic-bezier(0.075, 0.82, 0.165, 1);
-     max-width: 100%;
-  }
-
-  ul.nacc li.active {
-     transition-delay: .3s;
-     z-index: 2;
-     opacity: 1;
-     transform: translateX(0px);
-  }
-
-  ul.nacc li p {
-    margin: 0;
-  }
-
-  table.styled-table tr th {
-    text-align: center;
-  }
-  .styled-table {
-    border-collapse: collapse;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  }
-  .styled-table thead tr {
-    background-color: #009879;
-    color: #ffffff;
-    text-align: left;
-  }
-
-  .styled-table th,
-  .styled-table td {
-    padding: 12px 15px;
-  }
-
-  .styled-table tbody tr {
-      border-bottom: 1px solid #dddddd;
-  }
-
-  .styled-table tbody tr:nth-of-type(even) {
-      background-color: #f3f3f3;
-  }
-
-  .styled-table tbody tr:last-of-type {
-      border-bottom: 2px solid #009879;
-  }
-
-  .show-infor-review {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    max-width:1140px;
-    display:flex;
-    align-items:center;
-    margin:auto;
-    cursor:pointer;
-  }
-  #show_review_user {
-    width: 25px;
-    height: 24px;
-    margin-left: 10px;
-  }
-
-  #overlay{
-    position: fixed;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    height:100%;
-    display: none;
-    background: rgba(0,0,0,0.6);
-  }
-  .wrapper-review-form-detail {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  .wrapper-review-form-detail span{
-    display: inline-block;
-    margin-bottom: 5px;
-  }
-  .cv-spinner {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px #ddd solid;
-    border-top: 4px #2e93e6 solid;
-    border-radius: 50%;
-    animation: sp-anime 0.8s infinite linear;
-  }
-  .name-user-show {
-    font-size: 30px;
-    margin-bottom: 30px;
-    font-weight: bold;
-  }
-
-  .show-form-point span {
-    display:block;
-  }
-
-
-  @keyframes sp-anime {
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  .is-hide{
-    display:none;
-  }
-
-  @media(max-width:600px){
-
-    .gc--1-of-3 {
-      width: 100%;
-      padding-right: 0;
-    }
-
-    .gc--2-of-3 {
-      width: 100%;
-    }
-  }
-  @media(max-width:450px) {
-    .show-infor-review {
-      position: relative;
-      justify-content: flex-start;
-      top: auto;
-      margin-bottom: 10px;
-    }
-    .wrapper-review-form-detail span{
-      width: 100%;
-    }
-    .infor-user-review span {
-      width: 100%;
-      text-align: left;
-    }
-    .infor-user-review {
-      margin-bottom: 5px;
-    }
-  }
-
-</style>
 <script>
 
 jQuery( document ).ready(function($) {

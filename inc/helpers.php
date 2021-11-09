@@ -1284,81 +1284,87 @@ function get_review_rating_by_id_post( $id_post ) {
   $data_all_rating = [];
   $data_max_point = [];
   $array_data_rating_all =[];
+  $data_point_average =[];
+  $data_name_form_for_post = [];
   while ( $ratings->have_posts() ) : $ratings->the_post();
     $id_post= get_the_ID();
     $rating = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
     array_push($data_rating,$rating);
-    // $id_form = carbon_get_post_meta($id_post,'design_id');
-    // array_push($data_id_form,$id_form);
+    $id_form = carbon_get_post_meta($id_post,'design_id');
+    array_push($data_id_form,$id_form);
+
   endwhile;
   wp_reset_postdata();
-  // $arr_id_form_all = array_unique($data_id_form);
-  // foreach ($arr_id_form_all as $key_id_form => $id_form_value) {
-  //   $array_data_rating_all[$key_id_form]=[];
-  //   while ( $ratings->have_posts() ) : $ratings->the_post();
-  //     $id_post= get_the_ID();
-  //     $rating = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
-  //     $id_form = carbon_get_post_meta($id_post,'design_id');
-  //     if($id_form==$id_form_value){
-  //       array_push($array_data_rating_all[$key_id_form],$rating);
-  //     }
-  //   endwhile;
-  //   wp_reset_postdata();
-  //
-  // }
-  // $point_data_rating =[];
-  // foreach ($array_data_rating_all as $key_rating => $rating_item) {
-  //   array_push($point_data_rating,[]);
-  //   echo '<pre>';
-  //   print_r($rating_item);
-  //   echo '</pre>';
-  //
-  //   // $data_test=0;
-  //   foreach ($rating_item as $key => $value) {
-  //     foreach ($value as $key1 => $value1) {
-  //         echo '<pre>';
-  //         print_r($value1['rate']);
-  //         echo '</pre>';
-  //     }
-  //       // echo '<pre>';
-  //       // print_r($value);
-  //       // echo '</pre>';
-  //
-  //     // code...
-  //   }
-  //
-  //
-  // }
-  // echo '<pre>';
-  // print_r($data_test);
-  // echo '</pre>';
-  // die();
-  if(!empty($data_rating)){
+  $arr_id_form_all = array_unique($data_id_form);
+  foreach ($arr_id_form_all as $key_id_form => $id_form_value) {
+    $array_data_rating_all[$key_id_form]=[];
+    $data_max_point[$key_id_form] =[];
+    while ( $ratings->have_posts() ) : $ratings->the_post();
+      $id_post= get_the_ID();
+      $rating = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
+      $id_form = carbon_get_post_meta($id_post,'design_id');
+      if($id_form==$id_form_value){
+        array_push($array_data_rating_all[$key_id_form],$rating);
+        $rating_field_raw = carbon_get_post_meta($id_form,'rating_fields');
+        $data_max_point[$key_id_form] = $rating_field_raw[0]['max_point'];
+      }
+    endwhile;
+    wp_reset_postdata();
 
-    $data_length = count($data_rating[0]);
-    $data_length_rating_p = count($data_rating);
-    foreach ($data_rating as $key => $data) {
-      foreach ($data as $key => $value) {
-        array_push($rating_all,$value['rate']);
+
+
+  }
+  $point_data_rating =[];
+  $data_length_rating_p_ar = [];
+  $data_name_show = [];
+  foreach ($array_data_rating_all as $key_rating => $rating_item) {
+    array_push($point_data_rating,[]);
+    array_push($sumArray,[]);
+    array_push($data_name_field,[]);
+  }
+  foreach ($array_data_rating_all as $key_rating => $rating_item) {
+    foreach ($rating_item as $key => $value) {
+      foreach ($value as $key1 => $value1) {
+        array_push($point_data_rating[$key_rating],$value1['rate']);
       }
-    }
-    foreach (array_chunk($rating_all,$data_length) as $k=>$subArray) {
-      foreach ($subArray as $id=>$value) {
-        $sumArray[$id]+=$value;
-      }
-    }
-    foreach ($sumArray as $key => $value) {
-      $sumArray[$key]=$sumArray[$key]/$data_length_rating_p;
-      array_push($data_name_field,$data_rating[0][$key]['name']);
     }
   }
-  $id_design = intval(carbon_get_post_meta($id_post,'design_id'));
-  $rating_field_raw = carbon_get_post_meta($id_design,'rating_fields');
+  if(!empty($array_data_rating_all)){
+    foreach ($array_data_rating_all as $index_raw => $value_raw) {
+      $data_length = count($value_raw[$index_raw]);
+      $data_length_rating_p = count($array_data_rating_all[$index_raw]);
+      array_push($data_length_rating_p_ar,$data_length_rating_p);
+      foreach ($value_raw as $key => $value) {
+        foreach ($value as $key_name => $value_name) {
+          array_push($data_name_field[$index_raw],$value_name['name']);
+        }
+      }
+      foreach (array_chunk($point_data_rating[$index_raw],$data_length) as $k=>$subArray) {
+        foreach ($subArray as $id=>$value) {
+          $sumArray[$index_raw][$id]+=$value;
+        }
+      }
 
-  array_push($data_all_rating,$sumArray);
-  array_push($data_all_rating,$data_name_field);
-  array_push($data_all_rating,$rating_field_raw[0]['max_point']);
+    }
+    foreach ($sumArray as $key_sum => $value_sum) {
+      foreach ($value_sum as $key_in => $point) {
+        $value_sum[$key_in] = $value_sum[$key_in]/$data_length_rating_p_ar[$key_sum];
+      }
+      array_push($data_point_average,$value_sum);
+    }
+    foreach ($data_name_field as $key => $value) {
+      $data_name_show[$key] = array_unique($value);
+    }
 
+  }
+  foreach ($arr_id_form_all as $key => $value) {
+    array_push($data_name_form_for_post,get_the_title(intval($value)));
+  }
+
+  array_push($data_all_rating,$data_point_average);
+  array_push($data_all_rating,$data_name_show);
+  array_push($data_all_rating,$data_max_point);
+  array_push($data_all_rating,$data_name_form_for_post);
   return $data_all_rating;
 
 }
@@ -1577,9 +1583,52 @@ function get_all_point_travel($id_form,$id_user) {
 }
 
 
+function get_score_category ($user_id,$form_id) {
+  $args_form = array(
+    'post_type'=>'point-entries',
+    'posts_per_page'=>-1,
+    'post_status'=>'publish',
+    'meta_query'=>array(
+      'relation' => 'AND',
+      array(
+        'key'     => 'review_user_id',
+        'value'   => $user_id,
+        'compare' => '=',
+      ),
+      array(
+        'key'     => 'id_form_design',
+        'value'   => $form_id,
+        'compare' => '=',
+      ),
+    )
+  );
+
+  $q_svl_new = new WP_Query( $args_form );
+  $total_reviews_form=$q_svl_new->found_posts;
+
+  if($q_svl_new->have_posts()){
+    $index=0;
+    while($q_svl_new->have_posts()){
+      $q_svl_new->the_post();
+      $id = get_the_ID();
+      $id_post = carbon_get_post_meta($id,'post_id');
+      $cat_in_point_rw = carbon_get_post_meta($id,'categories_fields_point');
+      $all_point_cat = 0;
+
+      foreach ($cat_in_point_rw as $cat_in_point) {
+        $all_point_cat=$all_point_cat+$cat_in_point['score'];
+      }
+    }
+  }
+  return $all_point_cat;
+}
+
+
 
 
 add_action( 'init', function() {
+  // get_score_category(1,12);
+
   // var_dump( rp_get_review_design( 32 ) );
   // var_dump(rp_check_user_reviews_form(1,8,11));
   // var_dump(get_all_point_travel(12,1));
