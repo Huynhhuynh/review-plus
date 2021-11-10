@@ -1582,7 +1582,6 @@ function get_all_point_travel($id_form,$id_user) {
   return $array_total_point;
 }
 
-
 function get_score_category ($user_id,$form_id) {
   $args_form = array(
     'post_type'=>'point-entries',

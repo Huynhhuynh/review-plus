@@ -102,29 +102,54 @@ function ReviewPlusProvider( { children, postId } ) {
   }
   const submitLike = async ( id_review ) => {
     const result = await postLikeReview ( id_review,postId )
-    setReviewLike( result.likeupdate )
-    setPointLikeReview( result.likeuserlogin )
+    if(result.likeupdate){
+      setReviewLike( result.likeupdate )
+    }
+    if(result.likeuserlogin) {
+      setPointLikeReview( result.likeuserlogin )
+    }
+
     return result
   }
 
   const submitLiked = async ( id_review,postId ) => {
     const result = await postLikedReview ( id_review,postId )
-    setReviewLike( result.likeupdate )
-    setPointLikeReview( result.likeuserlogin )
+    if(result.likeupdate ){
+      setReviewLike( result.likeupdate )
+    }
+
+    if(result.likeuserlogin) {
+      setPointLikeReview( result.likeuserlogin )
+    }
+
     return result
   }
 
   const submitDisLiked = async ( id_review,postId ) => {
     const result = await postDisLikedReview ( id_review,postId )
-    setReviewDisLike(result.dislikeupdate)
-    setPointDisLikeReview(result.dislikeuserlogin)
+
+    if(result.dislikeupdate){
+      setReviewDisLike(result.dislikeupdate)
+    }
+
+    if(result.dislikeuserlogin){
+      setPointDisLikeReview(result.dislikeuserlogin)
+    }
+
     return result
   }
 
   const submitDisLike = async ( id_review,postId ) => {
     const result = await postDisLikeReview ( id_review,postId )
-    setReviewDisLike(result.dislikeupdate)
-    setPointDisLikeReview(result.dislikeuserlogin)
+
+    if(result.dislikeupdate){
+      setReviewDisLike(result.dislikeupdate)
+    }
+
+    if(result.dislikeuserlogin){
+      setPointDisLikeReview(result.dislikeuserlogin)
+    }
+
     return result
   }
 

@@ -11,13 +11,10 @@ export default function ratingAverage(props) {
       data_rating.rating[3].length>0 &&
       <div className="wrapper-rating-average">
           <h3>Rating Average</h3>
-
-
         <div>
         {
           data_rating.rating.length > 0 &&
           data_rating.rating[3].map( ( r,index ) => {
-
             return  <>
                     <div className="name-form-rating">
                       <span>{r}</span>

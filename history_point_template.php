@@ -190,9 +190,22 @@
                         <span>Travel Category Score</span>
                         <?php
                           if(!empty(get_current_user_id())){
-                            ?>
-                              <p><?php echo get_score_category($id_user,$id_form_item)?></p>
-                            <?php
+                            if(!empty($id_user_link)){
+                              if(intval($id_user_link)==get_current_user_id()){
+                                ?>
+                                  <p><?php echo get_score_category($id_user,$id_form_item)?></p>
+                                <?php
+                              }else{
+                                ?>
+                                  <a href="#">Login or Register To See Personal Travel Score</a>
+                                <?php
+                              }
+                            }else{
+                              ?>
+                                <p><?php echo get_score_category($id_user,$id_form_item)?></p>
+                              <?php
+                            }
+
                           }else{
                             ?>
                               <a href="#">Login or Register To See Personal Travel Score</a>
