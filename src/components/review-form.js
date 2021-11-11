@@ -12,14 +12,20 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
   const { reviewDesign } = useReviewPlus();
   return (
     <>
+
       {
+
         reviewDesign &&
         reviewDesign.length > 0 &&
-        reviewDesign.map( design => {
-          if( design?.login_required == true ){
-            return <div className="message-not-login">
-                Please <a href="">Login</a> to leave a full review.<a href="#">Register</a>
-            </div>
+        reviewDesign.map( (design,index) => {
+          if( design?.login_required == true){
+            if(index==0) {
+              return <div className="message-not-login">
+                  Please <a href="">Login</a> to leave a full review.<a href="#">Register</a>
+              </div>
+
+            }
+
           }else{
             return <>
               <div className="one-line">

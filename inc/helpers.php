@@ -1311,9 +1311,8 @@ function get_review_rating_by_id_post( $id_post ) {
     endwhile;
     wp_reset_postdata();
 
-
-
   }
+
   $point_data_rating =[];
   $data_length_rating_p_ar = [];
   $data_name_show = [];
@@ -1331,7 +1330,7 @@ function get_review_rating_by_id_post( $id_post ) {
   }
   if(!empty($array_data_rating_all)){
     foreach ($array_data_rating_all as $index_raw => $value_raw) {
-      $data_length = count($value_raw[$index_raw]);
+      $data_length = count($value_raw[0]);
       $data_length_rating_p = count($array_data_rating_all[$index_raw]);
       array_push($data_length_rating_p_ar,$data_length_rating_p);
       foreach ($value_raw as $key => $value) {
@@ -1346,6 +1345,7 @@ function get_review_rating_by_id_post( $id_post ) {
       }
 
     }
+
     foreach ($sumArray as $key_sum => $value_sum) {
       foreach ($value_sum as $key_in => $point) {
         $value_sum[$key_in] = $value_sum[$key_in]/$data_length_rating_p_ar[$key_sum];
