@@ -96,12 +96,16 @@
           $total_point_session = $total_point_session + $point_number;
         }
         $id_form_design = carbon_get_post_meta($id,'id_form_design');
-        array_push($id_form_designs,$id_form_design);
+        if(!empty($id_form_design)){
+          array_push($id_form_designs,$id_form_design);
+        }
+
 
       }
       wp_reset_postdata();
 
     }
+
     $id_form_post = array_unique($id_form_designs);
       if(!empty($id_user)){
       ?>
@@ -115,6 +119,7 @@
       <div class="gc gc--1-of-3">
         <div class="menu">
           <?php
+          if(!empty($id_form_post)){
             foreach ($id_form_post  as $key => $value) {
               if($key==0){
                 $class_active_link = 'active';
@@ -132,12 +137,14 @@
           </div>
           <?php
             }
+          }
           ?>
   		</div>
       </div>
       <div class="gc gc--2-of-3">
         <ul class="nacc">
         <?php
+        if(!empty($id_form_post)){
           foreach ($id_form_post  as $key => $id_form_item) {
             $point_form_all =0;
             if($key==0){
@@ -288,6 +295,7 @@
 
             <?php
           }
+        }
 
         ?>
         </ul>

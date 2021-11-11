@@ -20,7 +20,6 @@ export default function ratingAverage(props) {
                       <span>{r}</span>
                     </div>{
                         <div className="av-rating-bl">
-
                           <div className="av-rating-item">
                               <div className="rating-content">
                                 {
