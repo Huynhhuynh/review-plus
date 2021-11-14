@@ -1343,7 +1343,6 @@ function get_review_rating_by_id_post( $id_post ) {
           $sumArray[$index_raw][$id]+=$value;
         }
       }
-
     }
 
     foreach ($sumArray as $key_sum => $value_sum) {
