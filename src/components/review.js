@@ -12,6 +12,46 @@ export default function ReviewContentApp( props ) {
   }
   return (
     < >
+
+    {
+        PHP_DATA.user_logged_in == 'yes' && dataReview.pointTravel &&
+
+        <div className="ss-score-total">
+          <span>Travel Session Score</span>
+          <p>{
+            dataReview.pointTravel
+            }
+          </p>
+          <div className="raw-score">
+            <span>Raw Score</span>
+            <div className="icon-start">
+              <img src="/wp-content/uploads/2021/11/star.png" />
+              <img src="/wp-content/uploads/2021/11/star.png" />
+              <img src="/wp-content/uploads/2021/11/star.png" />
+              <img src="/wp-content/uploads/2021/11/star.png" />
+              <img src="/wp-content/uploads/2021/11/star.png" />
+            </div>
+          </div>
+        </div>
+    }
+    {
+      PHP_DATA.user_logged_in != 'yes' &&
+      <div className="ss-score-total">
+        <span>Travel Session Score</span>
+        <a href="#">Login or Register To See Personal Travel Score</a>
+        <div className="raw-score">
+          <span>Raw Score</span>
+          <div className="icon-start">
+            <img src="/wp-content/uploads/2021/11/star.png" />
+            <img src="/wp-content/uploads/2021/11/star.png" />
+            <img src="/wp-content/uploads/2021/11/star.png" />
+            <img src="/wp-content/uploads/2021/11/star.png" />
+            <img src="/wp-content/uploads/2021/11/star.png" />
+          </div>
+        </div>
+      </div>
+    }
+
     {
       dataReview.reviewContent &&
       dataReview.reviewContent.length > 0 &&

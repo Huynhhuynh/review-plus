@@ -185,11 +185,11 @@
                         <div class="raw-score">
                           <span>Raw Score</span>
                           <div class="icon-start">
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
                           </div>
                         </div>
                       </div>
@@ -223,11 +223,11 @@
                         <div class="raw-score">
                           <span>Raw Score</span>
                           <div class="icon-start">
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
-                            <img src="https://travelingsession.com/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
+                            <img src="/wp-content/uploads/2021/11/star.png" >
                           </div>
                         </div>
                       </div>
@@ -309,7 +309,6 @@
 
   get_footer();
 ?>
-
 
 <style>
 
@@ -746,7 +745,6 @@ table.styled-table tr th {
 }
 
 </style>
-
 <script>
 
 jQuery( document ).ready(function($) {

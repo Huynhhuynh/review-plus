@@ -1172,6 +1172,37 @@ function spam_reviews_form ($Data) {
 }
 
 
+function get_point_travel_by_post($id_post,$slug_metakey) {
+  $point_start = 0;
+  $arg_points = array(
+    'post_type' => 'point-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+        [
+          'key' => 'post_id',
+          'value' => $id_post,
+          'compare' => '=',
+        ],
+        [
+          'key' => 'point_type_entrie',
+          'value' => $slug_metakey,
+          'compare' => '=',
+        ]
+    ]
+  );
+  $point = new WP_Query( $arg_points );
+
+  while ( $point->have_posts() ) : $point->the_post();
+    $id_point = get_the_ID();
+    $point_item = carbon_get_post_meta($id_point,'point_number_entrie');
+    $point_start = $point_start + intval($point_item);
+  endwhile;
+  wp_reset_postdata();
+  return $point_start;
+}
+
 function get_like_dislike_user_current ($id_post,$slug_metakey) {
   $data_points=[];
   $id_user_current = get_current_user_id();

@@ -28,6 +28,7 @@ function ReviewPlusProvider( { children, postId } ) {
   const [ reviewDisLike, setReviewDisLike ] = useState( [] )
   const [ scoreUser, setScoreUser ] = useState( [] )
   const [rating, setRating] = useState([])
+  const [ pointTravel, setPointTravel ] = useState([])
 
   useEffect( async () => {
     const Result = await getReviewDesignByPostID( postId )
@@ -63,6 +64,7 @@ function ReviewPlusProvider( { children, postId } ) {
     if(Result_point.success==true) {
       setPointLikeReview(Result_point.like)
       setPointDisLikeReview(Result_point.dislike)
+      setPointTravel(Result_point.point_session_travel)
     }else{
       return
     }
@@ -168,7 +170,8 @@ function ReviewPlusProvider( { children, postId } ) {
     pointLikeReview,
     pointDisLikeReview,
     submitReply,
-    rating
+    rating,
+    pointTravel
   }
 
   return (

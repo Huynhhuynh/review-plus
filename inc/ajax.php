@@ -331,12 +331,14 @@ function rp_ajax_get_point_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
   $postID = $postData[ 'idPost' ];
+  $point_session_travel = get_point_travel_by_post($postID,'sessionpoint');
   $point_like_user_login = get_like_dislike_user_current($postID,'likeentrie');
   $point_dislike_user_login = get_like_dislike_user_current($postID,'dislikeentrie');
   wp_send_json( [
     'success' => true,
     'like'=>array_values($point_like_user_login),
-    'dislike'=>array_values( $point_dislike_user_login )
+    'dislike'=>array_values( $point_dislike_user_login ),
+    'point_session_travel'=>$point_session_travel
   ] );
 }
 
