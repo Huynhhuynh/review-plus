@@ -1091,6 +1091,19 @@ function rp_check_ip_reviews_form ($ip_user,$id_post,$id_form_reviews) {
        'post_type' => 'review-entries',
        'post_status' => 'publish',
        'posts_per_page' => -1,
+       'meta_query'=>array(
+         'relation' => 'AND',
+         array(
+           'key'     => 'review_post_id',
+           'value'   => $id_post,
+           'compare' => '=',
+         ),
+         array(
+           'key'     => 'design_id',
+           'value'   => $id_form_reviews,
+           'compare' => '=',
+         ),
+       )
    );
 
    $passed = true;
@@ -1326,7 +1339,7 @@ function get_review_rating_by_id_post( $id_post ) {
 
   endwhile;
   wp_reset_postdata();
-  $arr_id_form_all = array_unique($data_id_form);
+  $arr_id_form_all = array_values(array_unique($data_id_form));
   foreach ($arr_id_form_all as $key_id_form => $id_form_value) {
     $array_data_rating_all[$key_id_form]=[];
     $data_max_point[$key_id_form] =[];
@@ -1343,7 +1356,7 @@ function get_review_rating_by_id_post( $id_post ) {
     wp_reset_postdata();
 
   }
-
+  $array_data_rating_all= array_values($array_data_rating_all);
   $point_data_rating =[];
   $data_length_rating_p_ar = [];
   $data_name_show = [];

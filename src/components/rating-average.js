@@ -10,7 +10,7 @@ export default function ratingAverage(props) {
       data_rating.rating[3] &&
       data_rating.rating[3].length>0 &&
       <div className="wrapper-rating-average">
-          <h3>Rating Average</h3>
+        <h3>Rating Average</h3>
         <div>
         {
           data_rating.rating.length > 0 &&
