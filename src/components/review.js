@@ -58,7 +58,7 @@ export default function ReviewContentApp( props ) {
       dataReview.reviewContent.length > 0 &&
       <div className="wrapper-review-lst">
 
-            <h3>Community Reviewsss</h3>
+            <h3>Community Reviews</h3>
 
       {
         dataReview.reviewContent &&
