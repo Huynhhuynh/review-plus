@@ -81,6 +81,7 @@
     $q_svl = new \WP_Query( $args );
     $total_point_travel = 0;
     $total_point_session= 0;
+    $total_point_category = 0;
     $id_form_designs =[];
     if($q_svl->have_posts()){
       while($q_svl->have_posts()){
@@ -94,6 +95,11 @@
         }
         if($type_point_review=='sessionpoint'){
           $total_point_session = $total_point_session + $point_number;
+        }
+        $cat_in_point_rw = carbon_get_post_meta($id,'categories_fields_point');
+
+        foreach ($cat_in_point_rw as $cat_in_point) {
+          $total_point_category=$total_point_category+$cat_in_point['score'];
         }
         $id_form_design = carbon_get_post_meta($id,'id_form_design');
         if(!empty($id_form_design)){
@@ -112,6 +118,7 @@
         <div class="infor-user-review">
             <span>Total Travel Point: <?php echo $total_point_travel?></span>
             <span>Total Travel Authority Point: <?php echo $total_point_session?></span>
+            <span>Total Travel Category Score: <?php echo $total_point_category?></span>
         </div>
       <?php
       }
@@ -177,61 +184,7 @@
             ?>
                 <li class="<?php echo $class_active_tab?>">
                   <div>
-                    <div class="show-form-point">
 
-                      <div class="ss-score-total">
-                        <span>Travel Session Score</span>
-                        <p><?php echo get_all_point_travel($id_form_item,$id_user)[1]?></p>
-                        <div class="raw-score">
-                          <span>Raw Score</span>
-                          <div class="icon-start">
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                          </div>
-                        </div>
-                      </div>
-                      <div class="cat-score-total ss-score-total">
-                        <span>Travel Category Score</span>
-                        <?php
-                          if(!empty(get_current_user_id())){
-                            if(!empty($id_user_link)){
-                              if(intval($id_user_link)==get_current_user_id()){
-                                ?>
-                                  <p><?php echo get_score_category($id_user,$id_form_item)?></p>
-                                <?php
-                              }else{
-                                ?>
-                                  <a href="#">Login or Register To See Personal Travel Score</a>
-                                <?php
-                              }
-                            }else{
-                              ?>
-                                <p><?php echo get_score_category($id_user,$id_form_item)?></p>
-                              <?php
-                            }
-
-                          }else{
-                            ?>
-                              <a href="#">Login or Register To See Personal Travel Score</a>
-                            <?php
-                          }
-                        ?>
-
-                        <div class="raw-score">
-                          <span>Raw Score</span>
-                          <div class="icon-start">
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                            <img src="/wp-content/uploads/2021/11/star.png" >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
 
                     <table class="styled-table">
                       <tr>
