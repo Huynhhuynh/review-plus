@@ -64,7 +64,12 @@ function ReviewPlusProvider( { children, postId } ) {
     if(Result_point.success==true) {
       setPointLikeReview(Result_point.like)
       setPointDisLikeReview(Result_point.dislike)
-      setPointTravel(Result_point.point_session_travel)
+      if(Result_point.point_session_travel!=0){
+        setPointTravel(Result_point.point_session_travel)
+      }else{
+        setPointTravel(0)
+      }
+
     }else{
       return
     }

@@ -14,8 +14,7 @@ export default function ReviewContentApp( props ) {
     < >
 
     {
-        PHP_DATA.user_logged_in == 'yes' && dataReview.pointTravel &&
-
+        PHP_DATA.user_logged_in == 'yes' &&
         <div className="ss-score-total">
           <span>Travel Session Score</span>
           <p>{
@@ -35,25 +34,6 @@ export default function ReviewContentApp( props ) {
         </div>
     }
 
-    {
-        PHP_DATA.user_logged_in == 'yes' && !dataReview.pointTravel &&
-
-        <div className="ss-score-total">
-          <span>Travel Session Score</span>
-          <p>0
-          </p>
-          <div className="raw-score">
-            <span>Raw Score</span>
-            <div className="icon-start">
-              <img src="/wp-content/uploads/2021/11/star.png" />
-              <img src="/wp-content/uploads/2021/11/star.png" />
-              <img src="/wp-content/uploads/2021/11/star.png" />
-              <img src="/wp-content/uploads/2021/11/star.png" />
-              <img src="/wp-content/uploads/2021/11/star.png" />
-            </div>
-          </div>
-        </div>
-    }
 
     {
       PHP_DATA.user_logged_in != 'yes' &&
@@ -67,7 +47,7 @@ export default function ReviewContentApp( props ) {
             <img src="/wp-content/uploads/2021/11/star.png" />
             <img src="/wp-content/uploads/2021/11/star.png" />
             <img src="/wp-content/uploads/2021/11/star.png" />
-            <img src="/wp-content/uploads/2021/11/star.png" /> 
+            <img src="/wp-content/uploads/2021/11/star.png" />
           </div>
         </div>
       </div>
@@ -78,7 +58,7 @@ export default function ReviewContentApp( props ) {
       dataReview.reviewContent.length > 0 &&
       <div className="wrapper-review-lst">
 
-            <h3>Community Reviews</h3>
+            <h3>Community Reviews sss</h3>
 
       {
         dataReview.reviewContent &&
