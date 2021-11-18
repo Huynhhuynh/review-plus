@@ -305,13 +305,13 @@ export default function ReviewForm( { designData, postId } ) {
               PHP_DATA.user_logged_in == 'yes' &&
               <div className="rp-field rp-field__comment">
                 <label>
-                  <span className="__label">Comment</span>
+                  <span className="__label">Comment *</span>
                   <div className="__field">
                     <textarea
-                      { ...register( 'comment' ) }
-                      className={ [ 'rp-comment' ].join( ' ' ) }
+                      { ...register( 'comment', { required: true } ) }
+                      className={ [ 'rp-comment', ( errors.comment ? '__is-invalid' : '' ) ].join( ' ' ) }
                       defaultValue={ submitFormData.comment }
-                      ></textarea>
+                      ></textarea>{ errors.comment && <span className="__invalid-message">Please enter your comment!</span> }
                   </div>
                 </label>
               </div>

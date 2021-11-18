@@ -29,7 +29,7 @@
         $id_user=Null;
         ?>
           <div class="notice-message-profile">
-            <span>Profile review is not publish. </span>
+            <span>This profile is private. </span>
             <a href="<?php echo get_home_url()?>">Back to home</a>
           </div>
         <?php
@@ -38,7 +38,7 @@
       if(empty($id_user)){
         ?>
           <div class="notice-message-profile">
-            <span>Profile review is not publish. </span>
+            <span>This profile is private. </span>
             <a href="<?php echo get_home_url()?>">Back to home</a>
           </div>
         <?php
@@ -54,7 +54,7 @@
       }
       ?>
         <div class="show-infor-review">
-          <label for="show_review_user"> Publish review page</label>
+          <label for="show_review_user"> Make profile public</label>
           <input type="checkbox" id="show_review_user" name="show-review-user"  data-user-id="<?php echo $id_user?>" <?php echo $key_checked?>>
         </div>
       <?php
