@@ -21,7 +21,6 @@ export default function ReviewPlusApp( props ) {
       }
     })
     setShowEditForm(idFormShow);
-
   })
 
   return (
@@ -35,7 +34,7 @@ export default function ReviewPlusApp( props ) {
             return;
           }else{
             if(!showeditForm.includes(Number(design.id))){
-              return <ReviewForm designData={ design } postId={ postId }/>
+              return <ReviewForm  designData={ design } postId={ postId } />
             }else{
               // return <ReviewForm designData={ design } postId={ postId } />
             }

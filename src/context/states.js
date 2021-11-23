@@ -111,7 +111,7 @@ function ReviewPlusProvider( { children, postId, userID } ) {
     if(new_state){
       for(let i in new_state) {
         if(new_state[i].id_reviews==idReviewp) {
-          new_state[i].user_id_review='-1';
+          new_state[i].user_id_review='hide-custom';
           data_rating_custom = new_state[i].rating_review
         }
       }
@@ -129,6 +129,22 @@ function ReviewPlusProvider( { children, postId, userID } ) {
 
     setReviewContent(new_state);
     setdataCommentEdit(datacomment);
+
+
+  }
+
+  const submitEditReviewHideForm = async ( idReviewp ) => {
+
+    const new_state = reviewContent;
+    if(new_state){
+      for(let i in new_state) {
+        if(new_state[i].id_reviews==idReviewp) {
+          new_state[i].user_id_review='1';
+        }
+      }
+    }
+
+    setReviewContent(new_state);
 
 
   }
@@ -198,6 +214,7 @@ function ReviewPlusProvider( { children, postId, userID } ) {
     reviewDesign,
     submitReview,
     submitEditReview,
+    submitEditReviewHideForm,
     reviewContent,
     submitLike,
     submitDisLike,

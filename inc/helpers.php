@@ -1696,7 +1696,14 @@ function get_score_category ($user_id,$form_id) {
 }
 
 function rp_update_review_new($id_post,$review_data) {
-  $review_data[ 'name' ] = get_the_title($id_post);
+  if( is_user_logged_in() ) {
+    $current_user = wp_get_current_user();
+    $name = esc_html( $current_user->display_name );
+    $review_data[ 'user_id' ] = $current_user->ID;
+    $review_data[ 'name' ] = esc_html( $current_user->display_name );
+    $review_data[ 'email' ] = $current_user->user_email;
+    $review_data[ 'url' ] = $current_user->user_url;
+  }
   {
     $meta_fields = [
       'ratings' => 'rating_json_field',
@@ -1707,12 +1714,9 @@ function rp_update_review_new($id_post,$review_data) {
       'user_id' => 'user_id',
       'name' => 'name',
       'email' => 'email',
-      'url' => 'url',
-      'user_ip' => 'user_ip',
-      'cons'=>'cons',
-      'pros'=>'pros',
-      'categories'=>'categories'
+      'url' => 'url'
     ];
+
 
     $review_data[ 'user_ip' ] = rp_get_client_ip();
     foreach( array_keys( $meta_fields ) as $key ) {

@@ -7,11 +7,11 @@ import Btndislike from '../components/btn-dislike'
 import Btnreply from '../components/btn-reply'
 import Contentreply from '../components/content-reply'
 
-export default function dataReview(props) {
-  const { submitEditReview } = useReviewPlus()
+export default function Reviewdata(props) {
+  const { submitEditReview ,submitEditReviewHideForm , userID} = useReviewPlus()
   const thisprop = props
   const [showReply, setShowReply] = useState(false)
-  const { userID } = useReviewPlus()
+  const [showBtnEdit, setshowBtnEdit ] = useState(false)
   const callbackFunction = (childData) => {
     setShowReply(childData)
   }
@@ -19,7 +19,16 @@ export default function dataReview(props) {
   const handleClickeditcomment =  async (e) => {
     e.preventDefault();
     submitEditReview(thisprop.id_review,thisprop.comment_rv,thisprop.id_form_rating)
+    thisprop.userID = 'hide-custom';
+    setshowBtnEdit(true);
   }
+  const handleClickedithideForm =  async (e) => {
+    e.preventDefault();
+    submitEditReviewHideForm(thisprop.id_review)
+    thisprop.userID = userID;
+    setshowBtnEdit(false)
+  }
+
 
   return (
     <>
@@ -69,6 +78,14 @@ export default function dataReview(props) {
               {
                 PHP_DATA.user_logged_in == 'yes' && Number(thisprop.userID) == Number(userID) &&
                 <div className="edit-review"  onClick={handleClickeditcomment}>
+                    <img src="/wp-content/uploads/2021/11/pencil.png"/>
+                    Edit
+                </div>
+              }
+              {
+
+                PHP_DATA.user_logged_in == 'yes' && showBtnEdit &&
+                <div className="edit-review ss"  onClick={handleClickedithideForm}>
                     <img src="/wp-content/uploads/2021/11/pencil.png"/>
                     Edit
                 </div>
