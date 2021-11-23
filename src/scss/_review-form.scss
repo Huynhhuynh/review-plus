@@ -1,3 +1,13 @@
+.edit-review {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  img {
+    width: 19px;
+    margin-right: 5px;
+  }
+}
+
 .review-form-container {
   h3 {
       font-size: 24px;
@@ -272,6 +282,16 @@ form.review-plus-form {
   }
 
 }
+
+
+.wrapper-point-star {
+  display: flex;
+  .review-plus-rating-field {
+    margin-left: 20px;
+  }
+}
+
+
 .user-profile {
   font-size: 25px;
   font-weight: bold;
@@ -406,12 +426,6 @@ form.review-plus-form {
 }
 }
 
-.wrapper-point-star {
-  display: flex;
-  .review-plus-rating-field {
-    margin-left: 20px;
-  }
-}
 
 
 .content-template-history-point {

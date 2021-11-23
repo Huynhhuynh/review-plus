@@ -19,7 +19,7 @@ import {
 } from '../admin/lib/api'
 const ReviewPlusContext = createContext()
 
-function ReviewPlusProvider( { children, postId } ) {
+function ReviewPlusProvider( { children, postId, userID } ) {
   const [ reviewDesign, setReviewDesign ] = useState( [] )
   const [ reviewContent, setReviewContent ] = useState( [] )
   const [ pointLikeReview, setPointLikeReview ] = useState( [] )
@@ -29,6 +29,7 @@ function ReviewPlusProvider( { children, postId } ) {
   const [ scoreUser, setScoreUser ] = useState( [] )
   const [rating, setRating] = useState([])
   const [ pointTravel, setPointTravel ] = useState([])
+  const [ dataCommentEdit, setdataCommentEdit ] = useState('')
 
   useEffect( async () => {
     const Result = await getReviewDesignByPostID( postId )
@@ -102,6 +103,35 @@ function ReviewPlusProvider( { children, postId } ) {
     const result = await postReview( reviewData )
     return result
   }
+  const submitEditReview = async ( idReviewp,datacomment,idformReview ) => {
+
+    const new_state = reviewContent;
+    const new_reviewDesign = reviewDesign;
+    var data_rating_custom =[];
+    if(new_state){
+      for(let i in new_state) {
+        if(new_state[i].id_reviews==idReviewp) {
+          new_state[i].user_id_review='-1';
+          data_rating_custom = new_state[i].rating_review
+        }
+      }
+    }
+
+    if(new_reviewDesign) {
+      for(let i in new_reviewDesign) {
+        if(new_reviewDesign[i].id==Number(idformReview)){
+          for(let j in data_rating_custom ) {
+            new_reviewDesign[i].rating_fields[j].default_point = data_rating_custom[j];
+          }
+        }
+      }
+    }
+
+    setReviewContent(new_state);
+    setdataCommentEdit(datacomment);
+
+
+  }
 
   const submitReply = async ( replyData ) => {
     const result = await postReply( replyData )
@@ -162,9 +192,12 @@ function ReviewPlusProvider( { children, postId } ) {
 
 
   const value = {
+    dataCommentEdit,
     postId,
+    userID,
     reviewDesign,
     submitReview,
+    submitEditReview,
     reviewContent,
     submitLike,
     submitDisLike,

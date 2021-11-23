@@ -23,9 +23,7 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
               return <div className="message-not-login">
                   Please <a href="">Login</a> to leave a full review.<a href="#">Register</a>
               </div>
-
             }
-
           }else{
             return <>
               <div className="one-line">
@@ -81,7 +79,7 @@ const NotLoggedFields = ( { submitFormData, register, errors } ) => {
 }
 
 export default function ReviewForm( { designData, postId } ) {
-  const { submitReview } = useReviewPlus()
+  const { submitReview,dataCommentEdit } = useReviewPlus()
   const { register, setValue, handleSubmit, trigger, formState: { errors } } = useForm()
   const [ loading, setLoading ] = useState( false )
   const [ formSubmited, setFormSubmited ] = useState( false )
@@ -92,7 +90,7 @@ export default function ReviewForm( { designData, postId } ) {
     parent: 0,
     name: '',
     email: '',
-    comment: '',
+    comment: dataCommentEdit,
     url: '',
     pros:[],
     cons:[],

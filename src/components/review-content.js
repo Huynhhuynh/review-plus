@@ -8,13 +8,17 @@ import Btnreply from '../components/btn-reply'
 import Contentreply from '../components/content-reply'
 
 export default function dataReview(props) {
-
+  const { submitEditReview } = useReviewPlus()
   const thisprop = props
-
   const [showReply, setShowReply] = useState(false)
-
+  const { userID } = useReviewPlus()
   const callbackFunction = (childData) => {
     setShowReply(childData)
+  }
+
+  const handleClickeditcomment =  async (e) => {
+    e.preventDefault();
+    submitEditReview(thisprop.id_review,thisprop.comment_rv,thisprop.id_form_rating)
   }
 
   return (
@@ -62,6 +66,13 @@ export default function dataReview(props) {
                 <Btnreply  parentCallback={callbackFunction} id_review = {thisprop.id_review} parent = {thisprop.parent}/>
               }
             </div>
+              {
+                PHP_DATA.user_logged_in == 'yes' && Number(thisprop.userID) == Number(userID) &&
+                <div className="edit-review"  onClick={handleClickeditcomment}>
+                    <img src="/wp-content/uploads/2021/11/pencil.png"/>
+                    Edit
+                </div>
+              }
           </div>
           {
             (showReply==true) &&
@@ -69,6 +80,7 @@ export default function dataReview(props) {
               <Contentreply  id_review = {thisprop.id_review} parent = {thisprop.parent}/>
             </div>
           }
+
         </div>
       </div>
     </>

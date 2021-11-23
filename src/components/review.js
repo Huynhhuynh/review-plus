@@ -65,7 +65,7 @@ export default function ReviewContentApp( props ) {
         dataReview.reviewContent.length > 0 &&
         dataReview.reviewContent.map( data => {
           if(data.parent == 0 && data.comment.length>0) {
-            return <Reviewdata parent={data.parent} name_author={ data.name } comment_rv={ data.comment }  id_review = { data.id_reviews } url_avatar= {data.url_avatar}  date_comment={data.date_coment} />
+            return <Reviewdata parent={data.parent} id_form_rating= {data.id_form_review} name_author={ data.name } comment_rv={ data.comment }  id_review = { data.id_reviews } url_avatar= {data.url_avatar}  date_comment={data.date_coment} userID = {data.user_id_review} />
           }
         } )
       }

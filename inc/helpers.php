@@ -169,9 +169,10 @@ function rp_delete_review_design( $ID ) {
  */
 function rp_comment_form() {
   $post_id = get_the_ID();
+  $user_login = get_current_user_id();
   if( empty( $post_id ) ) return;
   ?>
-  <div class="review-plus-container" data-post-id="<?php echo $post_id ?>">
+  <div class="review-plus-container" data-post-id="<?php echo $post_id ?>" data-user-login = "<?php echo $user_login?>">
     <!-- Content by React JS -->
   </div> <!-- .review-plus-container -->
   <?php
@@ -1066,23 +1067,40 @@ function rp_check_user_reviews_form ($id_user,$id_post,$id_form_reviews) {
        'post_type' => 'review-entries',
        'post_status' => 'publish',
        'posts_per_page' => -1,
+       'meta_query'=>array(
+         'relation' => 'AND',
+         array(
+           'key'     => 'review_post_id',
+           'value'   => $id_post,
+           'compare' => '=',
+         ),
+         array(
+           'key'     => 'design_id',
+           'value'   => $id_form_reviews,
+           'compare' => '=',
+         ),
+         array(
+           'key'     => 'user_id',
+           'value'   => $id_user,
+           'compare' => '=',
+         ),
+         array(
+           'key'     => 'parent',
+           'value'   => 0,
+           'compare' => '=',
+         ),
+       )
    );
 
-   $passed = true;
    $entries = new WP_Query( $args );
-    while ( $entries->have_posts() ) : $entries->the_post();
-        $id_entrie = get_the_ID();
-        $id_user_entri = carbon_get_post_meta( $id_entrie, 'user_id' );
-        $review_post_id = carbon_get_post_meta( $id_entrie, 'review_post_id' );
-        $review_design_id = carbon_get_post_meta( $id_entrie, 'design_id' );
-        if( $id_user == $id_user_entri && $id_post == $review_post_id && $id_form_reviews == $review_design_id) {
-            $passed = false;
-            break;
-        }else {
-            $passed = true;
-        }
-    endwhile;
-    wp_reset_postdata();
+   $count = $entries->found_posts;
+   if($count==1){
+     while ( $entries->have_posts() ) : $entries->the_post();
+         $passed = get_the_ID();
+     endwhile;
+   }else{
+     $passed = null;
+   }
     return $passed;
 }
 
@@ -1147,7 +1165,8 @@ function spam_reviews_form ($Data) {
         $point_data[ 'user_id' ] = $id_user_current;
         $point_data[ 'name' ] = esc_html( $current_user->display_name );
         $passed_reviews = rp_check_user_reviews_form($id_user_current,$id_post,$id_design);
-        if($passed_reviews){
+
+        if(empty($passed_reviews)){
             $review_id = rp_post_review( $reviewData );
             $user_id_reviews = carbon_get_post_meta($review_id,'user_id');
             $point_data['user_id_reviews'] = $user_id_reviews;
@@ -1155,13 +1174,14 @@ function spam_reviews_form ($Data) {
             rp_new_point_review($point_data,$review_id);
             wp_send_json( [
               'success' => true,
-              'review_id' => $review_id
+              'review_id' => $review_id,
+              'pas'=>$passed_reviews
             ] );
         } else {
+            rp_update_review_new( intval($passed_reviews), $reviewData );
             wp_send_json( [
-              'success' => false,
-              'message' =>'You have already submitted this review',
-              'review_id' => $review_id,
+              'success' => true,
+              'review_id' => $passed_reviews,
             ] );
         }
     } else {
@@ -1436,13 +1456,23 @@ function get_review_content_by_id_post ( $id_post ) {
     $author_name_reviews = carbon_get_post_meta($id_post_reviews,'name');
     $content_reviews = carbon_get_post_meta($id_post_reviews,'comment_content');
     $parent = intval(carbon_get_post_meta($id_post_reviews,'parent'));
+    $id_user_review = carbon_get_post_meta($id_post_reviews,'user_id');
+    $id_form_review = carbon_get_post_meta($id_post_reviews,'design_id');
+    $id_rate_review = [];
+    $rating_review_raw = unserialize(get_post_meta( $id_post_reviews, '_rating_json_field', true ));
+    foreach ($rating_review_raw as $key => $value) {
+      array_push($id_rate_review, intval($value['rate']));
+    }
     array_push($data_reviews,[
       'id_reviews'=>$id_post_reviews,
       'url_avatar'=>get_avatar_url($id_post_reviews),
       'name'=>$author_name_reviews,
       'comment'=>$content_reviews,
       'date_coment'=>get_the_date( 'l F j, Y' ),
-      'parent' =>$parent
+      'parent' =>$parent,
+      'user_id_review'=>$id_user_review,
+      'id_form_review'=>$id_form_review,
+      'rating_review'=>$id_rate_review
     ]);
 
   endwhile;
@@ -1665,7 +1695,41 @@ function get_score_category ($user_id,$form_id) {
   return $all_point_cat;
 }
 
+function rp_update_review_new($id_post,$review_data) {
+  $review_data[ 'name' ] = get_the_title($id_post);
+  {
+    $meta_fields = [
+      'ratings' => 'rating_json_field',
+      'postId' => 'review_post_id',
+      'designId' => 'design_id',
+      'parent' => 'parent',
+      'comment' => 'comment_content',
+      'user_id' => 'user_id',
+      'name' => 'name',
+      'email' => 'email',
+      'url' => 'url',
+      'user_ip' => 'user_ip',
+      'cons'=>'cons',
+      'pros'=>'pros',
+      'categories'=>'categories'
+    ];
 
+    $review_data[ 'user_ip' ] = rp_get_client_ip();
+    foreach( array_keys( $meta_fields ) as $key ) {
+      if( ! isset( $review_data[ $key ] ) ) continue;
+
+      if( $meta_fields[ $key ] == 'rating_json_field' ) {
+        $review_data[ $key ] = serialize( $review_data[ $key ] );
+      }
+      carbon_set_post_meta(
+        $id_post,
+        $meta_fields[ $key ],
+        ( isset( $review_data[ $key ] ) ? $review_data[ $key ] : '' )
+      );
+    }
+  }
+
+}
 
 
 add_action( 'init', function() {

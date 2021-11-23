@@ -9,9 +9,9 @@ import RatingAverage from './components/rating-average'
  * Review type script
  */
 
-const ReviewPlusWrap = ( { postId } ) => {
+const ReviewPlusWrap = ( { postId, userID } ) => {
   return (
-    <ReviewPlusProvider postId={ postId }>
+    <ReviewPlusProvider postId={ postId } userID = { userID }>
       <RatingAverage />
       <GetReview />
       <ReviewPlusApp />
@@ -27,7 +27,8 @@ export default class ReviewDesign {
 
     elems.forEach( ( elem ) => {
       const postID = parseInt( elem.dataset.postId )
-      ReactDOM.render( <ReviewPlusWrap postId={ postID } />, elem );
+      const userID = parseInt( elem.dataset.userLogin );
+      ReactDOM.render( <ReviewPlusWrap postId={ postID } userID = { userID } />, elem );
     } )
   }
 }

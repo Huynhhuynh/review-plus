@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import Rating from 'react-simple-star-rating'
 /**
- * Rating fields 
+ * Rating fields
  */
 
 
-export default function RatingField(  { ratingOptions, label, register, setValue, errors, itemIndex, onChange } ) {
+export default function RatingField(  { ratingOptions, label, register, setValue, errors, itemIndex, onChange,ratingvalueDefault } ) {
   const [ rate, setRate ] = useState( parseInt( ratingOptions.default_point ) )
   const refRate = useRef()
-
   const handleRating = ( rate ) => {
     setRate( rate )
     setValue( `${ label }.rate`, rate )
@@ -39,11 +38,11 @@ export default function RatingField(  { ratingOptions, label, register, setValue
           />
         }
       </div>
-      <input 
+      <input
         className="hidden-rate-value"
         ref={ refRate }
         type='number'
-        defaultValue={ rate } 
+        defaultValue={ rate }
         { ...register( `${ label }.rate`, { required: true, min: 1 } ) }
         readOnly
       />
