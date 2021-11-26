@@ -4,8 +4,8 @@
  */
 // REVIEW_PLUS_VER
 function rp_enqueue_scripts() {
-  wp_enqueue_style( 'review-plus', REVIEW_PLUS_URI . '/dist/css/review-plus.frontend.css', false, '3.0.3' );
-  wp_enqueue_script( 'review-plus', REVIEW_PLUS_URI . '/dist/review-plus.frontend.bundle.js', ['jquery'], '3.0.3', true );
+  wp_enqueue_style( 'review-plus', REVIEW_PLUS_URI . '/dist/css/review-plus.frontend.css', false, '3.0.4' );
+  wp_enqueue_script( 'review-plus', REVIEW_PLUS_URI . '/dist/review-plus.frontend.bundle.js', ['jquery'], '3.0.4', true );
 
   wp_localize_script( 'review-plus', 'PHP_DATA', [
     'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -16,13 +16,13 @@ function rp_enqueue_scripts() {
 
 add_action( 'wp_enqueue_scripts', 'rp_enqueue_scripts' );
 
-wp_enqueue_style( 'review-plus-backend', REVIEW_PLUS_URI . '/dist/css/review-plus.backend.css', false, '3.0.3' );
+wp_enqueue_style( 'review-plus-backend', REVIEW_PLUS_URI . '/dist/css/review-plus.backend.css', false, '3.0.4' );
 
 function rp_admin_enqueue_scripts() {
   if( ! isset( $_GET[ 'page' ] ) || $_GET[ 'page' ] != 'review-design-settings-panel' )
     return;
 
-  wp_enqueue_script( 'review-plus-backend', REVIEW_PLUS_URI . '/dist/review-plus.backend.bundle.js', ['jquery', 'carbon-fields-core'], '3.0.3', true );
+  wp_enqueue_script( 'review-plus-backend', REVIEW_PLUS_URI . '/dist/review-plus.backend.bundle.js', ['jquery', 'carbon-fields-core'], '3.0.4', true );
 
   wp_localize_script( 'review-plus-backend', 'PHP_DATA', [
     'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -34,7 +34,7 @@ function rp_admin_enqueue_scripts() {
 add_action( 'admin_enqueue_scripts', 'rp_admin_enqueue_scripts' );
 
 function rp_cb_field_enqueue_scripts() {
-  wp_enqueue_script( 'review-plus-cb-field', REVIEW_PLUS_URI . '/dist/review-plus.cbFields.bundle.js', ['jquery', 'carbon-fields-core'], '3.0.3', true );
+  wp_enqueue_script( 'review-plus-cb-field', REVIEW_PLUS_URI . '/dist/review-plus.cbFields.bundle.js', ['jquery', 'carbon-fields-core'], '3.0.4', true );
 }
 
 add_action( 'admin_enqueue_scripts', 'rp_cb_field_enqueue_scripts' );

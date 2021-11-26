@@ -1,5 +1,5 @@
 import { useReviewPlus } from '../context/states'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Reviewlike from '../components/like-review'
 import Reviewdislike from '../components/dislike-review'
 import Btnlike from '../components/btn-like'
@@ -16,11 +16,15 @@ export default function Reviewdata(props) {
     setShowReply(childData)
   }
 
+  const titleRef = useRef(null)
+
   const handleClickeditcomment =  async (e) => {
     e.preventDefault();
     submitEditReview(thisprop.id_review,thisprop.comment_rv,thisprop.id_form_rating)
     thisprop.userID = 'hide-custom';
     setshowBtnEdit(true);
+    console.log('ok',titleRef);
+    titleRef.current.scrollIntoView({ behavior: 'smooth' })
   }
   const handleClickedithideForm =  async (e) => {
     e.preventDefault();
@@ -77,7 +81,7 @@ export default function Reviewdata(props) {
             </div>
               {
                 PHP_DATA.user_logged_in == 'yes' && Number(thisprop.userID) == Number(userID) &&
-                <div className="edit-review"  onClick={handleClickeditcomment}>
+                <div ref={titleRef} className="edit-review"  onClick={handleClickeditcomment}>
                     <img src="/wp-content/uploads/2021/11/pencil.png"/>
                     Edit
                 </div>
