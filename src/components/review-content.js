@@ -23,12 +23,12 @@ export default function Reviewdata(props) {
     submitEditReview(thisprop.id_review,thisprop.comment_rv,thisprop.id_form_rating)
     thisprop.userID = 'hide-custom';
     setshowBtnEdit(true);
-    console.log('ok',titleRef);
-    titleRef.current.scrollIntoView({ behavior: 'smooth' })
+    // titleRef.current.scrollIntoView({ behavior: 'smooth' })
   }
   const handleClickedithideForm =  async (e) => {
     e.preventDefault();
     submitEditReviewHideForm(thisprop.id_review)
+    console.log('ok',thisprop.userID);
     thisprop.userID = userID;
     setshowBtnEdit(false)
   }
@@ -89,7 +89,7 @@ export default function Reviewdata(props) {
               {
 
                 PHP_DATA.user_logged_in == 'yes' && showBtnEdit &&
-                <div className="edit-review ss"  onClick={handleClickedithideForm}>
+                <div className="edit-review hide"  onClick={handleClickedithideForm}>
                     <img src="/wp-content/uploads/2021/11/pencil.png"/>
                     Edit
                 </div>
