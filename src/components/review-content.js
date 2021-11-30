@@ -28,7 +28,6 @@ export default function Reviewdata(props) {
   const handleClickedithideForm =  async (e) => {
     e.preventDefault();
     submitEditReviewHideForm(thisprop.id_review)
-    console.log('ok',thisprop.userID);
     thisprop.userID = userID;
     setshowBtnEdit(false)
   }

@@ -264,32 +264,36 @@ export default function ReviewForm( { designData, postId } ) {
                 </div>
               </>
             }
-            <div className="one-line">
             {
-              designData.pros_fields.length > 0 &&
-              <>
-                <div>
-                  <span className="__label">Pros</span>
-                  <div className="rp-pros-list">
-                      <Multiselect {...prosOptions} />
+              PHP_DATA.user_logged_in == 'yes' &&
+              <div className="one-line">
+              {
+                designData.pros_fields.length > 0 &&
+                <>
+                  <div>
+                    <span className="__label">Pros</span>
+                    <div className="rp-pros-list">
+                        <Multiselect {...prosOptions} />
+                    </div>
                   </div>
-                </div>
-              </>
-            }
-            {
-              designData.cons_fields.length > 0 &&
-              <>
-                <div>
-                  <span className="__label">Cons</span>
-                  <div className="rp-cons-list">
-                      <Multiselect {...consOptions} />
+                </>
+              }
+              {
+                designData.cons_fields.length > 0 &&
+                <>
+                  <div>
+                    <span className="__label">Cons</span>
+                    <div className="rp-cons-list">
+                        <Multiselect {...consOptions} />
+                    </div>
                   </div>
-                </div>
-              </>
+                </>
+              }
+              </div>
             }
-            </div>
+
             {
-              designData.categories_fields.length > 0 &&
+              designData.categories_fields.length > 0 && PHP_DATA.user_logged_in == 'yes' &&
               <>
                 <div className="rv-categories-field">
                   <span className="__label">Categories</span>
