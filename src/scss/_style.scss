@@ -306,3 +306,47 @@
       }
   }
 }
+
+.list-data-favorite {
+  width: 400px;
+  max-width: 100%;
+  >h1 {
+    margin-bottom: 40px;
+  }
+  .wraper-content-city {
+    border: solid #eee;
+    border-width: 0 1px;
+    background: #eeeaea;
+    border-radius: 6px;
+    padding: 15px 0;
+  }
+  .item-favorite-city {
+    display: block;
+    padding: 10px 20px;
+    border-bottom: solid 1px #d1cfcf;
+    &:last-child{
+      border-bottom: none;
+    }
+    >span {
+      display: block;
+      font-size: 13px;
+    }
+    .cat-favorite-city {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      h3 {
+        line-height: 1;
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: bold;
+      }
+      img {
+        width: 30px; 
+      }
+    }
+  }
+  
+}

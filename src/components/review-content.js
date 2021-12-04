@@ -6,30 +6,27 @@ import Btnlike from '../components/btn-like'
 import Btndislike from '../components/btn-dislike'
 import Btnreply from '../components/btn-reply'
 import Contentreply from '../components/content-reply'
+import {Link} from 'react-scroll'
 
 export default function Reviewdata(props) {
   const { submitEditReview ,submitEditReviewHideForm , userID} = useReviewPlus()
   const thisprop = props
   const [showReply, setShowReply] = useState(false)
-  const [showBtnEdit, setshowBtnEdit ] = useState(false)
+  const [idScroll,setidScroll] = useState('');
   const callbackFunction = (childData) => {
     setShowReply(childData)
   }
-
-  const titleRef = useRef(null)
-
+  useEffect( async () => {
+    setidScroll(thisprop.id_form_rating)
+  } )
+  
   const handleClickeditcomment =  async (e) => {
     e.preventDefault();
     submitEditReview(thisprop.id_review,thisprop.comment_rv,thisprop.id_form_rating)
-    thisprop.userID = 'hide-custom';
-    setshowBtnEdit(true);
-    // titleRef.current.scrollIntoView({ behavior: 'smooth' })
   }
   const handleClickedithideForm =  async (e) => {
     e.preventDefault();
     submitEditReviewHideForm(thisprop.id_review)
-    thisprop.userID = userID;
-    setshowBtnEdit(false)
   }
 
 
@@ -80,14 +77,20 @@ export default function Reviewdata(props) {
             </div>
               {
                 PHP_DATA.user_logged_in == 'yes' && Number(thisprop.userID) == Number(userID) &&
-                <div ref={titleRef} className="edit-review"  onClick={handleClickeditcomment}>
+                <Link className="edit-review"  
+                      onClick={handleClickeditcomment} 
+                      to={idScroll} 
+                      smooth={true}
+                      duration = {1000} 
+                      offset={-50}
+                >
                     <img src="/wp-content/uploads/2021/11/pencil.png"/>
                     Edit
-                </div>
+                </Link>
               }
               {
 
-                PHP_DATA.user_logged_in == 'yes' && showBtnEdit &&
+                PHP_DATA.user_logged_in == 'yes' && thisprop.userID =='hide-custom'  &&
                 <div className="edit-review hide"  onClick={handleClickedithideForm}>
                     <img src="/wp-content/uploads/2021/11/pencil.png"/>
                     Edit

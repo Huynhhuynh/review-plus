@@ -101,18 +101,26 @@ function ReviewPlusProvider( { children, postId, userID } ) {
 
   const submitReview = async ( reviewData ) => {
     const result = await postReview( reviewData )
+    const Result_review = await getReview(postId)
+    if(Result_review.success==true) {
+      setReviewContent(Result_review.data)
+      // setRating(Result_review.rating)
+    }else{
+      
+    }
     return result
   }
+
   const submitEditReview = async ( idReviewp,datacomment,idformReview ) => {
 
-    const new_state = reviewContent;
-    const new_reviewDesign = reviewDesign;
+    const new_reviewContent = [...reviewContent];
+    const new_reviewDesign = [...reviewDesign];
     var data_rating_custom =[];
-    if(new_state){
-      for(let i in new_state) {
-        if(new_state[i].id_reviews==idReviewp) {
-          new_state[i].user_id_review='hide-custom';
-          data_rating_custom = new_state[i].rating_review
+    if(new_reviewContent){
+      for(let i in new_reviewContent) {
+        if(new_reviewContent[i].id_reviews==idReviewp) {
+          new_reviewContent[i].user_id_review='hide-custom';
+          data_rating_custom =  new_reviewContent[i].rating_review
         }
       }
     }
@@ -125,9 +133,9 @@ function ReviewPlusProvider( { children, postId, userID } ) {
           }
         }
       }
-    }
-
-    setReviewContent(new_state);
+    } 
+    
+    setReviewContent(new_reviewContent);
     setdataCommentEdit(datacomment);
 
 
@@ -135,17 +143,17 @@ function ReviewPlusProvider( { children, postId, userID } ) {
 
   const submitEditReviewHideForm = async ( idReviewp ) => {
 
-    const new_state = reviewContent;
-    if(new_state){
-      for(let i in new_state) {
-        if(new_state[i].id_reviews==idReviewp) {
-          new_state[i].user_id_review='1';
+    const new_reviewContent = [...reviewContent];
+    if(new_reviewContent){
+      for(let i in new_reviewContent) {
+        if(new_reviewContent[i].id_reviews==idReviewp) {
+          new_reviewContent[i].user_id_review=userID;
         }
       }
-    }
-
-    setReviewContent(new_state);
-
+    } 
+    
+    setReviewContent(new_reviewContent);
+    // setdataCommentEdit('');
 
   }
 

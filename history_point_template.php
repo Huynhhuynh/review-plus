@@ -253,6 +253,58 @@
         ?>
         </ul>
       </div>
+      <?php 
+        if(!empty($id_user)){
+
+          $agrs_city = array(
+            'post_type'=>'favorite-city',
+            'post_status'=>'publish',
+            'post_per_page'=>'-1',
+            'meta_query'=>array(
+              'relation' => 'AND',
+                array(
+                  'key'     => 'user_id_custom',
+                  'value'   => $id_user,
+                  'compare' => '=',
+                ),
+            )
+          );
+          $the_query = new \WP_Query( $agrs_city );
+          ?>
+            <div class="list-data-favorite">
+              <h1>Favorite City</h1>
+              <div class="wraper-content-city">
+              <?php 
+                if($the_query->have_posts()){
+                  while($the_query->have_posts()){
+                    $the_query->the_post();
+                    $id_post = get_the_ID();
+                    $category = get_the_terms( $id_post, 'favorite-city-cat' );     
+                    foreach ( $category as $cat){
+                      
+                      $thumbnail = get_field('icon', $cat->taxonomy . '_' . $cat->term_id);
+                      
+                      ?>
+                        <div class="item-favorite-city">
+                          <div class="cat-favorite-city">
+                            <h3><?php echo $cat->name ?></h3>
+                            <img src="<?php echo $thumbnail?>"/>
+                          </div>
+                          <span><?php echo get_field('place_name',$id_post)?></span>
+                        </div>
+                      <?php
+                    }
+                  }
+                } 
+                wp_reset_postdata(); 
+              
+              ?>
+              </div>
+            </div>
+          <?php
+        }
+      ?>
+      
     </div>
   </div>
 </div>
