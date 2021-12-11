@@ -105,6 +105,10 @@
         if(!empty($id_form_design)){
           array_push($id_form_designs,$id_form_design);
         }
+        $cat_point_show_all= carbon_get_post_meta($id,'categories_fields_point');
+        foreach ($cat_point_show_all as $cat_point_show_key => $cat_point_show_item) {
+          $total_point = $total_point+intval($cat_point_show_item['score']);
+        }
 
 
       }
@@ -128,6 +132,8 @@
           <?php
           if(!empty($id_form_post)){
             foreach ($id_form_post  as $key => $value) {
+              $array_cat  = carbon_get_post_meta($id_form_item,'categories_fields');
+              $point_form_all =0;
               if($key==0){
                 $class_active_link = 'active';
               }else{
@@ -146,13 +152,14 @@
             }
           }
           ?>
-  		</div>
+  		  </div>
       </div>
       <div class="gc gc--2-of-3">
         <ul class="nacc">
         <?php
         if(!empty($id_form_post)){
           foreach ($id_form_post  as $key => $id_form_item) {
+            $array_cat  = carbon_get_post_meta($id_form_item,'categories_fields');
             $point_form_all =0;
             if($key==0){
               $class_active_tab = 'active';
@@ -175,6 +182,11 @@
                   'value'   => $id_form_item,
                   'compare' => '=',
                 ),
+                array(
+                  'key'     => 'parent',
+                  'value'   => '0',
+                  'compare' => '='
+                )
               )
             );
             $q_svl_new = new \WP_Query( $args_form );
@@ -242,6 +254,112 @@
                           wp_reset_postdata();
                         ?>
                     </table>
+                    <table  class="styled-table">
+                      <tr>
+                        <th>No</th>
+                        <th>Reviews on post</th>
+                        <th>Average point</th>
+                        <th>Reviews Date</th>
+                        <?php 
+                          $cat_raw_form_all =[];
+                          $array_show_score=[];
+                          $array_show=[];
+                          $count_item_cat = count($array_cat);
+                          foreach ($array_cat as $cat) {
+                            array_push($cat_raw_form_all,$cat['name']);
+                            array_push($array_show_score,$cat['score']);
+                              ?>
+                                <th>
+                                  <?php echo $cat['name']?>
+                                </th>
+                              <?php
+                          }  
+                        ?>
+                      </tr>
+                      <?php
+                        $args_form = array(
+                          'post_type'=>'point-entries',
+                          'posts_per_page'=>-1,
+                          'post_status'=>'publish',
+                          'meta_query'=>array(
+                            'relation' => 'AND',
+                            array(
+                              'key'     => 'review_user_id',
+                              'value'   => $id_user,
+                              'compare' => '=',
+                            ),
+                            array(
+                              'key'     => 'id_form_design',
+                              'value'   => $id_form_item,
+                              'compare' => '=',
+                            ),
+                            array(
+                              'key'     => 'point_type_entrie',
+                              'value'   => ['travelpoint'],
+                              'compare' => 'IN',
+                            )
+                          )
+                        );
+                        $q_svl_new = new \WP_Query( $args_form );
+                        $total_reviews_form=$q_svl_new->found_posts;
+                      ?>
+                      <?php 
+                        if($q_svl_new->have_posts()){
+                          $index=0;
+                          while($q_svl_new->have_posts()){
+                            $q_svl_new->the_post();
+                            $id = get_the_ID();
+                            $index++;
+                            $id_post = carbon_get_post_meta($id,'post_id');
+                            ?>
+                            <tr>
+                              <td><?php echo $index?></td>
+                              <?php 
+                                 $cat_in_point_rw = carbon_get_post_meta($id,'categories_fields_point');
+                                 $cat_in_point_rw_name = [];
+                                 $all_point_cat = 0;
+
+                                 foreach ($cat_in_point_rw as $cat_in_point) {
+                                   array_push($cat_in_point_rw_name,$cat_in_point['name']);
+                                   $all_point_cat=$all_point_cat+$cat_in_point['score'];
+                                 }
+                                 $point_form_all = $point_form_all+$all_point_cat;
+                                 $result = array_intersect( $cat_raw_form_all,$cat_in_point_rw_name);
+
+
+                                 foreach ($array_cat as $_key_s => $vldf_show) {
+                                   $array_show[$_key_s]='-';
+                                 }
+                                 foreach ($result as $key_new => $result_item) {
+                                   $array_show[$key_new]=$result_item;
+                                 }
+                                 foreach ($array_show as $key_new_show => $item_show) {
+                                   if($item_show!='-'){
+                                     $array_show[$key_new_show]=$array_show_score[$key_new_show];
+                                   }
+                                 }
+                              ?>
+                              <td>
+                                <a href="<?php echo get_permalink($id_post )?>" target="_blank">
+                                  <?php echo get_the_title($id_post)?>
+                                </a>
+                              </td>
+                              <td><?php echo round($all_point_cat/$count_item_cat,2)?></td>
+                              <td><?php echo get_the_date('M j, Y')?></td>  
+                              <?php
+                                foreach ($array_show as $value) {
+                                  ?>
+                                    <td><?php echo $value?></td>
+                                  <?php
+                                } 
+                              ?> 
+                            </tr>
+                            <?php
+                          }
+                        }    
+                      ?>
+                    
+                    </table>
 
                   </div>
                 </li>
@@ -271,36 +389,92 @@
           );
           $the_query = new \WP_Query( $agrs_city );
           ?>
-            <div class="list-data-favorite">
-              <h1>Favorite City</h1>
-              <div class="wraper-content-city">
-              <?php 
-                if($the_query->have_posts()){
-                  while($the_query->have_posts()){
-                    $the_query->the_post();
-                    $id_post = get_the_ID();
-                    $category = get_the_terms( $id_post, 'favorite-city-cat' );     
-                    foreach ( $category as $cat){
-                      
-                      $thumbnail = get_field('icon', $cat->taxonomy . '_' . $cat->term_id);
-                      
-                      ?>
-                        <div class="item-favorite-city">
-                          <div class="cat-favorite-city">
-                            <h3><?php echo $cat->name ?></h3>
-                            <img src="<?php echo $thumbnail?>"/>
+            <div class="data-user-infor">
+              <div class="list-data-favorite">
+                <h1>Favorite City</h1>
+                <div class="wraper-content-city">
+                <?php 
+                  if($the_query->have_posts()){
+                    while($the_query->have_posts()){
+                      $the_query->the_post();
+                      $id_post = get_the_ID();
+                      $category = get_the_terms( $id_post, 'favorite-city-cat' );     
+                      foreach ( $category as $cat){
+                        
+                        $thumbnail = get_field('icon', $cat->taxonomy . '_' . $cat->term_id);
+                        
+                        ?>
+                          <div class="item-favorite-city">
+                            <div class="cat-favorite-city">
+                              <h3><?php echo $cat->name ?></h3>
+                              <img src="<?php echo $thumbnail?>"/>
+                            </div>
+                            <span><?php echo get_field('place_name',$id_post)?></span>
                           </div>
-                          <span><?php echo get_field('place_name',$id_post)?></span>
-                        </div>
-                      <?php
+                        <?php
+                      }
                     }
+                  } 
+                  wp_reset_postdata(); 
+                
+                ?>
+                </div>
+              </div>
+              <div class="data-list-category">
+                <?php
+                  $args_cat_review = array(
+                    'post_type'=>'review-entries',
+                    'posts_per_page'=>-1,
+                    'post_status'=>'publish',
+                    'meta_query'=>array(
+                      'relation' => 'AND',
+                      array(
+                        'key'     => 'user_id',
+                        'value'   => $id_user,
+                        'compare' => '=',
+                      ),
+                      array(
+                        'key'     => 'parent',
+                        'value'   => '0',
+                        'compare' => '='
+                      )
+                    )
+                  );
+
+                  $the_query_cat = new \WP_Query( $args_cat_review );
+                  $name_cat_all_raw = [];
+                  if($the_query_cat->have_posts()){
+                    while($the_query_cat->have_posts()){
+                      $the_query_cat->the_post();
+                      $id_post = get_the_ID();
+                      $cat_items = carbon_get_post_meta($id_post,'categories');
+                      foreach ($cat_items as $key=>$cat_item) {
+                        array_push($name_cat_all_raw,$cat_item['name']);
+                      }
+                    }
+                    $name_cat_alls = array_unique($name_cat_all_raw);
+                    // echo '<pre>';
+                    // print_r($name_cat_alls);
+                    // echo '</pre>';
                   }
-                } 
-                wp_reset_postdata(); 
-              
-              ?>
+
+                  wp_reset_postdata();     
+                ?>  
+                <h1>Travel Style</h1>
+                <div class="item_category_list">
+                  <ol type="a">
+                    <?php 
+                      foreach($name_cat_alls as $name_cat_all) {
+                        ?>
+                          <li><?php echo $name_cat_all?></li>
+                        <?php
+                      }
+                    ?>
+                  </ol> 
+                </div>
               </div>
             </div>
+            
           <?php
         }
       ?>

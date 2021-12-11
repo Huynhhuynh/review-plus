@@ -139,7 +139,7 @@
             }
           }
           ?>
-  		</div>
+  		  </div>
       </div>
       <div class="gc gc--2-of-3">
         <ul class="nacc">

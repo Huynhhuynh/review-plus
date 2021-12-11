@@ -306,10 +306,19 @@
       }
   }
 }
-
+.data-user-infor {
+  display: flex;
+  flex-wrap: wrap;
+}
+.data-list-category {
+  >h1 {
+    margin-bottom: 40px;
+  }
+}
 .list-data-favorite {
   width: 400px;
   max-width: 100%;
+  margin-right: 50px;
   >h1 {
     margin-bottom: 40px;
   }
