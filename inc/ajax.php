@@ -367,6 +367,21 @@ function rp_ajax_get_score_user() {
 add_action( 'wp_ajax_rp_ajax_get_score_user', 'rp_ajax_get_score_user' );
 add_action( 'wp_ajax_nopriv_rp_ajax_get_score_user', 'rp_ajax_get_score_user' );
 
+add_action( 'wp_ajax_update_score_category_user', 'update_score_category_user_init' );
+add_action( 'wp_ajax_nopriv_update_score_category_user', 'update_score_category_user_init' );
+
+function update_score_category_user_init() {
+  // echo '<pre>';
+  // print_r($_POST);
+  // echo '</pre>';
+  $data_score = $_POST['data'];
+  $id_user = get_current_user_id();
+  update_user_meta($id_user,'data_score_cat_form',$data_score);
+  wp_send_json( [
+		'success' => true,
+	] );
+}
+
 
 add_action( 'wp_ajax_update_show_review_user', 'update_show_review_user_init' );
 add_action( 'wp_ajax_nopriv_update_show_review_user', 'update_show_review_user_init' );

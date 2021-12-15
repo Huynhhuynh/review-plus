@@ -307,8 +307,9 @@
   }
 }
 .data-user-infor {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 40% 56%;
+  grid-gap: 4%;
 }
 .data-list-category {
   >h1 {
@@ -316,9 +317,7 @@
   }
 }
 .list-data-favorite {
-  width: 400px;
-  max-width: 100%;
-  margin-right: 50px;
+  width: 100%;
   >h1 {
     margin-bottom: 40px;
   }
@@ -358,4 +357,36 @@
     }
   }
   
+}
+
+.item_category_list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 30px;
+}
+.content-cat {
+  margin-bottom: 15px;
+  .score-profile-cat {
+    width: 55px;
+    height: 40px;
+    font-size: 15px;
+  }
+}
+.wrapper-save-cat-profile {
+  display: block;
+  text-align: right;
+  .save-btn-cat-profile {
+    padding: 10px 30px;
+    color: #fff;
+    background: #007acc;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 18px;
+  }
+}
+
+.wrapper-form-personalized {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 30px;
 }
