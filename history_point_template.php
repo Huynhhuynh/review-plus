@@ -585,7 +585,7 @@
                 // echo '<pre>';
                 // print_r($id_form_post);
                 // echo '</pre>';
-                $data_score_cat_form = get_user_meta(1,'data_score_cat_form',true);
+                $data_score_cat_form = get_user_meta(get_current_user_id(),'data_score_cat_form',true);
                 $data_cat_entrie_review = [];
 
                 if(!empty($id_form_post)){
