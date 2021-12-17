@@ -17,7 +17,7 @@ require_once( __DIR__ . '/plugin_template_page.php' );
   /**
    * Define
    */
-  define( 'REVIEW_PLUS_VER', '7.0.10' );
+  define( 'REVIEW_PLUS_VER', '8.0.10' );
   define( 'REVIEW_PLUS_URI', plugin_dir_url( __FILE__ ) );
   define( 'REVIEW_PLUS_DIR', plugin_dir_path( __FILE__ ) );
 }
