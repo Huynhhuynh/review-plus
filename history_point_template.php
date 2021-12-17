@@ -141,7 +141,7 @@
                     $the_query_form = new \WP_Query( $args_design_review );
                     if($the_query_form->have_posts()){
                       ?>
-                        <h1>Travel Styles</h1>
+                        <h1>Travel Review Settings</h1>
                         <div class="item_category_list">
                       <?php
                       while($the_query_form->have_posts()){
@@ -217,7 +217,7 @@
                     }
                     $data_id_forms = array_unique($data_id_form_raw);
                   ?>
-                    <h1>Travel Styles</h1>
+                    <h1>Travel Review Settings</h1>
                     <div class="item_category_list">
                     <?php
                     foreach($data_id_forms as $key_id_form =>$id_form){
@@ -366,7 +366,7 @@
                       <tr>
                         <th>No</th>
                         <th>Reviews on post</th>
-                        <th>Categorys</th>
+                        <th>Categories</th>
                         <th>Average point</th>
                         <th>Reviews Date</th>
                         <?php
@@ -402,10 +402,11 @@
                                       if(!empty($cat_show_table)){
                                         $count_cat = count($cat_show_table)-1;
                                         foreach ($cat_show_table as $key_cat_show => $cat_show){
-                                          if($count_cat=$key_cat_show){
+                                          
+                                          if($count_cat==$key_cat_show){
                                             $string_end = '';
                                           }else{
-                                            $string_end = ',';
+                                            $string_end = ', ';
                                           }
                                           echo $cat_show['name'].$string_end;
                                         }
@@ -498,6 +499,61 @@
                 } 
                 wp_reset_postdata(); 
               ?>
+              </div>
+              <div class="list-cat-submit">
+                <h1>Travel Styles</h1>
+                <div class="content-cat-submit">
+                  <?php 
+                     $args_travel_style = array(
+                      'post_type'=>'review-entries',
+                      'posts_per_page'=>-1,
+                      'post_status'=>'publish',
+                      'meta_query'=>array(
+                        'relation' => 'AND',
+                        array(
+                          'key'     => 'user_id',
+                          'value'   => $id_user,
+                          'compare' => '=',
+                        ),
+                        array(
+                          'key'     => 'parent',
+                          'value'   => '0',
+                          'compare' => '='
+                        )
+                      )
+                    );
+                    $the_query_travel_style = new \WP_Query( $args_travel_style );
+                    
+                    //  echo '<pre>';
+                    //  print_r($the_query_travel_style);
+                    //  echo '</pre>';
+                    $data_cat_raw =[];
+                     if($the_query_travel_style->have_posts()){
+                      while($the_query_travel_style->have_posts()){
+                        $the_query_travel_style->the_post();
+                        $id_post = get_the_ID();
+                        $data_cat_posts = carbon_get_post_meta($id_post,'categories');
+                        foreach($data_cat_posts as $data_cat_post) {
+                          array_push($data_cat_raw,$data_cat_post['name']);
+                        }
+                      }
+                      $data_cat_travel_style = array_unique($data_cat_raw);
+                      ?>
+                      <ol>
+                      <?php
+                      foreach($data_cat_travel_style as $item_cat) {
+                        ?>
+                          <li><?php echo $item_cat?></li>
+                        <?php
+                      }
+                      ?>
+                      </ol>
+                      <?php
+                    }
+                    wp_reset_postdata(); 
+                  ?>
+                  
+                </div>
               </div>
             </div>
             <div class="point-personalized">
