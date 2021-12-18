@@ -154,14 +154,16 @@
                             <div class="item-cat-point">
                               
                                 <?php
+                                  $index_custom = 0;
                                   foreach(array_slice($cat_forms,0,5) as $key=>$cat_form){
+                                     $index_custom++; 
                                     ?>
                                     <div class="content-cat">  
                                       <?php 
                                         if(is_user_logged_in()){
                                           ?>
                                             <input 
-                                              data-index="<?php echo($key+1)?>"
+                                              data-index="<?php echo $index_custom?>"
                                               type="number" 
                                               class="score-profile-cat" 
                                               data-design="<?php echo $id_post ?>"
@@ -180,7 +182,6 @@
                                         }
                                       ?>
                                       <span class="notice-change-input">
-                                        asdasdss
                                       </span>
                                       <span>
                                         <?php 
@@ -220,14 +221,18 @@
                     <h1>Travel Review Settings</h1>
                     <div class="item_category_list">
                     <?php
+                    
                     foreach($data_id_forms as $key_id_form =>$id_form){
                       ?>
                         <div class="form-cat-point">
                           <h3><?php echo get_the_title($id_form)?></h3>
                           <div class="item-cat-point">
                           <?php 
+                            $index_custom = 0;
                             foreach($data_cat_user as $key=>$cat_user){
+                              
                               if($id_form==$cat_user['idForm']){
+                                $index_custom++;
                                 ?>
                                   <div class="content-cat">  
                                       <?php 
@@ -235,7 +240,7 @@
                                           ?>
                                             <input 
                                               type="number" 
-                                              data-index="<?php echo($key+1)?>"
+                                              data-index="<?php echo $index_custom ?>"
                                               class="score-profile-cat" 
                                               value="<?php echo $cat_user['score']?>"
                                               data-design="<?php echo $id_form ?>"
@@ -360,8 +365,6 @@
             ?>
                 <li class="<?php echo $class_active_tab?>">
                   <div>
-
-
                     <table class="styled-table">
                       <tr>
                         <th>No</th>
@@ -503,55 +506,40 @@
               <div class="list-cat-submit">
                 <h1>Travel Styles</h1>
                 <div class="content-cat-submit">
-                  <?php 
-                     $args_travel_style = array(
-                      'post_type'=>'review-entries',
-                      'posts_per_page'=>-1,
-                      'post_status'=>'publish',
-                      'meta_query'=>array(
-                        'relation' => 'AND',
-                        array(
-                          'key'     => 'user_id',
-                          'value'   => $id_user,
-                          'compare' => '=',
-                        ),
-                        array(
-                          'key'     => 'parent',
-                          'value'   => '0',
-                          'compare' => '='
-                        )
-                      )
-                    );
-                    $the_query_travel_style = new \WP_Query( $args_travel_style );
-                    
-                    //  echo '<pre>';
-                    //  print_r($the_query_travel_style);
-                    //  echo '</pre>';
-                    $data_cat_raw =[];
-                     if($the_query_travel_style->have_posts()){
-                      while($the_query_travel_style->have_posts()){
-                        $the_query_travel_style->the_post();
-                        $id_post = get_the_ID();
-                        $data_cat_posts = carbon_get_post_meta($id_post,'categories');
-                        foreach($data_cat_posts as $data_cat_post) {
-                          array_push($data_cat_raw,$data_cat_post['name']);
-                        }
-                      }
-                      $data_cat_travel_style = array_unique($data_cat_raw);
-                      ?>
-                      <ol>
-                      <?php
-                      foreach($data_cat_travel_style as $item_cat) {
-                        ?>
-                          <li><?php echo $item_cat?></li>
-                        <?php
-                      }
-                      ?>
-                      </ol>
-                      <?php
-                    }
-                    wp_reset_postdata(); 
-                  ?>
+                <form action="/action_page.php">
+                  <input type="checkbox" id="tourist" name="tourist" value="Tourist">
+                  <label for="tourist"> Tourist</label><br>
+                  <input type="checkbox" id="luxurytravel" name="luxurytravel" value="Luxury Travel">
+                  <label for="luxurytravel"> Luxury Travel</label><br>
+                  <input type="checkbox" id="budgettravel" name="budgettravel" value="Budget Travel">
+                  <label for="vehicle3"> Budget Travel</label><br>
+                  <input type="checkbox" id="slowtravel" name="slowtravel" value="Slow Travel">
+                  <label for="vehicle1"> Slow Travel</label><br>
+                  <input type="checkbox" id="backpacker" name="backpacker" value="Backpacker">
+                  <label for="vehicle2"> Backpacker</label><br>
+                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                  <label for="vehicle3"> Expat</label><br>
+                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                  <label for="vehicle1"> Digital Nomad</label><br>
+                  <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                  <label for="vehicle2"> Adventure Travel</label><br>
+                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                  <label for="vehicle3"> Culture & Heritage Travel</label><br>
+                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                  <label for="vehicle3"> Volunteer Travel</label><br>
+                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                  <label for="vehicle3"> Faith Travel</label><br>
+                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                  <label for="vehicle3"> Student Travel</label><br>
+                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                  <label for="vehicle3"> Business Travel</label><br>
+                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                  <label for="vehicle3"> Solo Travel </label><br>
+                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                  <label for="vehicle3"> Party Travel</label><br><br>
+                  
+                  <input type="submit" value="Submit">
+                </form>
                   
                 </div>
               </div>
@@ -718,92 +706,117 @@ jQuery( document ).ready(function($) {
     data_list_score_init();
     
 
-
+    
     $('.score-profile-cat').on('change',function(e){
+      $('.notice-change-input').removeClass('active-tooltip');
+      let data_point_init = [];
       let point_data = $(this).val();
       let seft = $(this);
       let count = 0;
-      let data_point_init = [1,2,3,4,5];
-      
-
+      seft.parents('.item-cat-point').find('.content-cat').each(function(i,e){
+        let seft_itme = $(this).parent();  
+        data_point_init.push(Number($(this).find('.score-profile-cat').val()));
+      })
       let data_index_ip = Number($(this).data('index'));
-
       data_point_init[data_index_ip-1]=Number(point_data);
       for(var i in data_point_init) {
         if(data_point_init[i]==point_data){
           count++;
         }
       }
-      seft.parents('.item-cat-point').find('.content-cat').each(function(i,e){
-        
-        if((i+1)!=data_index_ip){
-          let seft_itme = $(this).parent();
-          if(point_data==$(this).find('.score-profile-cat').val()){
-            seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').addClass('active-tooltip');
-            seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').html('This point already exists')
-          }
-          if(count<2){
-            seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').removeClass('active-tooltip');
-          }
-        }
-        
-      })
-      if(count<2){
-        let data_item_cat_score = {
-          'idForm':'',
-          'nameCat':'', 
-          'score':''
-        }
-        data_item_cat_score.idForm=$(this).data('design');
-        data_item_cat_score.nameCat=$(this).data('namecat');
-        data_item_cat_score.score=$(this).val();
-        let data_index;
-        let push_data = true;
-        for(var i in data_cat_score_by_form) {
-          if(data_cat_score_by_form[i].idForm == $(this).data('design')
-            && data_cat_score_by_form[i].nameCat == $(this).data('namecat')
-          ){
-            push_data = false;
-            data_index= i;
-          }
-        }
-        if(!push_data && data_index) {
-          data_cat_score_by_form[data_index]=data_item_cat_score;
-        }
-        if(push_data){
-          data_cat_score_by_form.push(data_item_cat_score);
+      if(point_data>5){
+        seft.parent().find('.notice-change-input').addClass('active-tooltip');
+        seft.parent().find('.notice-change-input').html('This point must be less than 6.');
+      }else{
+        if(point_data==0){
+          seft.parent().find('.notice-change-input').addClass('active-tooltip');
+          seft.parent().find('.notice-change-input').html('this point must be greater than 0.');
+        }else{
+          seft.parents('.item-cat-point').find('.content-cat').each(function(i,e){
+            let seft_itme = $(this).parent();  
+            if((i+1)!=data_index_ip){
+              
+              if(point_data==$(this).find('.score-profile-cat').val()){
+                seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').addClass('active-tooltip');
+                seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').html('This point already exists');
+              }
+              if(count<2){
+                seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').removeClass('active-tooltip');
+              }
+            }
+          })
         }
       }
+      
+      let data_item_cat_score = {
+        'idForm':'',
+        'nameCat':'', 
+        'score':''
+      }
+      data_item_cat_score.idForm=$(this).data('design');
+      data_item_cat_score.nameCat=$(this).data('namecat');
+      data_item_cat_score.score=$(this).val();
+      let data_index;
+      let push_data = true;
+      for(var i in data_cat_score_by_form) {
+        if(data_cat_score_by_form[i].idForm == $(this).data('design')
+          && data_cat_score_by_form[i].nameCat == $(this).data('namecat')
+        ){
+          push_data = false;
+          data_index= i;
+        }
+      }
+      if(!push_data && data_index) {
+        data_cat_score_by_form[data_index]=data_item_cat_score;
+      }
+      if(push_data){
+        data_cat_score_by_form.push(data_item_cat_score);
+      }
     })
+   
 
     $(document).on('click', '.save-btn-cat-profile', function(e) {
       e.preventDefault();
-      $.ajax({
-         cache: false,
-         timeout: 8000,
-         url: '<?php echo admin_url('admin-ajax.php');?>',
-         type: 'POST',
-         data: ({
-          action: 'update_score_category_user',
-          data:data_cat_score_by_form
-         }),
-         beforeSend: function() {
-           $('#overlay').fadeIn(300);　
-         },
-         success: function( data, textStatus, jqXHR ){
-           setTimeout(function(){
-             $('#overlay').fadeOut(300);
-           }, 1000);
+      let data_validate = [];
+      let sum_vld = 0;
+      for(let i in data_cat_score_by_form){
+        data_validate.push(Number(data_cat_score_by_form[i].score))
+      }
+      for(let j in data_validate) {
+        sum_vld = sum_vld + data_validate[j];
+      }
+      if(sum_vld!=15*(data_validate.length/5)){
+        alert('Point is not correct');
+        // location.reload();
+      }else{
+        $.ajax({
+          cache: false,
+          timeout: 8000,
+          url: '<?php echo admin_url('admin-ajax.php');?>',
+          type: 'POST',
+          data: ({
+            action: 'update_score_category_user',
+            data:data_cat_score_by_form
+          }),
+          beforeSend: function() {
+            $('#overlay').fadeIn(300);　
+          },
+          success: function( data, textStatus, jqXHR ){
+            setTimeout(function(){
+              $('#overlay').fadeOut(300);
+            }, 1000);
 
-         },
-         error: function( jqXHR, textStatus, errorThrown ){
-           alert( 'The following error occured: ' + textStatus, errorThrown );
-           location.reload();
-         },
-         complete: function( jqXHR, textStatus ){
+          },
+          error: function( jqXHR, textStatus, errorThrown ){
+            alert( 'The following error occured: ' + textStatus, errorThrown );
+            location.reload();
+          },
+          complete: function( jqXHR, textStatus ){
 
-         }
-       });
+          }
+        });
+      }
+      
 
     })
 

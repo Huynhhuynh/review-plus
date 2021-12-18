@@ -398,18 +398,20 @@
   display: block;
 }
 .notice-change-input {
+  font-size: 12px !important;
   position: absolute;
-  top: 16px;
+  top: 25px;
   display: -webkit-flex;
   display: none;
   text-align: center;
   background: #444;
   border-radius: 8px;
+  left: 56px;
   color: #fff;
   margin: -82px auto 0;
   font-size: 16px;
   padding: 13px;
-  width: 220px;
+  width: 250px;
   &:before{
     border: solid;
     border-color: #444 transparent;
