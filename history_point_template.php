@@ -1,6 +1,9 @@
 
 <?php
   get_header();
+  echo '<pre>';
+  print_r(get_user_meta(1,'data_travel_style',true));
+  echo '</pre>';
   // update_user_meta(1,'data_score_cat_form',Null);
 ?>
 <div id="overlay">
@@ -506,41 +509,60 @@
               <div class="list-cat-submit">
                 <h1>Travel Styles</h1>
                 <div class="content-cat-submit">
-                <form action="/action_page.php">
-                  <input type="checkbox" id="tourist" name="tourist" value="Tourist">
-                  <label for="tourist"> Tourist</label><br>
-                  <input type="checkbox" id="luxurytravel" name="luxurytravel" value="Luxury Travel">
-                  <label for="luxurytravel"> Luxury Travel</label><br>
-                  <input type="checkbox" id="budgettravel" name="budgettravel" value="Budget Travel">
-                  <label for="vehicle3"> Budget Travel</label><br>
-                  <input type="checkbox" id="slowtravel" name="slowtravel" value="Slow Travel">
-                  <label for="vehicle1"> Slow Travel</label><br>
-                  <input type="checkbox" id="backpacker" name="backpacker" value="Backpacker">
-                  <label for="vehicle2"> Backpacker</label><br>
-                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                  <label for="vehicle3"> Expat</label><br>
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                  <label for="vehicle1"> Digital Nomad</label><br>
-                  <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
-                  <label for="vehicle2"> Adventure Travel</label><br>
-                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                  <label for="vehicle3"> Culture & Heritage Travel</label><br>
-                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                  <label for="vehicle3"> Volunteer Travel</label><br>
-                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                  <label for="vehicle3"> Faith Travel</label><br>
-                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                  <label for="vehicle3"> Student Travel</label><br>
-                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                  <label for="vehicle3"> Business Travel</label><br>
-                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                  <label for="vehicle3"> Solo Travel </label><br>
-                  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                  <label for="vehicle3"> Party Travel</label><br><br>
-                  
-                  <input type="submit" value="Submit">
-                </form>
-                  
+                  <?php 
+                    $data_travel_style_user = get_user_meta(get_current_user_id(),'data_travel_style',true);
+                    $data_name_travel = [
+                      'Tourist',
+                      'Luxury Travel','Budget Travel',
+                      'Slow Travel','Backpacker',
+                      'Expat','Digital Nomad',
+                      'Adventure Travel','Culture & Heritage Travel',
+                      'Volunteer Travel','Faith Travel',
+                      'Student Travel','Business Travel',
+                      'Solo Travel','Party Travel'
+                    ];
+                    $data_checked_custom = [];
+                    $data_slug_travel =[
+                      'tourist',
+                      'luxurytravel','budgettravel',
+                      'slowtravel','backpacker',
+                      'expat','digitalnomad',
+                      'adventuretravel','cultureheritagetravel',
+                      'volunteertravel','faithtravel',
+                      'studenttravel','businesstravel',
+                      'solotravel','partytravel'
+                    ];
+                    foreach($data_name_travel as $name){
+                      array_push($data_checked_custom,'');
+                    }
+                    if(!empty($data_travel_style_user)){
+                      foreach($data_name_travel as $key=>$name_travel){
+                        foreach($data_travel_style_user as $key_child=>$item_name_user){
+                          if($name_travel==$item_name_user){
+                            $data_checked_custom[$key]='checked';
+                          }
+                        }
+                      }
+                    }
+                  ?>
+                  <form action="#" id="form-cat-content">
+                    <?php 
+                      foreach($data_name_travel as $key=>$name) {
+                        ?>
+                          <input 
+                            type="checkbox" 
+                            id="<?php echo $data_slug_travel[$key]?>" 
+                            name="<?php echo $data_slug_travel[$key]?>" 
+                            value="<?php echo $name?>" 
+                            <?php echo $data_checked_custom[$key]?>
+                          >
+                          <label for="<?php echo $data_slug_travel[$key]?>"> <?php echo $name?></label><br>
+                        <?php
+                      }
+                    ?>
+                    <br>
+                    <input type="submit" value="Submit" class="travel-style-submit">
+                  </form>
                 </div>
               </div>
             </div>
@@ -550,7 +572,6 @@
                 $data_cat_entrie_review = [];
                 if(!empty($id_form_post)){
                   foreach ($id_form_post  as $key => $id_form_item) {
-                    
                     $args_cat_form = array(
                       'post_type'=>'review-entries',
                       'posts_per_page'=>-1,
@@ -597,14 +618,9 @@
                     }
                     wp_reset_postdata();
                   }
-                  
-                  
                 }
-                
                 if(!empty($data_cat_entrie_review) && !empty($data_score_cat_form)){
               ?>
-
-                 
                   <h1>Personalized scoring</h1>
                   <div class="wrapper-form-personalized">
                   <?php 
@@ -636,8 +652,7 @@
                                   ?>
                                     <div class="content-show-point-average">
                                       <h4><?php echo get_the_title($item_cat_entrie_show['idPost'])?></h4>
-                                    <p>Personalized scoring:<?php echo $item_cat_entrie_show['score']?></p>
-
+                                      <p>Personalized scoring:<?php echo $item_cat_entrie_show['score']?></p>
                                     </div>
                                   <?php
                                 }
@@ -818,6 +833,51 @@ jQuery( document ).ready(function($) {
       }
       
 
+    })
+
+    $('#form-cat-content input').on('change',function(e){
+      // console.log('sdsds',$(this).is(':checked'));
+      if($(this).siblings(':checked').length >= 3) {
+          this.checked = false;
+      }
+
+    })
+
+    $('.travel-style-submit').on('click',function(e){
+      e.preventDefault();
+      var data_string_travel_style = [];
+      $('#form-cat-content input').each(function(e,i){
+        if($(this).is(':checked')){
+          data_string_travel_style.push($(this).val());
+        }
+      })
+
+      $.ajax({
+         cache: false,
+         timeout: 8000,
+         url: '<?php echo admin_url('admin-ajax.php');?>',
+         type: 'POST',
+         data: ({
+          action: 'update_travel_style_profile_review_user',
+          data:data_string_travel_style
+         }),
+         beforeSend: function() {
+           $('#overlay').fadeIn(300);　
+         },
+         success: function( data, textStatus, jqXHR ){
+           setTimeout(function(){
+             $('#overlay').fadeOut(300);
+           }, 1000);
+
+         },
+         error: function( jqXHR, textStatus, errorThrown ){
+           alert( 'The following error occured: ' + textStatus, errorThrown );
+           location.reload();
+         },
+         complete: function( jqXHR, textStatus ){
+
+         }
+       });
     })
 
     $('#show_review_user').on('change',function(e){

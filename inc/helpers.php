@@ -1204,7 +1204,81 @@ function spam_reviews_form ($Data) {
     }
 }
 
+function get_point_category_by_post_form($id_post){
+  $user_id = get_current_user_id();
 
+  $arg_cat = array(
+    'post_type'=>'review-entries',
+    'post_status'=>'publish',
+    'posts_per_page'=>-1,
+    'meta_query'=>[
+      'relation' => 'AND',
+      [
+        'key'=>'review_post_id',
+        'value'=>$id_post,
+        'compare' => '='
+      ],
+      [
+        'key'=>'user_id',
+        'value'=>$user_id,
+        'compare'=>'='
+      ],
+      [
+        'key'=>'parent',
+        'value'=>'0',
+        'compare'=>'='
+      ]
+    ]
+  );
+  $point_category = new WP_Query( $arg_cat );
+  $data_cat_entrie_review = [];
+  $data_score_cat_form = get_user_meta($user_id,'data_score_cat_form',true);
+  while ( $point_category->have_posts() ) : $point_category->the_post();
+    $id_post = get_the_ID();
+    $id_post_submit = carbon_get_post_meta($id_post,'review_post_id');
+    $data_cat_item_review = carbon_get_post_meta($id_post,'categories');
+    $data_string_name_cat = [];
+    foreach($data_cat_item_review as $item_cat_child) {
+      array_push($data_string_name_cat,$item_cat_child['name']);
+    }
+    
+    $idDesign = carbon_get_post_meta($id_post,'design_id');
+    $data_item_cat_review = [
+      'idDesign'=> $idDesign,
+      'idPost'=>$id_post_submit,
+      'data'  =>$data_string_name_cat,
+      'score'=>0
+    ];
+    
+    array_push($data_cat_entrie_review,$data_item_cat_review);
+    // echo '<pre>';
+    // print_r($data_cat_entrie_review);
+    // echo '</pre>';
+    $data_item_point = [];
+    foreach($data_cat_entrie_review as $key_entrie=>$item_entrie_review){
+      $item_point=[]; 
+      foreach($data_score_cat_form as $key_score=>$item_score_cat){
+        if($item_entrie_review['idDesign']==$item_score_cat['idForm']){
+          if(in_array($item_score_cat['nameCat'],$item_entrie_review['data'])){
+            array_push($item_point,$item_score_cat['score']);
+            $data_item_point[$key_entrie]=$item_point;
+          }
+        }
+      }
+    }
+    foreach($data_item_point as $key_average=>$item_point_average){
+      $average = round(array_sum($item_point_average)/count($item_point_average),2); 
+      $data_cat_entrie_review[$key_average]['score']=$average;
+    }
+  endwhile;
+  wp_reset_postdata();
+  $point_all_cat = 0;
+  foreach($data_cat_entrie_review as $key=>$score_point_cat) {
+    $point_all_cat = $point_all_cat+$score_point_cat['score'];
+  }
+  $point_average_cat = $point_all_cat/count($data_cat_entrie_review);
+  return $point_average_cat;
+}
 function get_point_travel_by_post($id_post,$slug_metakey) {
   $point_start = 0;
   $arg_points = array(

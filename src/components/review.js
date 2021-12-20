@@ -16,12 +16,11 @@ export default function ReviewContentApp( props ) {
 
   }
   return (
-    < >
-
+    <>
     {
         PHP_DATA.user_logged_in == 'yes' &&
         <div className="ss-score-total">
-          <span>Travel Session Score</span>
+          <span>Personalized scoring</span>
           <p>{
             dataReview.pointTravel
             }

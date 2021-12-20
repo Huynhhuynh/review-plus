@@ -331,6 +331,7 @@ function rp_ajax_get_point_review() {
   $json = file_get_contents('php://input');
   $postData = json_decode( $json, true );
   $postID = $postData[ 'idPost' ];
+  $point_category_form = get_point_category_by_post_form($postID);
   $point_session_travel = get_point_travel_by_post($postID,'sessionpoint');
   $point_like_user_login = get_like_dislike_user_current($postID,'likeentrie');
   $point_dislike_user_login = get_like_dislike_user_current($postID,'dislikeentrie');
@@ -338,7 +339,8 @@ function rp_ajax_get_point_review() {
     'success' => true,
     'like'=>array_values($point_like_user_login),
     'dislike'=>array_values( $point_dislike_user_login ),
-    'point_session_travel'=>$point_session_travel
+    'point_session_travel'=>$point_session_travel,
+    'point_category_travel'=>$point_category_form
   ] );
 }
 
@@ -396,6 +398,19 @@ function update_show_review_user_init() {
 	}
 	update_user_meta($id_user,'review_show_profile',$review_show);
 	wp_send_json( [
+		'success' => true,
+	] );
+}
+
+
+add_action( 'wp_ajax_update_travel_style_profile_review_user', 'update_travel_style_profile_review_user_init' );
+add_action( 'wp_ajax_nopriv_update_travel_style_profile_review_user', 'update_travel_style_profile_review_user_init' );
+
+function update_travel_style_profile_review_user_init(){
+  $id_user = get_current_user_id();
+  $data_travel_style = $_POST['data'];
+  update_user_meta($id_user,'data_travel_style',$data_travel_style);
+  wp_send_json( [
 		'success' => true,
 	] );
 }
