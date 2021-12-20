@@ -21,7 +21,7 @@ export default function ReviewContentApp( props ) {
     for (let i=1; i<= data_in;i++){
       data_image.push('/wp-content/uploads/2021/11/star.png');
     }
-    data_image.push('/wp-content/uploads/2021/12/tai-xuong-1.png.png');
+    data_image.push('/wp-content/uploads/2021/12/tai-xuong.png');
   }else{
     let data_in = Math.floor(dataReview.pointTravel);
     for (let i=1; i<= data_in;i++){
