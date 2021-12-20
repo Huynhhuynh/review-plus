@@ -2,15 +2,35 @@ import React from "react"
 //import ReactDOM from 'react-dom'
 import { useReviewPlus } from '../context/states'
 import { useEffect, useState } from 'react'
-import Reviewdata from '../components/review-content'
+import Reviewdata from '../components/review-content';
 
 
 export default function ReviewContentApp( props ) {
   // useEffect( async () => {
     
-
+  const [ dataStar, setdataStar ] = useState([])
   // })
   const dataReview = useReviewPlus()
+  const  isFloat = function(n){
+    return Number(n) === n && n % 1 !== 0;
+  }
+  let data_image = [];
+  if(isFloat(dataReview.pointTravel)){
+    let data_in = Math.floor(dataReview.pointTravel);
+    
+    for (let i=1; i<= data_in;i++){
+      data_image.push('/wp-content/uploads/2021/11/star.png');
+    }
+    data_image.push('/wp-content/uploads/2021/12/tải-xuống.png');
+  }else{
+    let data_in = Math.floor(dataReview.pointTravel);
+    for (let i=1; i<= data_in;i++){
+      data_image.push('/wp-content/uploads/2021/11/star.png');
+    }
+  }
+  useEffect( async () => {
+    setdataStar(data_image);
+  })
   
   const recursiveMenu = function (data, parent_id=0, sub=true) {
 
@@ -28,11 +48,17 @@ export default function ReviewContentApp( props ) {
           <div className="raw-score">
             <span>Raw Score</span>
             <div className="icon-start">
-              <img src="/wp-content/uploads/2021/11/star.png" />
-              <img src="/wp-content/uploads/2021/11/star.png" />
-              <img src="/wp-content/uploads/2021/11/star.png" />
-              <img src="/wp-content/uploads/2021/11/star.png" />
-              <img src="/wp-content/uploads/2021/11/star.png" />
+              {
+                data_image && 
+                data_image.length>0 &&
+                data_image.map( (image,i) => {
+                  return (
+                    <>
+                      <img src={image} />
+                    </>
+                  )
+                })
+              }
             </div>
           </div>
         </div>

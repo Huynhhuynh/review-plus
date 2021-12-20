@@ -1273,10 +1273,15 @@ function get_point_category_by_post_form($id_post){
   endwhile;
   wp_reset_postdata();
   $point_all_cat = 0;
-  foreach($data_cat_entrie_review as $key=>$score_point_cat) {
-    $point_all_cat = $point_all_cat+$score_point_cat['score'];
+  if(count($data_cat_entrie_review)>0){
+    foreach($data_cat_entrie_review as $key=>$score_point_cat) {
+      $point_all_cat = $point_all_cat+$score_point_cat['score'];
+    }
+    $point_average_cat = $point_all_cat/count($data_cat_entrie_review);
+  }else{
+    $point_average_cat  = 0;
   }
-  $point_average_cat = $point_all_cat/count($data_cat_entrie_review);
+  
   return $point_average_cat;
 }
 function get_point_travel_by_post($id_post,$slug_metakey) {

@@ -1,9 +1,6 @@
 
 <?php
   get_header();
-  echo '<pre>';
-  print_r(get_user_meta(1,'data_travel_style',true));
-  echo '</pre>';
   // update_user_meta(1,'data_score_cat_form',Null);
 ?>
 <div id="overlay">
@@ -561,7 +558,7 @@
                       }
                     ?>
                     <br>
-                    <input type="submit" value="Submit" class="travel-style-submit">
+                    <input type="submit" value="Save" class="travel-style-submit">
                   </form>
                 </div>
               </div>
