@@ -14,22 +14,22 @@ export default function ReviewContentApp( props ) {
   const  isFloat = function(n){
     return Number(n) === n && n % 1 !== 0;
   }
-  let data_image = [];
-  if(isFloat(dataReview.pointTravel)){
-    let data_in = Math.floor(dataReview.pointTravel);
-    
-    for (let i=1; i<= data_in;i++){
-      data_image.push('/wp-content/uploads/2021/11/star.png');
-    }
-    data_image.push('/wp-content/uploads/2021/12/tai-xuong.png');
-  }else{
-    let data_in = Math.floor(dataReview.pointTravel);
-    for (let i=1; i<= data_in;i++){
-      data_image.push('/wp-content/uploads/2021/11/star.png');
-    }
-  }
+  
   useEffect( async () => {
-    setdataStar(data_image);
+    let data_image = [];
+    if(isFloat(dataReview.pointTravel)){
+      let data_in = Math.floor(dataReview.pointTravel);
+      for (let i=1; i<= data_in;i++){
+        data_image.push('/wp-content/uploads/2021/11/star.png');
+      }
+      data_image.push('/wp-content/uploads/2021/12/tai-xuong.png');
+    }else{
+      let data_in = Math.floor(dataReview.pointTravel);
+      for (let i=1; i<= data_in;i++){
+        data_image.push('/wp-content/uploads/2021/11/star.png');
+      }
+    }
+    setdataStar(...[data_image]);
   })
   
   const recursiveMenu = function (data, parent_id=0, sub=true) {
@@ -37,7 +37,7 @@ export default function ReviewContentApp( props ) {
   }
   return (
     <>
-    {
+    {/* {
         PHP_DATA.user_logged_in == 'yes' &&
         <div className="ss-score-total">
           <span>Personalized scoring</span>
@@ -49,9 +49,9 @@ export default function ReviewContentApp( props ) {
             <span>Raw Score</span>
             <div className="icon-start">
               {
-                data_image && 
-                data_image.length>0 &&
-                data_image.map( (image,i) => {
+                dataStar && 
+                dataStar.length>0 &&
+                dataStar.map( (image,i) => {
                   return (
                     <>
                       <img src={image} />
@@ -62,10 +62,10 @@ export default function ReviewContentApp( props ) {
             </div>
           </div>
         </div>
-    }
+    } */}
 
 
-    {
+    {/* {
       PHP_DATA.user_logged_in != 'yes' &&
       <div className="ss-score-total">
         <span>Travel Session Score</span>
@@ -81,7 +81,7 @@ export default function ReviewContentApp( props ) {
           </div>
         </div>
       </div>
-    }
+    } */}
 
     {
       dataReview.reviewContent &&

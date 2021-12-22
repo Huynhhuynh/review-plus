@@ -1236,7 +1236,7 @@ function get_point_category_by_post_form($id_post){
   while ( $point_category->have_posts() ) : $point_category->the_post();
     $id_post = get_the_ID();
     $id_post_submit = carbon_get_post_meta($id_post,'review_post_id');
-    $data_cat_item_review = carbon_get_post_meta($id_post,'categories');
+    $data_cat_item_review = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
     $data_string_name_cat = [];
     foreach($data_cat_item_review as $item_cat_child) {
       array_push($data_string_name_cat,$item_cat_child['name']);
@@ -1256,16 +1256,21 @@ function get_point_category_by_post_form($id_post){
     // echo '</pre>';
     $data_item_point = [];
     foreach($data_cat_entrie_review as $key_entrie=>$item_entrie_review){
-      $item_point=[]; 
+      $item_point=[];
+      $item_name =[]; 
       foreach($data_score_cat_form as $key_score=>$item_score_cat){
         if($item_entrie_review['idDesign']==$item_score_cat['idForm']){
           if(in_array($item_score_cat['nameCat'],$item_entrie_review['data'])){
             array_push($item_point,$item_score_cat['score']);
+            array_push($item_name,$item_score_cat['nameCat']);
             $data_item_point[$key_entrie]=$item_point;
           }
         }
       }
     }
+    // echo '<pre>';
+    // print_r($item_name);
+    // echo '</pre>';
     foreach($data_item_point as $key_average=>$item_point_average){
       $average = round(array_sum($item_point_average)/count($item_point_average),2); 
       $data_cat_entrie_review[$key_average]['score']=$average;
@@ -1398,6 +1403,7 @@ function get_score_user () {
 }
 
 function get_review_rating_by_id_post( $id_post ) {
+  $id_user = get_current_user_id();
   $data_rating = [];
   $data_rating_number =[];
   $data_id_form = [];
@@ -1420,15 +1426,51 @@ function get_review_rating_by_id_post( $id_post ) {
 
     ]
   );
+  
+  $args_user = array(
+    'post_type' => 'review-entries',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'meta_query' => [
+      'relation' => 'AND',
+      [
+        'key' => 'review_post_id',
+        'value' => $id_post,
+        'compare' => '=',
+      ],
+      [
+        'key' => 'parent',
+        'value' => 0,
+        'compare' => '=',
+      ],
+      [
+        'key' => 'user_id',
+        'value' => $id_user,
+        'compare' => '=',
+      ],
+    ]
+  );
   $rating_all = [];
   $sumArray = array();
   $ratings = new WP_Query( $args );
+  $user_ratings = new WP_Query( $args_user );
   $data_name_field =[];
   $data_all_rating = [];
   $data_max_point = [];
   $array_data_rating_all =[];
   $data_point_average =[];
   $data_name_form_for_post = [];
+  $data_id_form_user_raw = [];
+  while ( $user_ratings->have_posts() ) : $user_ratings->the_post();
+    $id_post= get_the_ID();
+    $id_form = carbon_get_post_meta($id_post,'design_id');
+    array_push($data_id_form_user_raw,$id_form);
+
+  endwhile;
+  wp_reset_postdata();
+
+  $data_id_form_user = array_values(array_unique($data_id_form_user_raw));
+
   while ( $ratings->have_posts() ) : $ratings->the_post();
     $id_post= get_the_ID();
     $rating = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
@@ -1499,14 +1541,80 @@ function get_review_rating_by_id_post( $id_post ) {
     }
 
   }
+  $data_pio_rating = get_user_meta($id_user,'data_score_cat_form',true);
+  // echo '<pre>';
+  // print_r($data_pio_rating);
+  // echo '</pre>';
+  
+  $data_pio_score =[];
+  
   foreach ($arr_id_form_all as $key => $value) {
     array_push($data_name_form_for_post,get_the_title(intval($value)));
   }
-
+  if(!empty($data_id_form_user)){
+    if(!empty($data_pio_rating)){
+      $rsult = array_diff($arr_id_form_all,$data_id_form_user);
+      foreach($rsult as $value_p) {
+        foreach($arr_id_form_all as $key_check=>$value_check){
+          if($value_p==$value_check){
+            $arr_id_form_all[$key_check]=-1;
+          }
+        }
+      }
+      foreach ($arr_id_form_all as $key => $value) {
+        $item_pio = [];
+        foreach ($data_pio_rating as $key_pio=>$value_pio){
+          if($value_pio['idForm']==$value){
+            array_push($item_pio,$value_pio['score']);
+          }
+        }
+        if($value==-1){
+          $item_pio=[0,0,0,0,0];
+        }
+        
+          
+        $data_pio_score[$key] = $item_pio;
+      }
+      
+    }
+  }else{
+    foreach ($arr_id_form_all as $key_check=>$value_check){
+      array_push($data_pio_score,[0,0,0,0,0]);
+    }
+  }
+  // echo '<pre>';
+  // print_r($data_point_average);
+  // echo '</pre>';
+  $data_all_score =[];
+  foreach ($data_pio_score as $key_score=>$value_pio_score){
+    $number_raw_score = 0;
+    foreach($value_pio_score as $key_score_child=>$value_child){
+      if($value_child==1){
+        $number_raw_score+= round($data_point_average[$key_score][$key_score_child])*5;
+      }
+      if($value_child==2){
+        $number_raw_score+= round($data_point_average[$key_score][$key_score_child])*4;
+      }
+      if($value_child==3){
+        $number_raw_score+= round($data_point_average[$key_score][$key_score_child])*3;
+      }
+      if($value_child==4){
+        $number_raw_score+= round($data_point_average[$key_score][$key_score_child])*2;
+      }
+      if($value_child==5){
+        $number_raw_score+= round($data_point_average[$key_score][$key_score_child])*1;
+      }
+    }
+    $data_all_score[$key_score]=round(($number_raw_score/15),2);
+  }
+  // echo '<pre>';
+  // print_r($data_all_score);
+  // echo '</pre>';
   array_push($data_all_rating,$data_point_average);
   array_push($data_all_rating,$data_name_show);
   array_push($data_all_rating,$data_max_point);
   array_push($data_all_rating,$data_name_form_for_post);
+  array_push($data_all_rating,$data_all_score);
   return $data_all_rating;
 
 }

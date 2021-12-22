@@ -2,6 +2,9 @@
 <?php
   get_header();
   // update_user_meta(1,'data_score_cat_form',Null);
+  // echo '<pre>';
+  // print_r(get_user_meta(1,'data_score_cat_form',true));
+  // echo '</pre>';
 ?>
 <div id="overlay">
   <div class="cv-spinner">
@@ -147,15 +150,18 @@
                       while($the_query_form->have_posts()){
                         $the_query_form->the_post();
                         $id_post = get_the_ID();
-                        $cat_forms = carbon_get_post_meta($id_post,'categories_fields');
+                        $rating_fields = carbon_get_post_meta($id_post,'rating_fields');
+                        // echo '<pre>';
+                        // print_r($rating_fields);
+                        // echo '</pre>';
+                        // $cat_forms = carbon_get_post_meta($id_post,'categories_fields');
                         ?>
                           <div class="form-cat-point">
                             <h3><?php echo get_the_title($id_post)?></h3>
                             <div class="item-cat-point">
-                              
                                 <?php
                                   $index_custom = 0;
-                                  foreach(array_slice($cat_forms,0,5) as $key=>$cat_form){
+                                  foreach(array_slice($rating_fields,0,5) as $key=>$rating_field){
                                      $index_custom++; 
                                     ?>
                                     <div class="content-cat">  
@@ -167,7 +173,8 @@
                                               type="number" 
                                               class="score-profile-cat" 
                                               data-design="<?php echo $id_post ?>"
-                                              data-namecat="<?php echo $cat_form['name']?>"
+                                              data-namecat="<?php echo $rating_field['name']?>"
+                                              data-slug="<?php echo $rating_field['slug']?>"
                                             />
                                           <?php
                                         }else{
@@ -185,7 +192,7 @@
                                       </span>
                                       <span>
                                         <?php 
-                                          echo $cat_form['name'];
+                                          echo $rating_field['name'];
                                         ?>
                                       </span>    
                                     </div>    
@@ -245,6 +252,7 @@
                                               value="<?php echo $cat_user['score']?>"
                                               data-design="<?php echo $id_form ?>"
                                               data-namecat="<?php echo $cat_user['nameCat']?>"
+                                              data-slug ="<?php echo $cat_user['slug']?>"
                                             />
                                           <?php
                                         }else{
@@ -598,8 +606,12 @@
                         $the_query_cat_form->the_post();
                         $id_post = get_the_ID();
                         $id_post_submit = carbon_get_post_meta($id_post,'review_post_id');
-                        $data_cat_item_review = carbon_get_post_meta($id_post,'categories');
+                        //$data_cat_item_review = carbon_get_post_meta($id_post,'categories');
+                        $data_cat_item_review = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
                         $data_string_name_cat = [];
+                        // echo '<pre>';
+                        // print_r($data_cat_item_review1);
+                        // echo '</pre>';
                         foreach($data_cat_item_review as $item_cat_child) {
                           array_push($data_string_name_cat,$item_cat_child['name']);
                         }
@@ -747,7 +759,6 @@ jQuery( document ).ready(function($) {
           seft.parents('.item-cat-point').find('.content-cat').each(function(i,e){
             let seft_itme = $(this).parent();  
             if((i+1)!=data_index_ip){
-              
               if(point_data==$(this).find('.score-profile-cat').val()){
                 seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').addClass('active-tooltip');
                 seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').html('This point already exists');
@@ -763,10 +774,12 @@ jQuery( document ).ready(function($) {
       let data_item_cat_score = {
         'idForm':'',
         'nameCat':'', 
+        'slug':'',
         'score':''
       }
       data_item_cat_score.idForm=$(this).data('design');
       data_item_cat_score.nameCat=$(this).data('namecat');
+      data_item_cat_score.slug = $(this).data('slug');
       data_item_cat_score.score=$(this).val();
       let data_index;
       let push_data = true;
