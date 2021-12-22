@@ -1,7 +1,11 @@
 
 <?php
   get_header();
-  // update_user_meta(1,'data_score_cat_form',Null);
+  if(!empty($_GET['test'])){
+    update_user_meta(get_current_user_id(),'data_score_cat_form',Null);
+    echo '1231';
+  }
+  
   // echo '<pre>';
   // print_r(get_user_meta(1,'data_score_cat_form',true));
   // echo '</pre>';
