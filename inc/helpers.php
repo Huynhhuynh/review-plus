@@ -1551,31 +1551,28 @@ function get_review_rating_by_id_post( $id_post ) {
   foreach ($arr_id_form_all as $key => $value) {
     array_push($data_name_form_for_post,get_the_title(intval($value)));
   }
-  if(!empty($data_id_form_user)){
-    if(!empty($data_pio_rating)){
-      $rsult = array_diff($arr_id_form_all,$data_id_form_user);
-      foreach($rsult as $value_p) {
-        foreach($arr_id_form_all as $key_check=>$value_check){
-          if($value_p==$value_check){
-            $arr_id_form_all[$key_check]=-1;
-          }
+  if(!empty($data_id_form_user) && !empty($data_pio_rating)){
+    $rsult = array_diff($arr_id_form_all,$data_id_form_user);
+    foreach($rsult as $value_p) {
+      foreach($arr_id_form_all as $key_check=>$value_check){
+        if($value_p==$value_check){
+          $arr_id_form_all[$key_check]=-1;
         }
       }
-      foreach ($arr_id_form_all as $key => $value) {
-        $item_pio = [];
-        foreach ($data_pio_rating as $key_pio=>$value_pio){
-          if($value_pio['idForm']==$value){
-            array_push($item_pio,$value_pio['score']);
-          }
+    }
+    foreach ($arr_id_form_all as $key => $value) {
+      $item_pio = [];
+      foreach ($data_pio_rating as $key_pio=>$value_pio){
+        if($value_pio['idForm']==$value){
+          array_push($item_pio,$value_pio['score']);
         }
-        if($value==-1){
-          $item_pio=[0,0,0,0,0];
-        }
-        
-          
-        $data_pio_score[$key] = $item_pio;
+      }
+      if($value==-1){
+        $item_pio=[0,0,0,0,0];
       }
       
+        
+      $data_pio_score[$key] = $item_pio;
     }
   }else{
     foreach ($arr_id_form_all as $key_check=>$value_check){

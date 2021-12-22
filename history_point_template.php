@@ -3,7 +3,8 @@
   get_header();
   if(!empty($_GET['test'])){
     update_user_meta(get_current_user_id(),'data_score_cat_form',Null);
-    echo '1231';
+    update_user_meta(8,'data_score_cat_form',Null);
+    echo 'thanh';
   }
   
   // echo '<pre>';
