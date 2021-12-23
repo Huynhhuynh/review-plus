@@ -1,11 +1,11 @@
 
 <?php
   get_header();
-  if(!empty($_GET['test'])){
-    update_user_meta(get_current_user_id(),'data_score_cat_form',Null);
-    update_user_meta(8,'data_score_cat_form',Null);
-    echo 'thanh';
-  }
+  // if(!empty($_GET['test'])){
+  //   update_user_meta(get_current_user_id(),'data_score_cat_form',Null);
+  //   update_user_meta(8,'data_score_cat_form',Null);
+  //   echo 'thanh';
+  // }
   
   // echo '<pre>';
   // print_r(get_user_meta(1,'data_score_cat_form',true));
@@ -128,9 +128,9 @@
       if(!empty($id_user)){
       ?>
         <div class="infor-user-review">
-            <span>Total Travel Point: <?php echo $total_point_travel?></span>
-            <span>Total Travel Authority Point: <?php echo $total_point_session?></span>
-            <span>Total Travel Category Score: <?php echo $total_point_category?></span>
+            <span>Travel Point: <?php echo $total_point_travel?></span>
+            <span>Influence: <?php echo $total_point_session?></span>
+            <span>Category Points: <?php echo $total_point_category?></span>
         </div>
         
         <div class="data-list-category">
@@ -167,7 +167,7 @@
                                 <?php
                                   $index_custom = 0;
                                   foreach(array_slice($rating_fields,0,5) as $key=>$rating_field){
-                                     $index_custom++; 
+                                    $index_custom++; 
                                     ?>
                                     <div class="content-cat">  
                                       <?php 

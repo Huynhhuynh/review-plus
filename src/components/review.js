@@ -9,6 +9,7 @@ export default function ReviewContentApp( props ) {
   // useEffect( async () => {
     
   const [ dataStar, setdataStar ] = useState([])
+  const [pointAverage, setAverage] = useState();
   // })
   const dataReview = useReviewPlus()
   const  isFloat = function(n){
@@ -16,72 +17,105 @@ export default function ReviewContentApp( props ) {
   }
   
   useEffect( async () => {
-    let data_image = [];
-    if(isFloat(dataReview.pointTravel)){
-      let data_in = Math.floor(dataReview.pointTravel);
-      for (let i=1; i<= data_in;i++){
-        data_image.push('/wp-content/uploads/2021/11/star.png');
+    if(dataReview.rating[4] && dataReview.rating[4].length>0){
+      let total_point_pio = 0;
+      let data_image = [];
+      dataReview.rating[4].map( ( r,index ) => {
+        total_point_pio += r;
+      })
+      let total_average = (total_point_pio/dataReview.rating[4].length);
+      if(isFloat(total_average)){
+        setAverage(total_average.toFixed(2))
+      }else{
+        setAverage(total_average)
       }
-      data_image.push('/wp-content/uploads/2021/12/tai-xuong.png');
-    }else{
-      let data_in = Math.floor(dataReview.pointTravel);
-      for (let i=1; i<= data_in;i++){
-        data_image.push('/wp-content/uploads/2021/11/star.png');
+      
+      // console.log('ssss',total_average,isFloat(total_average))
+      if(isFloat(total_average)){
+        let data_in = Math.floor(total_average);
+        for (let i=1; i<= data_in;i++){
+          data_image.push('/wp-content/uploads/2021/11/star.png');
+        }
+        data_image.push('/wp-content/uploads/2021/12/tai-xuong.png');
+      }else{
+        if(total_average!=0){
+          let data_in = Math.floor(total_average);
+          for (let i=1; i<= data_in;i++){
+            data_image.push('/wp-content/uploads/2021/11/star.png');
+          } 
+        }
       }
-    }
-    setdataStar(...[data_image]);
+      setdataStar(...[data_image])
+    } 
   })
-  
-  const recursiveMenu = function (data, parent_id=0, sub=true) {
-
-  }
   return (
     <>
-    {/* {
+    {
         PHP_DATA.user_logged_in == 'yes' &&
         <div className="ss-score-total">
           <span>Personalized scoring</span>
-          <p>{
-            dataReview.pointTravel
-            }
-          </p>
-          <div className="raw-score">
-            <span>Raw Score</span>
-            <div className="icon-start">
-              {
-                dataStar && 
-                dataStar.length>0 &&
-                dataStar.map( (image,i) => {
-                  return (
-                    <>
-                      <img src={image} />
-                    </>
-                  )
-                })
-              }
+          {
+            dataReview.rating[4] && 
+            dataReview.rating[4].length==0 &&
+            <div>
+              <p>0</p>
+              <div className="raw-score">
+               <span>Raw Score</span> 
+                {/* <div className="icon-start">
+                  {
+                    dataStar && 
+                    dataStar.length>0 &&
+                    dataStar.map( (image,i) => {
+                      return (
+                        <>
+                          <img src={image} />
+                        </>
+                      )
+                    })
+                  }
+                </div> */}
+              </div>
             </div>
-          </div>
+            
+          }
+          {
+            dataReview.rating[4] &&
+            dataReview.rating[4].length>0 &&
+            <>
+              <p>{pointAverage}</p>
+              <div className="raw-score">
+                <span>Raw Score</span> 
+                <div className="icon-start">
+                  {
+                    dataStar && 
+                    dataStar.length>0 &&
+                    dataStar.map( (image,i) => {
+                      return (
+                        <>
+                          <img src={image} />
+                        </>
+                      )
+                    })
+                  }
+                </div>
+              </div>
+            </>
+          }
+          
         </div>
-    } */}
+    }
 
 
-    {/* {
+    {
       PHP_DATA.user_logged_in != 'yes' &&
       <div className="ss-score-total">
         <span>Travel Session Score</span>
         <a href="#">Login or Register To See Personal Travel Score</a>
         <div className="raw-score">
-          <span>Raw Score</span>
-          <div className="icon-start">
-            <img src="/wp-content/uploads/2021/11/star.png" />
-            <img src="/wp-content/uploads/2021/11/star.png" />
-            <img src="/wp-content/uploads/2021/11/star.png" />
-            <img src="/wp-content/uploads/2021/11/star.png" />
-            <img src="/wp-content/uploads/2021/11/star.png" />
-          </div>
+          
         </div>
       </div>
-    } */}
+    }
 
     {
       dataReview.reviewContent &&
