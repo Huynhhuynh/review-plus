@@ -1,7 +1,15 @@
 
 <?php
   get_header();
-  // update_user_meta(1,'data_score_cat_form',Null);
+  if(!empty($_GET['test'])){
+    update_user_meta(get_current_user_id(),'data_score_cat_form',Null);
+    // update_user_meta(8,'data_score_cat_form',Null);
+    echo 'thanh';
+  }
+  
+  // echo '<pre>';
+  // print_r(get_user_meta(1,'data_score_cat_form',true));
+  // echo '</pre>';
 ?>
 <div id="overlay">
   <div class="cv-spinner">
@@ -120,179 +128,195 @@
       if(!empty($id_user)){
       ?>
         <div class="infor-user-review">
-            <span>Total Travel Point: <?php echo $total_point_travel?></span>
-            <span>Total Travel Authority Point: <?php echo $total_point_session?></span>
-            <span>Total Travel Category Score: <?php echo $total_point_category?></span>
+            <span>Travel Point: <?php echo $total_point_travel?></span>
+            <span>Influence: <?php echo $total_point_session?></span>
+            <span>Category Points: <?php echo $total_point_category?></span>
         </div>
         
         <div class="data-list-category">
+          <?php
+            $data_cat_user = get_user_meta($id_user,'data_score_cat_form',true);
+            // echo '<pre>';
+            // print_r($data_cat_user);
+            // echo '</pre>';  
+            if(empty($data_cat_user)){
+              $args_design_review = array(
+                'post_type'=>'review-design',
+                'posts_per_page'=>-1,
+                'post_status'=>'publish'
+              );
+
+              $the_query_form = new \WP_Query( $args_design_review );
+              if($the_query_form->have_posts()){
+                ?>
+                  <h1>Travel Review Settings</h1>
+                  <div class="item_category_list">
                 <?php
-                  $data_cat_user = get_user_meta($id_user,'data_score_cat_form',true);
+                while($the_query_form->have_posts()){
+                  $the_query_form->the_post();
+                  $id_post = get_the_ID();
+                  $rating_fields = carbon_get_post_meta($id_post,'rating_fields');
                   // echo '<pre>';
-                  // print_r($data_cat_user);
-                  // echo '</pre>';  
-                  if(empty($data_cat_user)){
-                    $args_design_review = array(
-                      'post_type'=>'review-design',
-                      'posts_per_page'=>-1,
-                      'post_status'=>'publish'
-                    );
-  
-                    $the_query_form = new \WP_Query( $args_design_review );
-                    if($the_query_form->have_posts()){
-                      ?>
-                        <h1>Travel Review Settings</h1>
-                        <div class="item_category_list">
-                      <?php
-                      while($the_query_form->have_posts()){
-                        $the_query_form->the_post();
-                        $id_post = get_the_ID();
-                        $cat_forms = carbon_get_post_meta($id_post,'categories_fields');
-                        ?>
-                          <div class="form-cat-point">
-                            <h3><?php echo get_the_title($id_post)?></h3>
-                            <div class="item-cat-point">
-                              
-                                <?php
-                                  $index_custom = 0;
-                                  foreach(array_slice($cat_forms,0,5) as $key=>$cat_form){
-                                     $index_custom++; 
+                  // print_r($rating_fields);
+                  // echo '</pre>';
+                  // $cat_forms = carbon_get_post_meta($id_post,'categories_fields');
+                  ?>
+                    <div class="form-cat-point">
+                      <h3><?php echo get_the_title($id_post)?></h3>
+                      <div class="item-cat-point">
+                          <?php
+                            $index_custom = 0;
+                            foreach(array_slice($rating_fields,0,5) as $key=>$rating_field){
+                              $index_custom++; 
+                              ?>
+                              <div class="content-cat">  
+                                <?php 
+                                  if(is_user_logged_in()){
                                     ?>
-                                    <div class="content-cat">  
-                                      <?php 
-                                        if(is_user_logged_in()){
-                                          ?>
-                                            <input 
-                                              data-index="<?php echo $index_custom?>"
-                                              type="number" 
-                                              class="score-profile-cat" 
-                                              data-design="<?php echo $id_post ?>"
-                                              data-namecat="<?php echo $cat_form['name']?>"
-                                            />
-                                          <?php
-                                        }else{
-                                          ?>
-                                            <input 
-                                              type="number" 
-                                              class="score-profile-cat"
-                                              value=""
-                                              disabled
-                                            />
-                                          <?php
-                                        }
-                                      ?>
-                                      <span class="notice-change-input">
-                                      </span>
-                                      <span>
-                                        <?php 
-                                          echo $cat_form['name'];
-                                        ?>
-                                      </span>    
-                                    </div>    
+                                      <input 
+                                        data-index="<?php echo $index_custom?>"
+                                        type="number" 
+                                        class="score-profile-cat" 
+                                        data-design="<?php echo $id_post ?>"
+                                        data-namecat="<?php echo $rating_field['name']?>"
+                                        data-slug="<?php echo $rating_field['slug']?>"
+                                      />
+                                    <?php
+                                  }else{
+                                    ?>
+                                      <input 
+                                        type="number" 
+                                        class="score-profile-cat"
+                                        value=""
+                                        disabled
+                                      />
                                     <?php
                                   }
                                 ?>
-                            </div>
-                          </div>
-                        <?php
-                      }
-                      ?>
-                        </div>
-                        <div class="wrapper-save-cat-profile">
-                          <a 
-                            href="#" 
-                            class="save-btn-cat-profile"
-                          >
-                            Save          
-                          </a>
-                        </div>
-                        
-                      <?php
-                    }
-  
-                    wp_reset_postdata(); 
-                  }else{
-                    $data_id_form_raw = [];
-                    foreach($data_cat_user as $key_cat=>$item_cat){
-                      array_push($data_id_form_raw,$item_cat['idForm']);
-                    }
-                    $data_id_forms = array_unique($data_id_form_raw);
-                  ?>
-                    <h1>Travel Review Settings</h1>
-                    <div class="item_category_list">
-                    <?php
-                    
-                    foreach($data_id_forms as $key_id_form =>$id_form){
-                      ?>
-                        <div class="form-cat-point">
-                          <h3><?php echo get_the_title($id_form)?></h3>
-                          <div class="item-cat-point">
-                          <?php 
-                            $index_custom = 0;
-                            foreach($data_cat_user as $key=>$cat_user){
-                              
-                              if($id_form==$cat_user['idForm']){
-                                $index_custom++;
-                                ?>
-                                  <div class="content-cat">  
-                                      <?php 
-                                        if(is_user_logged_in()){
-                                          ?>
-                                            <input 
-                                              type="number" 
-                                              data-index="<?php echo $index_custom ?>"
-                                              class="score-profile-cat" 
-                                              value="<?php echo $cat_user['score']?>"
-                                              data-design="<?php echo $id_form ?>"
-                                              data-namecat="<?php echo $cat_user['nameCat']?>"
-                                            />
-                                          <?php
-                                        }else{
-                                          ?>
-                                            <input 
-                                              type="number" 
-                                              class="score-profile-cat"
-                                              value="<?php echo $cat_user['score']?>"
-                                              disabled
-                                            />
-                                          <?php
-                                        }
-                                      ?>
-                                      <span class="notice-change-input">
-                                        
-                                      </span>
-                                      <span>
-                                        <?php 
-                                          echo $cat_user['nameCat'];
-                                        ?>
-                                      </span>    
-                                    </div> 
-                                <?php
-                              }
+                                <span class="notice-change-input">
+                                </span>
+                                <span>
+                                  <?php 
+                                    echo $rating_field['name'];
+                                  ?>
+                                </span>    
+                              </div>    
+                              <?php
                             }
                           ?>
-                          </div>  
-                        </div> 
-                      <?php
-                    }
-                    ?>
+                      </div>
                     </div>
+                  <?php
+                }
+                ?>
+                  </div>
+                  <div class="wrapper-save-cat-profile">
+                    <a 
+                      href="#" 
+                      class="save-btn-cat-profile"
+                    >
+                      Save          
+                    </a>
+                  </div>
+                  
+                <?php
+              }
+
+              wp_reset_postdata(); 
+            }else{
+              $data_id_form_raw = [];
+              foreach($data_cat_user as $key_cat=>$item_cat){
+                array_push($data_id_form_raw,$item_cat['idForm']);
+              }
+              $data_id_forms = array_unique($data_id_form_raw);
+            ?>
+              <h1>Travel Review Settings</h1>
+              <div class="item_category_list">
+              <?php
+              
+              foreach($data_id_forms as $key_id_form =>$id_form){
+                ?>
+                  <div class="form-cat-point">
+                    <h3><?php echo get_the_title($id_form)?></h3>
+                    <div class="item-cat-point">
                     <?php 
-                      if(is_user_logged_in()){
-                        ?>
-                          <div class="wrapper-save-cat-profile">
-                            <a 
-                              href="#" 
-                              class="save-btn-cat-profile"
-                            >
-                              Save          
-                            </a>
-                          </div>
-                        <?php
+                      $index_custom = 0;
+                      foreach($data_cat_user as $key=>$cat_user){
+                        
+                        if($id_form==$cat_user['idForm']){
+                          $index_custom++;
+                          ?>
+                            <div class="content-cat">  
+                                <?php 
+                                  if(is_user_logged_in()){
+                                    ?>
+                                      <input 
+                                        type="number" 
+                                        data-index="<?php echo $index_custom ?>"
+                                        class="score-profile-cat" 
+                                        value="<?php echo $cat_user['score']?>"
+                                        data-design="<?php echo $id_form ?>"
+                                        data-namecat="<?php echo $cat_user['nameCat']?>"
+                                        data-slug ="<?php echo $cat_user['slug']?>"
+                                      />
+                                    <?php
+                                  }else{
+                                    ?>
+                                      <input 
+                                        type="number" 
+                                        class="score-profile-cat"
+                                        value="<?php echo $cat_user['score']?>"
+                                        disabled
+                                      />
+                                    <?php
+                                  }
+                                ?>
+                                <span class="notice-change-input">
+                                  
+                                </span>
+                                <span>
+                                  <?php 
+                                    echo $cat_user['nameCat'];
+                                  ?>
+                                </span>    
+                              </div> 
+                          <?php
+                        }
                       }
-                  }
-                ?>  
+                    ?>
+                    </div>  
+                  </div> 
+                <?php
+              }
+              ?>
               </div>
+              <?php 
+                if(is_user_logged_in()){
+                  ?>
+                    <div class="wrapper-save-cat-profile">
+                      <a 
+                        href="#" 
+                        class="save-btn-cat-profile"
+                      >
+                        Save          
+                      </a>
+                    </div>
+                  <?php
+                }
+            }
+          ?>  
+        </div>
+        <div class="dropdown-checkbox-cat">
+          <h3>Drag and drop the items for some fun</h3>
+          <label>Choose action on drop</label><br>
+          <div class="container">
+            <div class="item" draggable=true data-score="1" data-slug="ss">Alice</div>
+            <div class="item" draggable=true data-score="2">Bob</div>
+            <div class="item" draggable=true data-score="3">Claire</div>
+            <div class="item" draggable=true data-score="4">Dave</div>
+            <div class="item" draggable=true data-score="5">Eve</div>
+          </div>
+        </div>
       <?php
       }
       ?>
@@ -507,55 +531,59 @@
                 <h1>Travel Styles</h1>
                 <div class="content-cat-submit">
                   <?php 
-                     $args_travel_style = array(
-                      'post_type'=>'review-entries',
-                      'posts_per_page'=>-1,
-                      'post_status'=>'publish',
-                      'meta_query'=>array(
-                        'relation' => 'AND',
-                        array(
-                          'key'     => 'user_id',
-                          'value'   => $id_user,
-                          'compare' => '=',
-                        ),
-                        array(
-                          'key'     => 'parent',
-                          'value'   => '0',
-                          'compare' => '='
-                        )
-                      )
-                    );
-                    $the_query_travel_style = new \WP_Query( $args_travel_style );
-                    
-                    //  echo '<pre>';
-                    //  print_r($the_query_travel_style);
-                    //  echo '</pre>';
-                    $data_cat_raw =[];
-                     if($the_query_travel_style->have_posts()){
-                      while($the_query_travel_style->have_posts()){
-                        $the_query_travel_style->the_post();
-                        $id_post = get_the_ID();
-                        $data_cat_posts = carbon_get_post_meta($id_post,'categories');
-                        foreach($data_cat_posts as $data_cat_post) {
-                          array_push($data_cat_raw,$data_cat_post['name']);
+                    $data_travel_style_user = get_user_meta(get_current_user_id(),'data_travel_style',true);
+                    $data_name_travel = [
+                      'Tourist',
+                      'Luxury Travel','Budget Travel',
+                      'Slow Travel','Backpacker',
+                      'Expat','Digital Nomad',
+                      'Adventure Travel','Culture & Heritage Travel',
+                      'Volunteer Travel','Faith Travel',
+                      'Student Travel','Business Travel',
+                      'Solo Travel','Party Travel'
+                    ];
+                    $data_checked_custom = [];
+                    $data_slug_travel =[
+                      'tourist',
+                      'luxurytravel','budgettravel',
+                      'slowtravel','backpacker',
+                      'expat','digitalnomad',
+                      'adventuretravel','cultureheritagetravel',
+                      'volunteertravel','faithtravel',
+                      'studenttravel','businesstravel',
+                      'solotravel','partytravel'
+                    ];
+                    foreach($data_name_travel as $name){
+                      array_push($data_checked_custom,'');
+                    }
+                    if(!empty($data_travel_style_user)){
+                      foreach($data_name_travel as $key=>$name_travel){
+                        foreach($data_travel_style_user as $key_child=>$item_name_user){
+                          if($name_travel==$item_name_user){
+                            $data_checked_custom[$key]='checked';
+                          }
                         }
                       }
-                      $data_cat_travel_style = array_unique($data_cat_raw);
-                      ?>
-                      <ol>
-                      <?php
-                      foreach($data_cat_travel_style as $item_cat) {
+                    }
+                  ?>
+                  <form action="#" id="form-cat-content">
+                    <?php 
+                      foreach($data_name_travel as $key=>$name) {
                         ?>
-                          <li><?php echo $item_cat?></li>
+                          <input 
+                            type="checkbox" 
+                            id="<?php echo $data_slug_travel[$key]?>" 
+                            name="<?php echo $data_slug_travel[$key]?>" 
+                            value="<?php echo $name?>" 
+                            <?php echo $data_checked_custom[$key]?>
+                          >
+                          <label for="<?php echo $data_slug_travel[$key]?>"> <?php echo $name?></label><br>
                         <?php
                       }
-                      ?>
-                      </ol>
-                      <?php
-                    }
-                    wp_reset_postdata(); 
-                  ?>
-                  
+                    ?>
+                    <br>
+                    <input type="submit" value="Save" class="travel-style-submit">
+                  </form>
                 </div>
               </div>
             </div>
@@ -565,7 +593,6 @@
                 $data_cat_entrie_review = [];
                 if(!empty($id_form_post)){
                   foreach ($id_form_post  as $key => $id_form_item) {
-                    
                     $args_cat_form = array(
                       'post_type'=>'review-entries',
                       'posts_per_page'=>-1,
@@ -595,8 +622,12 @@
                         $the_query_cat_form->the_post();
                         $id_post = get_the_ID();
                         $id_post_submit = carbon_get_post_meta($id_post,'review_post_id');
-                        $data_cat_item_review = carbon_get_post_meta($id_post,'categories');
+                        //$data_cat_item_review = carbon_get_post_meta($id_post,'categories');
+                        $data_cat_item_review = unserialize(get_post_meta( $id_post, '_rating_json_field', true ));
                         $data_string_name_cat = [];
+                        // echo '<pre>';
+                        // print_r($data_cat_item_review1);
+                        // echo '</pre>';
                         foreach($data_cat_item_review as $item_cat_child) {
                           array_push($data_string_name_cat,$item_cat_child['name']);
                         }
@@ -612,58 +643,10 @@
                     }
                     wp_reset_postdata();
                   }
-                  
-                  
                 }
                 
-                if(!empty($data_cat_entrie_review) && !empty($data_score_cat_form)){
               ?>
-
-                 
-                  <h1>Personalized scoring</h1>
-                  <div class="wrapper-form-personalized">
-                  <?php 
-                    
-                    $data_item_point = [];
-                    foreach($data_cat_entrie_review as $key_entrie=>$item_entrie_review){
-                      $item_point=[]; 
-                      foreach($data_score_cat_form as $key_score=>$item_score_cat){
-                        if($item_entrie_review['idDesign']==$item_score_cat['idForm']){
-                          if(in_array($item_score_cat['nameCat'],$item_entrie_review['data'])){
-                            array_push($item_point,$item_score_cat['score']);
-                            $data_item_point[$key_entrie]=$item_point;
-                          }
-                        }
-                      }
-                    }
-                    foreach($data_item_point as $key_average=>$item_point_average){
-                      $average = round(array_sum($item_point_average)/count($item_point_average),2); 
-                      $data_cat_entrie_review[$key_average]['score']=$average;
-                    }
-                    foreach($id_form_post as $idform){
-                    ?>
-                        <div class="content-data-personalized">
-                          <h2><?php echo get_the_title($idform)?></h2>
-                          <div class="content-post-point">
-                            <?php 
-                              foreach($data_cat_entrie_review as $item_cat_entrie_show){
-                                if($idform==$item_cat_entrie_show['idDesign']){
-                                  ?>
-                                    <div class="content-show-point-average">
-                                      <h4><?php echo get_the_title($item_cat_entrie_show['idPost'])?></h4>
-                                    <p>Personalized scoring:<?php echo $item_cat_entrie_show['score']?></p>
-
-                                    </div>
-                                  <?php
-                                }
-                              }
-                            ?>
-                          </div>
-                        </div>
-                    <?php
-                    }
-                }   
-              ?> 
+                  
               </div>
             </div>
           <?php
@@ -750,7 +733,6 @@ jQuery( document ).ready(function($) {
           seft.parents('.item-cat-point').find('.content-cat').each(function(i,e){
             let seft_itme = $(this).parent();  
             if((i+1)!=data_index_ip){
-              
               if(point_data==$(this).find('.score-profile-cat').val()){
                 seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').addClass('active-tooltip');
                 seft_itme.find('.content-cat:nth-child('+data_index_ip+')').find('.notice-change-input').html('This point already exists');
@@ -766,10 +748,12 @@ jQuery( document ).ready(function($) {
       let data_item_cat_score = {
         'idForm':'',
         'nameCat':'', 
+        'slug':'',
         'score':''
       }
       data_item_cat_score.idForm=$(this).data('design');
       data_item_cat_score.nameCat=$(this).data('namecat');
+      data_item_cat_score.slug = $(this).data('slug');
       data_item_cat_score.score=$(this).val();
       let data_index;
       let push_data = true;
@@ -800,7 +784,6 @@ jQuery( document ).ready(function($) {
       for(let j in data_validate) {
         sum_vld = sum_vld + data_validate[j];
       }
-      console.log('ôk',sum_vld,15*(data_validate.length/5));
       if(sum_vld!=15*(data_validate.length/5)){
         alert('Point is not correct');
         // location.reload();
@@ -836,6 +819,51 @@ jQuery( document ).ready(function($) {
 
     })
 
+    $('#form-cat-content input').on('change',function(e){
+      // console.log('sdsds',$(this).is(':checked'));
+      if($(this).siblings(':checked').length >= 3) {
+          this.checked = false;
+      }
+
+    })
+
+    $('.travel-style-submit').on('click',function(e){
+      e.preventDefault();
+      var data_string_travel_style = [];
+      $('#form-cat-content input').each(function(e,i){
+        if($(this).is(':checked')){
+          data_string_travel_style.push($(this).val());
+        }
+      })
+
+      $.ajax({
+         cache: false,
+         timeout: 8000,
+         url: '<?php echo admin_url('admin-ajax.php');?>',
+         type: 'POST',
+         data: ({
+          action: 'update_travel_style_profile_review_user',
+          data:data_string_travel_style
+         }),
+         beforeSend: function() {
+           $('#overlay').fadeIn(300);　
+         },
+         success: function( data, textStatus, jqXHR ){
+           setTimeout(function(){
+             $('#overlay').fadeOut(300);
+           }, 1000);
+
+         },
+         error: function( jqXHR, textStatus, errorThrown ){
+           alert( 'The following error occured: ' + textStatus, errorThrown );
+           location.reload();
+         },
+         complete: function( jqXHR, textStatus ){
+
+         }
+       });
+    })
+
     $('#show_review_user').on('change',function(e){
       let data_user_update = $(this).is(':checked');
       let user_id = $(this).data('user-id');
@@ -867,5 +895,97 @@ jQuery( document ).ready(function($) {
          }
        });
     })
+    
+  function handleDragStart(e) {
+    this.style.opacity = "0.4";
+
+    dragSrcEl = this;
+    e.dataTransfer.effectAllowed = "move";
+    //e.dataTransfer.setData("text/html", this.innerHTML);
+  }
+
+  function handleDragEnd(e) {
+    this.style.opacity = "1";
+  }
+
+  function handleDragEnd(e) {
+    this.style.opacity = "1";
+
+    items.forEach(function (item) {
+      item.classList.remove("over");
+    });
+    dragSrcEl = undefined;
+  }
+
+  function handleDragOver(e) {
+    if (e.preventDefault) {
+      e.preventDefault();
+    }
+
+    return false;
+  }
+
+  function handleDragEnter(e) {
+    this.classList.add("over");
+  }
+
+  function handleDragLeave(e) {
+    this.classList.remove("over");
+  }
+
+  function handleDrop(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    if (dragSrcEl !== this) {
+      swapItems(dragSrcEl, this);
+    }
+    return false;
+  }
+
+  function swapItems(a, b) {
+    
+    const tmp = a.innerHTML;
+    a.innerHTML = b.innerHTML;
+    b.innerHTML = tmp;
+    console.log('ok')
+  }
+
+  function shiftItems(srcElem, destElem) {
+    const items = Array.from(document.querySelectorAll(".container .item"));
+    const srcIdx = items.indexOf(srcElem);
+    const destIdx = items.indexOf(destElem);
+    console.log(`srcIdx = ${srcIdx}, destIdx= ${destIdx}`);
+    if (srcIdx < destIdx) {
+      // moving down
+      for (let i = srcIdx; i < destIdx - 1; i++) {
+        console.log(`swapping ${i} and ${i + 1}`);
+        swapItems(items[i], items[i + 1]);
+      }
+    } else {
+      // moving up
+      for (let i = srcIdx - 1; i >= destIdx; i--) {
+        console.log(`swapping ${i} and ${i + 1}`);
+        swapItems(items[i], items[i + 1]);
+      }
+    }
+  }
+
+  let dragSrcEl;
+  const items = document.querySelectorAll(".container .item");
+  items.forEach(function (item) {
+    item.addEventListener("dragstart", handleDragStart);
+    item.addEventListener("dragover", handleDragOver);
+    item.addEventListener("dragenter", handleDragEnter);
+    item.addEventListener("dragleave", handleDragLeave);
+    item.addEventListener("dragend", handleDragEnd);
+    item.addEventListener("drop", handleDrop);
+  });
+
+  // document.querySelector("#dropaction").addEventListener("change", (e) => {
+  //   dropAction = e.target.value;
+  // });
+
+
+
 });
 </script>

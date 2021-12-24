@@ -1542,12 +1542,10 @@ function get_review_rating_by_id_post( $id_post ) {
 
   }
   $data_pio_rating = get_user_meta($id_user,'data_score_cat_form',true);
-  // echo '<pre>';
-  // print_r($data_pio_rating);
-  // echo '</pre>';
   
   $data_pio_score =[];
-  
+  $data_pio_name = [];
+  $data_name_rating_form = [];
   foreach ($arr_id_form_all as $key => $value) {
     array_push($data_name_form_for_post,get_the_title(intval($value)));
   }
@@ -1562,28 +1560,42 @@ function get_review_rating_by_id_post( $id_post ) {
     }
     foreach ($arr_id_form_all as $key => $value) {
       $item_pio = [];
+      $item_pio_name = [];
+      $item_name_rating = [];
+      $item_name_rating_raw = carbon_get_post_meta($value,'rating_fields');
+
+      foreach ($item_name_rating_raw as $value_raw_rt) {
+        array_push($item_name_rating,$value_raw_rt['name']);
+      }
       foreach ($data_pio_rating as $key_pio=>$value_pio){
         if($value_pio['idForm']==$value){
           array_push($item_pio,$value_pio['score']);
+          array_push($item_pio_name,$value_pio['nameCat']);
         }
       }
       if($value==-1){
         $item_pio=[0,0,0,0,0];
       }
-      
-        
       $data_pio_score[$key] = $item_pio;
+      $data_pio_name[$key] = $item_pio_name;
+      $data_name_rating_form[$key] = $item_name_rating;
     }
   }else{
     foreach ($arr_id_form_all as $key_check=>$value_check){
       array_push($data_pio_score,[0,0,0,0,0]);
     }
   }
-  // echo '<pre>';
-  // print_r($data_point_average);
-  // echo '</pre>';
   $data_all_score =[];
-  foreach ($data_pio_score as $key_score=>$value_pio_score){
+  $data_index =[];
+  foreach ($data_name_rating_form as $key_rt=>$value_rt) {
+    $data_index_item = [];
+    foreach($value_rt as $key=>$value){
+      $key_item = array_search($value, $data_pio_name[$key_rt]);
+      array_push($data_index_item,($key_item+1));
+    }
+    $data_index[$key_rt]=$data_index_item;
+  }
+  foreach ($data_index as $key_score=>$value_pio_score){
     $number_raw_score = 0;
     foreach($value_pio_score as $key_score_child=>$value_child){
       if($value_child==1){
